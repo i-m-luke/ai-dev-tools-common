@@ -1,6 +1,6 @@
 # README
 
-- The tools are bundled as plugin
+- The tools are bundled as a plugin
 
 ## Skills
 
