@@ -1,0 +1,3 @@
+interface:
+  display_name: "Vertical Slice Architecture"
+  short_description: "Cut a codebase into capability slices"
