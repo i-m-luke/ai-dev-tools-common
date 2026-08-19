@@ -1,7 +1,6 @@
 ---
 name: document-app
-description: Document an application's UI top-down, screen by screen based on the code.
-disable-model-invocation: true
+description: Document an application's UI, functionality and purpose from the code. Use when writing app UI documentation, when revising it after a code change, or when another skill needs these conventions.
 ---
 
 Document the application's UI, functionality and purpose **based on the code**.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Update App Doc"
+  short_description: "Reconcile app documentation with the code"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Write App Doc"
+  short_description: "Write app documentation based on code"
