@@ -11,6 +11,12 @@ loses its description, and nothing but a human typing its name can invoke it.
 
 ## Editing guidelines
 
+### Keep the Markdown shape in the template
+
+[`TEMPLATE.md`](TEMPLATE.md) is the single source of truth for the document's Markdown
+shape — title, TOC markers, anchors, image tags. `SKILL.md` states only the rules the
+template cannot show, so a shape change is an edit to the template, not to both.
+
 ### Keep the skill stack-agnostic
 
 Describe the process generically — layout definition -> wired code ->
