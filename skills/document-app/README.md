@@ -11,11 +11,13 @@ loses its description, and nothing but a human typing its name can invoke it.
 
 ## Editing guidelines
 
-### Keep the Markdown shape in the template
+### Keep the reference files as the source of truth
 
-[`TEMPLATE.md`](TEMPLATE.md) is the single source of truth for the document's Markdown
-shape — title, TOC markers, anchors, image tags. `SKILL.md` states only the rules the
-template cannot show, so a shape change is an edit to the template, not to both.
+[`references/TEMPLATE.md`](references/TEMPLATE.md) is the single source of truth for the
+document's Markdown shape — title, TOC markers, anchors, image tags — and
+[`references/TERMS.md`](references/TERMS.md) for the wording of UI element names. `SKILL.md`
+states only the rules those files cannot show, so a shape change is an edit to the template,
+and a new term or language is an edit to the terms table, not to both.
 
 ### Keep the skill stack-agnostic
 

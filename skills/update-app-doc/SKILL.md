@@ -49,7 +49,7 @@ Close the report by offering three ways to answer: apply everything, apply the n
 
 Run a `/document-app` session over the approved rows and the chapters they name, following its method and its format for the edits.
 
-Carry the document's machinery along with the text: table-of-contents entries, heading anchors, cross-references, and an image placeholder for every new chapter.
+Carry the document's machinery along with the text: table-of-contents entries, heading anchors, and cross-references, with images following `document-app`'s image rules.
 
 ## 5. Close
 
