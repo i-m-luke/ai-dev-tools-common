@@ -7,6 +7,22 @@
 - Installation: Install skills at once by running 'npx skills add \<floder or git repo url\>' command
 - Updating: Update the skills by 'npx skills update' command
 
+## AGENTS-SHARED
+
+`AGENTS-SHARED.md` holds user preferences shared across projects. Include it in a project via a symlink:
+
+```powershell
+# Windows (needs Developer Mode or an elevated shell)
+New-Item -ItemType SymbolicLink -Path <path-to-the-project>AGENTS-SHARED.md -Target <path-to-this-repo>\AGENTS-SHARED.md
+```
+
+```sh
+# Linux / macOS
+ln -s <path-to-this-repo>/AGENTS-SHARED.md AGENTS-SHARED.md
+```
+
+Adding `AGENTS-SHARED.md` to the project's `.gitignore` is recommended, so it doesn't pollute the repo for other developers.
+
 ## Evals
 
 - Run all evals: `./tools/evals.ps1`
