@@ -1,3 +1,3 @@
 # Agents
 
-For extra instuctions see `AGENTS-SHARED.md`;
+For extra instuctions see `AGENTS-SHARED.md`.

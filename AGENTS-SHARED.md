@@ -27,8 +27,10 @@ before your change. Leave pre-existing diagnostics as they are unless the user a
 
 ### Committing
 
-Leave changes in the working tree; after implementing each phase of the plan, ask the user whether
-to commit.
+Leave changes in the working tree and never commit unprompted. Offer a commit only when finishing a
+phase of an explicit multi-phase plan agreed with the user for a larger task; a phase is one of the
+plan's named steps, not a single reply or edit. For small tasks and follow-up tweaks, don't ask —
+the user will say when to commit.
 
 ## Writing docs
 
