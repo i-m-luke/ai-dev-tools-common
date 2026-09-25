@@ -45,4 +45,4 @@ dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead
 | Term            | Meaning                                                                                                                                                                                         |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Planning | Any process of questioning the user before or during work to settle how to proceed: design discussion, clarifying requirements, reviewing a plan or idea. |
-| Narrow planning | Planning capped at one round. User is asked only the essential questions (those whose answer changes the approach); agent decides everything else by itself. |
+| Narrow planning | Planning capped at one round. User is asked only the blocking questions (those the agent cannot resolve itself and where a wrong guess would derail the work); agent decides everything else by itself. Agent offers another round only when the user points out uncertainties or asks questions. |
