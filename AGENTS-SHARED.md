@@ -28,9 +28,9 @@ before your change. Leave pre-existing diagnostics as they are unless the user a
 ### Committing
 
 Leave changes in the working tree and never commit unprompted. Offer a commit only when finishing a
-phase of an explicit multi-phase plan agreed with the user for a larger task; a phase is one of the
-plan's named steps, not a single reply or edit. For small tasks and follow-up tweaks, don't ask —
-the user will say when to commit.
+phase of a multi-phase plan agreed with the user during planning for a larger task; a phase is one
+of the plan's named steps, not a single reply or edit. For small tasks and follow-up tweaks, don't
+ask — the user will say when to commit.
 
 ## Writing docs
 
@@ -39,3 +39,10 @@ it needs, optimally one or two. Describe behaviour at a high level; add implemen
 only when the user asks or when the behaviour cannot be understood without them. Applies to every
 human-facing doc in any repo: markdown docs, ADRs, and code doc comments alike. Docs with a
 dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead.
+
+## Glossary
+
+| Term            | Meaning                                                                                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Planning | Any process of questioning the user before or during work to settle how to proceed: design discussion, clarifying requirements, reviewing a plan or idea. |
+| Narrow planning | Planning capped at one round. User is asked only the essential questions (those whose answer changes the approach); agent decides everything else by itself. |
