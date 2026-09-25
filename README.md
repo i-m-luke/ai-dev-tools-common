@@ -18,7 +18,7 @@ New-Item -ItemType SymbolicLink -Path <path-to-the-project>AGENTS-SHARED.md -Tar
 
 ```sh
 # Linux / macOS
-ln -s <path-to-this-repo>/AGENTS-SHARED.md AGENTS-SHARED.md
+ln -s <path-to-this-repo>/AGENTS-SHARED.md <path-to-the-project>AGENTS-SHARED.md
 ```
 
 Adding `AGENTS-SHARED.md` to the project's `.gitignore` is recommended, so it doesn't pollute the repo for other developers.
