@@ -19,6 +19,8 @@ Communicate with the user in Czech. In chat, be extremely concise; sacrifice gra
 Write files (code, comments, docs, commit messages) in the language the repository already uses; English
 by default.
 
+Close every Planning with a plan summary for approval; start implementing only once the user approves.
+
 ## Code changes
 
 ### Static analysis
