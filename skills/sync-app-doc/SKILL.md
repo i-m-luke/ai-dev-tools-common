@@ -1,5 +1,5 @@
 ---
-name: update-app-doc
+name: sync-app-doc
 description: Compare an app's UI documentation against its code and bring it back in sync.
 disable-model-invocation: true
 ---
