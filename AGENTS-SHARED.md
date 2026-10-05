@@ -23,12 +23,13 @@ Close every Planning with a plan summary for approval; start implementing only o
 Write (code, comments, docs, commit messages) in the language the repository already uses; English
 by default.
 
-### Static analysis
+### Quality assurance
 
 After each change, run the project's static checks (compiler warnings, linters, analyzers, type
-checkers — whatever the project uses) and fix every diagnostic your change caused, at any severity
-(errors, warnings, info) and in any file. Done when the output holds no diagnostic that was absent
-before your change. Leave pre-existing diagnostics as they are unless the user asks.
+checkers — whatever the project uses) and its tests. Fix every diagnostic your change caused, at any
+severity (errors, warnings, info) and in any file, and every test your change turned red. Done when
+the output holds no diagnostic or red test that was absent before your change. Leave pre-existing
+diagnostics and red tests as they are unless the user asks.
 
 ### Committing
 
