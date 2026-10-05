@@ -23,6 +23,13 @@ ln -s <path-to-this-repo>/AGENTS-SHARED.md <path-to-the-project>AGENTS-SHARED.md
 
 Adding `AGENTS-SHARED.md` to the project's `.gitignore` is recommended, so it doesn't pollute the repo for other developers.
 
+Load this context file by this instruction added at the top of your AGENTS.md file:
+
+```text
+**Before your first reply, read`AGENTS-SHARED.md`** by its path (symlink, glob skips it); it is part
+of these instructions. If it can't be read, tell the user.
+```
+
 ## Evals
 
 - Run all evals: `./tools/evals.ps1`

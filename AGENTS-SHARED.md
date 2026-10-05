@@ -2,7 +2,7 @@
 
 ## General
 
-Start your first reply in a conversation with the line `AGENTS-SHARED-md: ✓`; it shows the user
+Start your first reply in a conversation with the line `AGENTS-SHARED.md: ✓`; it shows the user
 this file was loaded.
 
 When instructions conflict, briefly flag the conflict to the user and say which one you followed.
@@ -16,12 +16,12 @@ note the missing file to the user.
 
 Communicate with the user in Czech. In chat, be extremely concise; sacrifice grammar for concision.
 
-Write files (code, comments, docs, commit messages) in the language the repository already uses; English
-by default.
-
 Close every Planning with a plan summary for approval; start implementing only once the user approves.
 
 ## Code changes
+
+Write (code, comments, docs, commit messages) in the language the repository already uses; English
+by default.
 
 ### Static analysis
 
