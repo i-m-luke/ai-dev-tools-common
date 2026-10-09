@@ -12,7 +12,20 @@
 - Describe basic usage of FlaUI
 - IS THIS A GENERAL (AGNOSTIC) skill: FlaUI can be used for any Windows app
 - If initialization is needed: At the start, the agent will launch a Terminal.Gui app via a "script" and from the process output the agent will obtain the necessary configuration (data into DEVNOTES)
-- Use wayfinder? Will probably be a bit complex (probably worth the tokens)
+- v1: FlaUI , v2: Čisté UIA, v3: Použít yaml namísto json? Údajně lepší optimalizace, ale po migraci na MCP horší parsování?
+
+#### Zmigorvat win-app-spy do MCP serveru
+
+- Jeden tool bude "instructions"
+- Navrátí obsah skill.md
+- V Description bude: "Before use call instructions to get usage guidelines"?
+- Skill má výhodu oproti MCP: Nemusí se vydávat extension
+- Výhody MCP:
+  - úspora tokenů
+  - determinističnost
+  - Lepší testování: Testuje se jako API
+  - Testy: Bude existovat základní aplikace, ta se spustí bez vykreslení UI a provedou se na ni základní testy
+  - Bude se nacházet v 'agent-toolkit-mcps' repo: Repo sturktura: src, docs, tools
 
 ### browser-app-spy
 
