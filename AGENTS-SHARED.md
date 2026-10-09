@@ -20,6 +20,13 @@ Planning is exhausted once the user has answered every question and the answers 
 Only then close it with a plan summary for approval, in a reply whose sole question is that
 approval; start implementing only once the user approves.
 
+### Shared files
+
+`.artifacts/` in the repository root is the file exchange between you and the user: put every file
+meant for the user there, and look there for files the user refers to. When you create
+the folder, check that `.gitignore` ignores it; if it does not, tell the user and leave
+`.gitignore` to them.
+
 ## Code changes
 
 Write (code, comments, docs, commit messages) in the language the repository already uses; English
