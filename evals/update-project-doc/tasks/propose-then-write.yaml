@@ -1,0 +1,43 @@
+id: propose-then-write
+name: Proposes first, writes the pick
+description: The skill first offers alternative wordings and placements without writing; after the user picks, it writes exactly that.
+tags:
+  - behavior
+inputs:
+  prompt: "/update-project-doc Document the new --verbose flag, which prints each file's path before its counts."
+  follow_up_prompts:
+    - "Take your first wording and your first proposed place."
+  context:
+    fixture: fixtures/file-stats
+checkpoints:
+  - after_turn: 1
+    on_failure: stop
+    graders:
+      - type: file
+        name: nothing-written-yet
+        config:
+          content_patterns:
+            - path: README.md
+              must_not_match:
+                - "--verbose"
+            - path: docs/usage.md
+              must_not_match:
+                - "--verbose"
+      - type: prompt
+        name: proposes-variants
+        config:
+          continue_session: true
+          prompt: |
+            You are now grading the reply above, not continuing it. Check:
+            1. It offers at least two alternative wordings for documenting the --verbose flag.
+            2. It proposes at least one concrete place for the change (a file and a section).
+            3. It asks the user to pick before writing anything.
+            For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.
+graders:
+  - type: prompt
+    name: writes-the-pick
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the work above, not continuing it. Read the files in the workspace and check that the wording the agent listed first now appears in the place it proposed first.
+        Call set_waza_grade_pass if it does, otherwise call set_waza_grade_fail and say what differs.

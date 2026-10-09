@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Notes</title>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Notes</h1>
+    <div id="toolbar">
+      <button id="new-btn">New</button>
+      <button id="save-btn">Save</button>
+      <button id="delete-btn">Delete</button>
+      <button id="sort-btn">Sort</button>
+      <button id="sync-btn">Sync</button>
+      <button id="settings-btn">Settings</button>
+    </div>
+  </header>
+  <main>
+    <ul id="note-list"></ul>
+    <textarea id="editor" placeholder="Select or create a note"></textarea>
+  </main>
+  <dialog id="settings-dialog">
+    <h2>Settings</h2>
+    <label><input type="checkbox" id="autosave-option"> Auto-save</label>
+    <button id="settings-close">Close</button>
+  </dialog>
+</body>
+</html>

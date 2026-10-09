@@ -1,0 +1,42 @@
+id: write-ui-doc
+name: Writes UI documentation from the code
+description: The agent loads document-app on its own and documents the notes app by what its code does, not by its labels.
+tags:
+  - behavior
+inputs:
+  prompt: "Write the UI documentation for the app in this folder into docs/notes-app.md."
+  context:
+    fixture: fixtures/notes-app
+graders:
+  - type: skill_invocation
+    name: loads-document-app
+    config:
+      mode: any_order
+      required_skills:
+        - document-app
+  - type: file
+    name: document-shape
+    config:
+      content_patterns:
+        - path: docs/notes-app.md
+          must_match:
+            # TOC markers from references/TEMPLATE.md
+            - "<!--TOC-->"
+            # screen parts keyed to the screenshot
+            - "(?i)\\(part a\\)"
+            # Save is documented by its handler, which exports CSV
+            - "(?i)csv"
+            # Sync has no handler
+            - "(?i)unknown behavior"
+            - "(?im)^#+ .*settings"
+  - type: prompt
+    name: follows-method
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the work above, not continuing it. Read docs/notes-app.md in the workspace and check:
+        1. The Save button is described as exporting all notes to notes.csv, not as saving the edited note.
+        2. The Sync button is marked as unknown behavior instead of being given a guessed function.
+        3. Behavior chapters are named after user tasks (such as "Exporting notes"), not after screens or controls.
+        4. Auto-save is documented in an application settings chapter, with its effect and when the change is stored.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

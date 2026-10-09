@@ -1,0 +1,22 @@
+id: grilling-missing
+name: Stops when grilling is missing
+description: Without the grilling skill, the skill tells the user and stops instead of planning on its own.
+tags:
+  - behavior
+# Leaves out the grilling stub.
+skill_directories:
+  - ../../skills
+inputs:
+  prompt: "/shallow-grill Let's plan adding tags to notes in this notes app, so I can filter the note list by tag."
+  context:
+    fixture: fixtures/notes-app
+graders:
+  - type: prompt
+    name: reports-and-stops
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the reply above, not continuing it. Check:
+        1. The agent told the user that the grilling skill is missing or could not be invoked.
+        2. The agent stopped there: it asked no planning questions and proposed no plan.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

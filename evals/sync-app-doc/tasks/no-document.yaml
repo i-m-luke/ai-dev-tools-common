@@ -1,0 +1,15 @@
+id: no-document
+name: Points to write-app-doc when there is no document
+description: With no documentation in the repository, the skill reports there is nothing to update and points at write-app-doc.
+tags:
+  - behavior
+inputs:
+  prompt: "/sync-app-doc"
+  context:
+    fixture: fixtures/notes-app
+graders:
+  - type: text
+    name: points-to-write-app-doc
+    config:
+      contains:
+        - "write-app-doc"

@@ -1,0 +1,33 @@
+id: report-drift
+name: Reports drift before editing
+description: The skill sorts the drift into mismatches, additions and suspected code defects, and leaves the document untouched until the developer approves.
+tags:
+  - behavior
+inputs:
+  prompt: "/sync-app-doc docs/notes-app.md"
+  context:
+    fixture: fixtures/notes-app
+  files:
+    - path: docs/notes-app.md
+graders:
+  - type: file
+    name: document-untouched
+    config:
+      content_patterns:
+        - path: docs/notes-app.md
+          must_match:
+            - "sorts the notes alphabetically by title"
+            - "asks the user to confirm"
+          must_not_match:
+            - "(?i)auto-save"
+  - type: prompt
+    name: classifies-drift
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the report above, not continuing it. Check:
+        1. Sort is reported as a mismatch: the document says alphabetical by title, the code sorts by modification time, newest first.
+        2. Delete's missing confirmation is reported as a suspected code defect (confirmDelete exists but is never called), not as a mismatch to fix in the document.
+        3. The Settings dialog with its Auto-save option is among the proposed additions.
+        4. Rows are numbered continuously across the tables, and the report closes by offering to apply everything, the listed numbers, or nothing.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

@@ -1,0 +1,12 @@
+skill: vertical-slice-architecture
+
+should_trigger_prompts:
+  - prompt: "Should the folders in the shop project be organised by feature or by technical layer?"
+  - prompt: "I'm adding a file that exports invoices to PDF. Where in the shop project should it go?"
+  - prompt: "Restructure the shop project into vertical slices."
+
+should_not_trigger_prompts:
+  - prompt: "What does EmailSender.Send in the shop project do? Answer in one sentence."
+  - prompt: "Add XML doc comments to shop/Services/OrderService.cs."
+    confidence: medium
+  - prompt: "Tell me a short joke about coffee."

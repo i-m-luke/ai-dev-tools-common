@@ -1,0 +1,46 @@
+id: settles-plan
+name: Settles a plan in few rounds
+description: The skill runs grilling, asks only the blocking questions in one batch, and closes with a plan summary within two rounds.
+tags:
+  - behavior
+inputs:
+  prompt: "/shallow-grill Let's plan adding tags to notes in this notes app, so I can filter the note list by tag."
+  context:
+    fixture: fixtures/notes-app
+  responder:
+    # Claude models tend to call a second decision tool after the first, which waza rejects.
+    model: gpt-5.4
+    instructions: |
+      You are the developer who owns the notes app and wants tags. Your intent:
+      - Tags are typed comma-separated into a field below the editor.
+      - A tag bar above the note list shows every tag; clicking a tag filters the list, clicking it again clears the filter.
+      - Tags are stored with each note, the same way the note text is stored.
+      For anything else, answer "Your call."
+      Once the agent has summarised the plan, call responder_stop: the planning is over. Never approve the plan or ask the agent to build it.
+      Call exactly one decision tool per agent message, once, and then end your turn.
+    max_followups: 3
+graders:
+  - type: skill_invocation
+    name: runs-grilling
+    config:
+      mode: any_order
+      required_skills:
+        - grilling
+  - type: file
+    name: no-implementation
+    config:
+      content_patterns:
+        - path: app.js
+          must_not_match:
+            - "(?i)tag"
+  - type: prompt
+    name: plans-shallowly
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the planning conversation above, not continuing it. Check:
+        1. The agent asked only blocking questions: none could have been answered by reading the code (for example, where notes are stored), and none is a minor detail the agent could decide alone.
+        2. The questions of each round came together in one message, not one question per message.
+        3. The agent closed the planning with a summary of the plan after no more than two rounds of questions.
+        4. The plan summary states the details the agent decided on its own.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

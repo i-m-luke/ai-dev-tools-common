@@ -1,0 +1,21 @@
+id: runs-document-app
+name: Runs a document-app session
+description: The slash command hands the work to document-app, which writes the document.
+tags:
+  - behavior
+inputs:
+  prompt: "/write-app-doc Write it into docs/notes-app.md."
+  context:
+    fixture: fixtures/notes-app
+graders:
+  - type: skill_invocation
+    name: runs-document-app
+    config:
+      mode: any_order
+      required_skills:
+        - document-app
+  - type: file
+    name: document-written
+    config:
+      must_exist:
+        - docs/notes-app.md

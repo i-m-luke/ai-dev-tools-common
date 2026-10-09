@@ -1,0 +1,20 @@
+name: sync-app-doc
+description: Checks that /sync-app-doc reports the drift between a UI document and the code before touching the document.
+skill: sync-app-doc
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 600
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+  # User-invoked skill: the SDK does not expand slash commands, so the body is injected
+  # to stand in for the user typing /sync-app-doc.
+  inject_skill_body: true
+  skill_directories:
+    - ../../skills
+metrics:
+  - name: task_completion
+    weight: 1.0
+    threshold: 1.0
+tasks:
+  - "tasks/*.yaml"

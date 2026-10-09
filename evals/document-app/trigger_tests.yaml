@@ -1,0 +1,13 @@
+skill: document-app
+
+should_trigger_prompts:
+  - prompt: "Write user documentation for the notes app's UI, based on its code."
+  - prompt: "Document what every button and dialog in the notes app does."
+  - prompt: "I changed what the Sort button in the notes app does. Revise the app's UI documentation to match."
+    confidence: medium
+
+should_not_trigger_prompts:
+  - prompt: "Explain in two sentences what the exportCsv function in notes-app/app.js does."
+  - prompt: "Add a short README section explaining how to open the notes app in a browser."
+    confidence: medium
+  - prompt: "Tell me a short joke about coffee."

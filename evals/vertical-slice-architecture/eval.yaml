@@ -1,0 +1,22 @@
+name: vertical-slice-architecture
+description: Checks that the agent reaches for vertical-slice-architecture on its own and cuts a layered tree by capability.
+skill: vertical-slice-architecture
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+  # Hide the skill body so the agent has to load the skill itself, as in real use.
+  inject_skill_body: false
+  skill_directories:
+    - ../../skills
+metrics:
+  - name: task_completion
+    weight: 0.5
+    threshold: 1.0
+  - name: trigger_accuracy
+    weight: 0.5
+    threshold: 0.8
+tasks:
+  - "tasks/*.yaml"

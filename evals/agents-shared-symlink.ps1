@@ -57,14 +57,6 @@ function Remove-Workspace([hashtable] $workspace) {
     Remove-Item -Recurse -Force -Path $workspace.Root, $workspace.Target -ErrorAction SilentlyContinue
 }
 
-# COPILOT_GITHUB_TOKEN beats every other credential Copilot CLI knows, including GH_TOKEN.
-function Use-CopilotAccount([string] $githubUser) {
-    if (-not $githubUser) { return }
-    $ghToken = (gh auth token --hostname github.com --user $githubUser 2>&1 | Out-String).Trim()
-    if ($LASTEXITCODE) { throw "No GitHub CLI token for '$githubUser' (run: gh auth login): $ghToken" }
-    $env:COPILOT_GITHUB_TOKEN = $ghToken
-}
-
 function Invoke-Agent([string] $cwd, [string[]] $extraArgs) {
     $cliArgs = @('-p', $prompt, '-s', '--allow-all-tools', '--allow-all-paths', '--no-ask-user') + $extraArgs
     if ($Model) { $cliArgs += @('--model', $Model) }
@@ -91,8 +83,7 @@ function Test-Run([string] $label, [string[]] $extraArgs, [bool] $expectToken) {
 }
 
 try {
-    $config = & (Join-Path $PSScriptRoot 'utils' 'read-config.ps1')
-    Use-CopilotAccount $config.githubUser
+    & (Join-Path $PSScriptRoot 'utils' 'use-copilot-account.ps1')
 
     if (-not (Test-Run 'control (no custom instructions)' @('--no-custom-instructions') $false)) {
         Write-Host 'Control leaked the token; eval is invalid.'
