@@ -16,7 +16,9 @@ note the missing file to the user.
 
 Communicate with the user in Czech. In chat, be extremely concise; sacrifice grammar for concision.
 
-Close every Planning with a plan summary for approval; start implementing only once the user approves.
+Planning is exhausted once the user has answered every question and the answers raise no new one.
+Only then close it with a plan summary for approval, in a reply whose sole question is that
+approval; start implementing only once the user approves.
 
 ## Code changes
 
@@ -48,7 +50,7 @@ dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead
 
 ## Glossary
 
-| Term             | Meaning                                                                                                                                                                                                                                                                                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Planning         | Any process of questioning the user before or during work to settle how to proceed: design discussion, clarifying requirements, reviewing a plan or idea.                                                                                                                                         |
+| Term             | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Planning         | Any process of questioning the user before or during work to settle how to proceed: design discussion, clarifying requirements, reviewing a plan or idea.                                                                                                                                                                                                                                                                         |
 | Shallow planning | Planning kept to the fewest rounds that settle the work — ideally one, two when needed, more only exceptionally. User is asked only the blocking questions (those the agent cannot resolve itself and where a wrong guess would derail the work); agent decides everything else by itself. Agent opens another round only when answers raise new blocking questions, or when the user points out uncertainties or asks questions. |
