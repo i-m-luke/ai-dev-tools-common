@@ -1,0 +1,3 @@
+interface:
+  display_name: "Notify"
+  short_description: "Notify the user remotely via Telegram"

@@ -1,0 +1,14 @@
+id: notifies-after-work
+name: Notifies after finishing work
+description: After finishing work that edits files, the agent loads the skill on its own to notify the user.
+tags:
+  - trigger
+inputs:
+  prompt: "Create hello.py that prints 'Hello, world!'."
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - notify

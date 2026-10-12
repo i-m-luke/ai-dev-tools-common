@@ -7,6 +7,18 @@
 - Installation: Install skills at once by running 'npx skills add \<floder or git repo url\>' command
 - Updating: Update the skills by 'npx skills update' command
 
+### notify
+
+`notify` sends the user a Telegram message through a bot. It reads the bot token and chat ID from
+`agents.secrets.yaml`, looked up in the current git repository's root, then in `~/.agents/`. Keep
+the file git-ignored in any repo it lives in.
+
+```yaml
+notify:
+  token: "<bot token>"
+  chatId: "<chat ID>"
+```
+
 ## AGENTS-SHARED
 
 `AGENTS-SHARED.md` holds user preferences shared across projects. Include it in a project via a symlink:
@@ -29,6 +41,13 @@ Load this context file by this instruction added at the top of your AGENTS.md fi
 **Before your first reply, read`AGENTS-SHARED.md`** by its path (symlink, glob skips it); it is part
 of these instructions. If it can't be read, tell the user.
 ```
+
+## Script tests
+
+`./tools/script-tests.ps1` runs every [Pester](https://pester.dev) test in `script-tests/`; they
+cover the scripts the skills ship (e.g. `skills/notify/scripts/notify.ps1`) and cost no premium requests.
+
+Requirements: PowerShell 7+ (`pwsh`) and Pester 5+ (`Install-Module Pester -Scope CurrentUser -MinimumVersion 5.0 -Force -SkipPublisherCheck`).
 
 ## Evals
 

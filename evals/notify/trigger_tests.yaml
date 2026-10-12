@@ -1,0 +1,12 @@
+skill: notify
+
+should_trigger_prompts:
+  - prompt: "I want to add a dark-mode toggle to my web app. Before planning anything, ask me the questions you need answered."
+  - prompt: "Create a file notes.txt containing the word 'draft'."
+  - prompt: "Run `git --version` and tell me which version is installed."
+    confidence: medium
+
+should_not_trigger_prompts:
+  - prompt: "Tell me a short joke about coffee."
+  - prompt: "In one sentence, what is the difference between a list and a tuple in Python?"
+  - prompt: "What does HTTP status 404 mean? Answer in one sentence."
