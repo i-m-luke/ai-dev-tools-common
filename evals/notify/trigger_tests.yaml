@@ -1,12 +1,15 @@
 skill: notify
 
 should_trigger_prompts:
-  - prompt: "I want to add a dark-mode toggle to my web app. Before planning anything, ask me the questions you need answered."
-  - prompt: "Create a file notes.txt containing the word 'draft'."
-  - prompt: "Run `git --version` and tell me which version is installed."
+  - prompt: "I'm stepping away for a while — message me if you need anything. I want to add a dark-mode toggle to my web app; before planning anything, ask me the questions you need answered."
+  - prompt: "Send me a remote message when you're done: create a file notes.txt containing the word 'draft'."
+  - prompt: "I'll be away from my desk, so ping me with a message once you've run `git --version` and found the installed version."
     confidence: medium
 
 should_not_trigger_prompts:
   - prompt: "Tell me a short joke about coffee."
   - prompt: "In one sentence, what is the difference between a list and a tuple in Python?"
   - prompt: "What does HTTP status 404 mean? Answer in one sentence."
+  - prompt: "Create a file notes.txt containing the word 'draft'."
+  - prompt: "Run `git --version` and tell me which version is installed."
+  - prompt: "Write a commit message for the staged changes."
