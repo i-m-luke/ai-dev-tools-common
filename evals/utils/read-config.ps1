@@ -15,7 +15,7 @@ $ErrorActionPreference = 'Stop'
 
 $configPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..' '..' 'evals.config.json'))
 if (-not (Test-Path -Path $configPath -PathType Leaf)) {
-    throw "Missing $configPath; create it (it may be empty, see README)."
+    throw "Missing $configPath; create it (it may be empty, see docs/verification/evals.md)."
 }
 
 $json = Get-Content -Raw -Path $configPath

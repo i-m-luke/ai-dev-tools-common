@@ -1,5 +1,5 @@
 BeforeAll {
-    $script:notify = Join-Path $PSScriptRoot '..' 'skills' 'notify' 'scripts' 'notify.ps1'
+    $script:notify = Join-Path $PSScriptRoot '..' '..' 'skills' 'notify' 'scripts' 'notify.ps1'
 
     function New-SecretsFile([string] $Folder, [string] $Content) {
         New-Item -ItemType Directory -Force -Path $Folder | Out-Null

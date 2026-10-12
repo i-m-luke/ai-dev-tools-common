@@ -4,7 +4,7 @@
 Runs the repo's script tests and reports which ones failed.
 
 .DESCRIPTION
-Runs every Pester test (`*.Tests.ps1`) in the repo's script-tests folder.
+Runs every Pester test (`*.Tests.ps1`) in the repo's script-tests folder, including the per-skill subfolders.
 Exits 0 when all tests pass, 1 otherwise.
 
 .EXAMPLE
@@ -14,7 +14,7 @@ Exits 0 when all tests pass, 1 otherwise.
 $ErrorActionPreference = 'Stop'
 
 if (-not (Get-Module -ListAvailable Pester | Where-Object Version -GE '5.0')) {
-    throw 'Pester 5+ not found; install it (see README).'
+    throw 'Pester 5+ not found; install it (see docs/verification/script-tests.md).'
 }
 Import-Module Pester -MinimumVersion 5.0
 

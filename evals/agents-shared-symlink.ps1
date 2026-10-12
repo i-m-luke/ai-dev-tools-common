@@ -11,7 +11,7 @@ appears only when the instruction made the agent load the file. A control run wi
 custom instructions disabled must not contain the token, otherwise the eval itself is invalid.
 
 Requires Copilot CLI (`copilot`), `evals.config.json` (optionally naming the account to run it
-under; see README) and the right to create symlinks (Windows: Developer Mode or an elevated shell).
+under; see docs/verification/evals.md) and the right to create symlinks (Windows: Developer Mode or an elevated shell).
 
 .EXAMPLE
 ./evals/agents-shared-symlink.ps1 -Runs 5 -Model claude-sonnet-4.5
