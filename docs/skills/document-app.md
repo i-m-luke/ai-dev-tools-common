@@ -1,7 +1,8 @@
-# README
+# document-app
 
-These notes are for anyone modifying this skill. They are intentionally kept out of
-[`SKILL.md`](SKILL.md), which holds only the instructions the invoking agent needs.
+These notes are for anyone modifying this skill. They are intentionally kept out of the skill folder
+([`SKILL.md`](../../skills/document-app/SKILL.md) holds only the instructions the invoking agent
+needs), so an agent can't load them.
 
 ## Why this skill is model-invokable
 
@@ -13,9 +14,9 @@ loses its description, and nothing but a human typing its name can invoke it.
 
 ### Keep the reference files as the source of truth
 
-[`references/TEMPLATE.md`](references/TEMPLATE.md) is the single source of truth for the
+[`references/TEMPLATE.md`](../../skills/document-app/references/TEMPLATE.md) is the single source of truth for the
 document's Markdown shape — title, TOC markers, anchors, image tags — and
-[`references/TERMS.md`](references/TERMS.md) for the wording of UI element names. `SKILL.md`
+[`references/TERMS.md`](../../skills/document-app/references/TERMS.md) for the wording of UI element names. `SKILL.md`
 states only the rules those files cannot show, so a shape change is an edit to the template,
 and a new term or language is an edit to the terms table, not to both.
 

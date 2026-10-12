@@ -6,18 +6,7 @@
 
 - Installation: Install skills at once by running 'npx skills add \<floder or git repo url\>' command
 - Updating: Update the skills by 'npx skills update' command
-
-### notify
-
-`notify` sends the user a Telegram message through a bot. It reads the bot token and chat ID from
-`agents.secrets.yaml`, looked up in the current git repository's root, then in `~/.agents/`. Keep
-the file git-ignored in any repo it lives in.
-
-```yaml
-notify:
-  token: "<bot token>"
-  chatId: "<chat ID>"
-```
+- Docs: [docs/skills](docs/skills/index.md)
 
 ## AGENTS-SHARED
 
