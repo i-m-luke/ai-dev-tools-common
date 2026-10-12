@@ -37,28 +37,22 @@ dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead
 
 ## Code changes
 
-Write (code, comments, docs, commit messages) in the language the repository already uses; English
-by default.
+Write code, comments, docs and commit messages in the repo's existing language; English by default.
 
 ### Quality assurance
 
-After each change, run the project's static checks (compiler warnings, linters, analyzers, type
-checkers — whatever the project uses) and its tests. Fix every diagnostic your change caused, at any
-severity (errors, warnings, info) and in any file, and every test your change turned red. Done when
-the output holds no diagnostic or red test that was absent before your change. Leave pre-existing
-diagnostics and red tests as they are unless the user asks.
+After each change, run the project's static analysis (e.g. linters, compiler warnings) and tests.
+Done when the output holds no diagnostic (any severity, any file) or red test absent before your
+change; leave pre-existing ones unless the user asks.
 
 ### Committing
 
-Leave changes in the working tree and never commit unprompted. Offer a commit only when finishing a
-phase of a multi-phase plan agreed with the user during planning for a larger task; a phase is one
-of the plan's named steps, not a single reply or edit. For small tasks and follow-up tweaks, don't
-ask — the user will say when to commit.
+Leave changes in the working tree; commit only when the user asks. Offer a commit only on finishing
+a step listed in a multi-step plan agreed during planning — not after a single reply or edit.
 
 ## Roles
 
-Read `agents-shared/roles.md` when the user assigns you a role — "act as a <role>", "you are a
-<role>", "Role: <role>", "Roles: <role a>, …, <role z>", or similar.
+Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, y`).
 
 ## Triage labels
 
@@ -67,7 +61,6 @@ strings.
 
 ## Glossary
 
-| Term             | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Planning         | Any process of questioning the user before or during work to settle how to proceed: design discussion, clarifying requirements, reviewing a plan or idea.                                                                                                                                                                                                                                                                         |
-| Shallow planning | Planning kept to the fewest rounds that settle the work — ideally one, two when needed, more only exceptionally. User is asked only the blocking questions (those the agent cannot resolve itself and where a wrong guess would derail the work); agent decides everything else by itself. Agent opens another round only when answers raise new blocking questions, or when the user points out uncertainties or asks questions. |
+- **Planning** — any questioning of the user before or during work to settle how to proceed: design
+  discussion, clarifying requirements, reviewing a plan or idea.
+- **Shallow planning** — planning kept to the fewest rounds that settle the work: ideally one, two when needed, more only exceptionally. Only blocking questions are asked (ones you cannot resolve yourself and where a wrong guess would derail the work); decide everything else yourself. Another round is opened only when answers raise new blocking questions, or the user points out uncertainties or asks questions.
