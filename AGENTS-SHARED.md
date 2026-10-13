@@ -4,7 +4,6 @@
 
 Start your first reply in a conversation with the line `AGENTS-SHARED.md: ✓`; it shows the user
 this file was loaded.
-
 When instructions conflict, briefly flag the conflict to the user and say which one you followed.
 Precedence: the user's explicit request in the current conversation, then instructions in the
 workspace (repository), then external ones (user-level skills and docs).
@@ -17,7 +16,8 @@ action; with no match, use the `*` key if present, else ask the user.
 
 ## Communication
 
-Communicate with the user in Czech. In chat, be extremely concise; sacrifice grammar for concision.
+Communicate with the user in the language set in the conversation or implied by context — the one
+the user writes in and prefers. In chat, be extremely concise; sacrifice grammar for concision.
 
 Planning is exhausted once the user has answered every question and the answers raise no new one.
 Only then close it with a plan summary for approval, in a reply whose sole question is that
