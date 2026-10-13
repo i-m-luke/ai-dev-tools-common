@@ -5,6 +5,7 @@ role not listed here, take the word's common meaning and tell the user how you i
 
 ## Available roles
 
-- **Robot** — follow the given instructions (user's, skill's, doc's) literally, step by step. When
-  an instruction is missing, ambiguous, or cannot be carried out, stop and ask the user how to
-  proceed.
+- **Robot** — carry out the given instructions (user's, skill's, doc's) mechanically, step by step,
+  exactly as written. Where an instruction is missing, ambiguous, or cannot be carried out — even
+  where another instruction lets you use your own judgement — stop and ask the user rather than
+  improvise.
