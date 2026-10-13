@@ -108,6 +108,15 @@ Describe 'notify.ps1' {
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
+        It 'reports the searched paths and the expected structure when no config file is found' {
+            $missingPath = Join-Path $script:workDir 'missing.yaml'
+
+            $stderr = pwsh -NoProfile -File $script:notify -Msg 'hello' -SecretsPath $missingPath 2>&1 | Out-String
+
+            $stderr | Should -BeLike "*$missingPath*"
+            $stderr | Should -BeLike '*chatId: "<chat ID>"*'
+        }
+
         It 'exits 1 when -SecretsPath does not exist, without falling back' {
             New-SecretsFile (Join-Path $env:USERPROFILE '.agents') $script:validSecrets | Out-Null
 
@@ -126,6 +135,14 @@ Describe 'notify.ps1' {
 
             Invoke-Notify -SecretsPath $path | Should -Be 2
             Should -Invoke Invoke-RestMethod -Times 0
+        }
+
+        It 'reports the expected structure when the notify section is missing' {
+            $path = New-SecretsFile $script:workDir "other:`n  token: x"
+
+            $stderr = pwsh -NoProfile -File $script:notify -Msg 'hello' -SecretsPath $path 2>&1 | Out-String
+
+            $stderr | Should -BeLike '*token: "<bot token>"*'
         }
     }
 

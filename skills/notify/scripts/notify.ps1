@@ -31,6 +31,12 @@ $ErrorActionPreference = 'Stop'
 
 $secretsFileName = 'agents.secrets.yaml'
 $maxMessageLength = 4096
+$expectedStructure = @"
+Expected structure:
+notify:
+  token: "<bot token>"
+  chatId: "<chat ID>"
+"@
 
 function Fail([int] $Code, [string] $Message) {
     [Console]::Error.WriteLine($Message)
@@ -79,14 +85,14 @@ function Read-NotifySection([string] $Path) {
 $candidates = @(Get-SecretsCandidates)
 $secretsFile = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
 if (-not $secretsFile) {
-    Fail 1 "Config file '$secretsFileName' not found. Searched: $($candidates -join ', ')"
+    Fail 1 "Config file '$secretsFileName' not found. Searched: $($candidates -join ', ')`n$expectedStructure"
 }
 
 try { $notify = Read-NotifySection $secretsFile }
 catch { Fail 2 "Config file '$secretsFile' cannot be read: $($_.Exception.Message)" }
-if ($null -eq $notify) { Fail 2 "Config file '$secretsFile' has no 'notify' section." }
+if ($null -eq $notify) { Fail 2 "Config file '$secretsFile' has no 'notify' section.`n$expectedStructure" }
 $missing = @('token', 'chatId' | Where-Object { -not $notify[$_] })
-if ($missing) { Fail 2 "Config file '$secretsFile' has an empty or missing 'notify.$($missing -join "', 'notify.")'." }
+if ($missing) { Fail 2 "Config file '$secretsFile' has an empty or missing 'notify.$($missing -join "', 'notify.")'.`n$expectedStructure" }
 
 $text = $Msg
 if ($text.Length -gt $maxMessageLength) { $text = $text.Substring(0, $maxMessageLength - 1) + [char] 0x2026 }
