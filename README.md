@@ -10,25 +10,18 @@ The repository conaints agent tools (skills, agents, etc.) bundled as a plugin.
 
 ## AGENTS-SHARED
 
-`AGENTS-SHARED.md` holds user preferences shared across projects. Include it in a project via a symlink:
+`AGENTS-SHARED.md` holds user preferences shared across projects. To use it, create a symlink binding it with instruction file for concrete harness:
 
-```powershell
-# Windows (needs Developer Mode or an elevated shell)
-New-Item -ItemType SymbolicLink -Path <path-to-the-project>AGENTS-SHARED.md -Target <path-to-this-repo>\AGENTS-SHARED.md
+**Claude Code:**
+
+```ps
+New-Item -ItemType SymbolicLink -Path ~/.claude/CLAUDE.md -Target <path-to-this-repo>/AGENTS-SHARED.md
 ```
 
-```sh
-# Linux / macOS
-ln -s <path-to-this-repo>/AGENTS-SHARED.md <path-to-the-project>AGENTS-SHARED.md
-```
+**Copilot CLI:**
 
-Adding `AGENTS-SHARED.md` to the project's `.gitignore` is recommended, so it doesn't pollute the repo for other developers.
-
-Load this context file by this instruction added at the top of your AGENTS.md file:
-
-```text
-**Before your first reply, read`AGENTS-SHARED.md`** by its path (symlink, glob skips it); it is part
-of these instructions. If it can't be read, tell the user.
+```ps
+New-Item -ItemType SymbolicLink -Path ~/.copilot/copilot-instructions.md -Target <path-to-this-repo>/AGENTS-SHARED.md
 ```
 
 ## Verification

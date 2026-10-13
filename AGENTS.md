@@ -1,9 +1,5 @@
 # Agents
 
-**Before your first reply, read `AGENTS-SHARED.md`** by its path (symlink, glob skips it); it is part
-of these instructions. If it can't be read, tell the user and continue using only the instructions
-in this file.
-
 ## Shipped skills
 
 A skill folder holds only what the invoking agent needs; an agent may read any file in it. Put
