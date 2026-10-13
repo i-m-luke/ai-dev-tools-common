@@ -42,12 +42,3 @@ check the skill invocations, the files the agent left, and its replies (LLM judg
   doesn't depend on what is installed.
 
 A full run consumes a lot of tokens; use `-Name` to run only the evals you changed.
-
-## agents-shared-symlink
-
-`evals/agents-shared-symlink.ps1` checks that the agent loads `AGENTS-SHARED.md` when it is a symlink, following the include instruction in `AGENTS.md`.
-
-**Requirements:**
-
-- Git
-- Rights to create symlinks (Windows: Developer Mode or an elevated shell)
