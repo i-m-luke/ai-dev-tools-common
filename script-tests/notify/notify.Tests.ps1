@@ -9,8 +9,8 @@ BeforeAll {
     }
 
     function Invoke-Notify {
-        param([string] $Msg = 'hello', [string] $SecretsPath)
-        $params = @{ Msg = $Msg }
+        param([string] $Message = 'hello', [string] $WorkingFolderName = 'repo', [string] $SecretsPath)
+        $params = @{ Message = $Message; WorkingFolderName = $WorkingFolderName }
         if ($SecretsPath) { $params.SecretsPath = $SecretsPath }
         & $script:notify @params 2>$null | Out-Null
         $LASTEXITCODE
@@ -39,22 +39,22 @@ Describe 'notify.ps1' {
     }
 
     Context 'Sending' {
-        It 'sends the message to the configured chat and exits 0' {
+        It 'sends the working folder name and the message to the configured chat and exits 0' {
             $path = New-SecretsFile $script:workDir $script:validSecrets
 
-            Invoke-Notify -Msg 'Plan ready' -SecretsPath $path | Should -Be 0
+            Invoke-Notify -Message 'Plan ready' -WorkingFolderName 'my-repo' -SecretsPath $path | Should -Be 0
 
             Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
                 $sent = [Text.Encoding]::UTF8.GetString($Body) | ConvertFrom-Json
                 $Uri -eq 'https://api.telegram.org/bot123:abc/sendMessage' -and
-                $sent.chat_id -eq '42' -and $sent.text -eq 'Plan ready'
+                $sent.chat_id -eq '42' -and $sent.text -eq 'my-repo: Plan ready'
             }
         }
 
         It 'truncates a message longer than 4096 characters' {
             $path = New-SecretsFile $script:workDir $script:validSecrets
 
-            Invoke-Notify -Msg ('x' * 5000) -SecretsPath $path | Should -Be 0
+            Invoke-Notify -Message ('x' * 5000) -SecretsPath $path | Should -Be 0
 
             Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
                 $text = ([Text.Encoding]::UTF8.GetString($Body) | ConvertFrom-Json).text
@@ -111,7 +111,7 @@ Describe 'notify.ps1' {
         It 'reports the searched paths and the expected structure when no config file is found' {
             $missingPath = Join-Path $script:workDir 'missing.yaml'
 
-            $stderr = pwsh -NoProfile -File $script:notify -Msg 'hello' -SecretsPath $missingPath 2>&1 | Out-String
+            $stderr = pwsh -NoProfile -File $script:notify -Message 'hello' -WorkingFolderName 'repo' -SecretsPath $missingPath 2>&1 | Out-String
 
             $stderr | Should -BeLike "*$missingPath*"
             $stderr | Should -BeLike '*chatId: "<chat ID>"*'
@@ -140,7 +140,7 @@ Describe 'notify.ps1' {
         It 'reports the expected structure when the notify section is missing' {
             $path = New-SecretsFile $script:workDir "other:`n  token: x"
 
-            $stderr = pwsh -NoProfile -File $script:notify -Msg 'hello' -SecretsPath $path 2>&1 | Out-String
+            $stderr = pwsh -NoProfile -File $script:notify -Message 'hello' -WorkingFolderName 'repo' -SecretsPath $path 2>&1 | Out-String
 
             $stderr | Should -BeLike '*token: "<bot token>"*'
         }

@@ -13,17 +13,21 @@ Exit codes:
 - 2: config file invalid (unreadable, no `notify` section, or empty `token`/`chatId`).
 - 3: Telegram API or network error.
 
-.PARAMETER Msg
-The message to send; longer than Telegram's 4096-character limit is truncated.
+.PARAMETER Message
+What to report; sent as `<WorkingFolderName>: <Message>`, truncated to Telegram's 4096-character limit.
+
+.PARAMETER WorkingFolderName
+Name of the repository or working folder the message is about.
 
 .PARAMETER SecretsPath
 Path to the config file; skips the lookup.
 
 .EXAMPLE
-./notify.ps1 -Msg 'my-repo: plan ready, waiting for approval.'
+./notify.ps1 -Message 'plan ready, waiting for approval.' -WorkingFolderName 'my-repo'
 #>
 param(
-    [Parameter(Mandatory)] [string] $Msg,
+    [Parameter(Mandatory)] [string] $Message,
+    [Parameter(Mandatory)] [string] $WorkingFolderName,
     [string] $SecretsPath
 )
 
@@ -94,7 +98,7 @@ if ($null -eq $notify) { Fail 2 "Config file '$secretsFile' has no 'notify' sect
 $missing = @('token', 'chatId' | Where-Object { -not $notify[$_] })
 if ($missing) { Fail 2 "Config file '$secretsFile' has an empty or missing 'notify.$($missing -join "', 'notify.")'.`n$expectedStructure" }
 
-$text = $Msg
+$text = "${WorkingFolderName}: $Message"
 if ($text.Length -gt $maxMessageLength) { $text = $text.Substring(0, $maxMessageLength - 1) + [char] 0x2026 }
 
 $body = ConvertTo-Json -Compress @{ chat_id = $notify['chatId']; text = $text }
