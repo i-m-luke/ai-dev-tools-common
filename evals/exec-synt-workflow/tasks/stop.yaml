@@ -8,16 +8,16 @@ inputs:
     Execute this workflow. The invoice is damaged.
 
     ```workflow
-    Řekni "Začínám zpracování"
-    Zpracuj("faktura")
-    Řekni "Zpracování dokončeno"
+    Say "Starting processing"
+    Process("invoice")
+    Say "Processing finished"
 
     # TASKS
-    Zpracuj(dokument):
-        Řekni "Zpracovávám {dokument}"
-        if (Dokument je poškozený):
-            Stop("Dokument je poškozený")
-        Řekni "Dokument {dokument} zpracován"
+    Process(document):
+        Say "Processing {document}"
+        if (The document is damaged):
+            Stop("The document is damaged")
+        Say "Document {document} processed"
     ```
 graders:
   - type: skill_invocation
@@ -31,10 +31,10 @@ graders:
     config:
       continue_session: true
       prompt: |
-        You are now grading the agent's replies above, not continuing the work. The workflow calls the task Zpracuj("faktura"), which says "Zpracovávám faktura", then, because the invoice is damaged, calls Stop("Dokument je poškozený"). The correct run: say "Začínám zpracování", say "Zpracovávám faktura", then end the whole workflow and tell the user the reason "Dokument je poškozený". Check:
-        1. The reply contains the exact text "Začínám zpracování".
-        2. The reply contains the exact text "Zpracovávám faktura".
-        3. The reply tells the user the reason for stopping: the Stop reason "Dokument je poškozený" (verbatim or clearly the same message).
-        4. The reply does not contain "Dokument faktura zpracován" (the step in the task after Stop).
-        5. The reply does not contain "Zpracování dokončeno" (the step in the main flow after the task call).
+        You are now grading the agent's replies above, not continuing the work. The workflow         calls the task Process("invoice"), which says "Processing invoice", then, because the invoice is damaged, calls Stop("The document is damaged"). The correct run: say "Starting processing", say "Processing invoice", then end the whole workflow and tell the user the reason "The document is damaged". Check:
+                1. The reply contains the exact text "Starting processing".
+                2. The reply contains the exact text "Processing invoice".
+                3. The reply tells the user the reason for stopping: the Stop reason "The document is damaged" (verbatim or clearly the same message).
+                4. The reply does not contain "Document invoice processed" (the step in the task after Stop).
+                5. The reply does not contain "Processing finished" (the step in the main flow after the task call).
         For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

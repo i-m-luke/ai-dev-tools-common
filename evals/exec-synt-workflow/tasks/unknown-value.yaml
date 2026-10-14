@@ -8,10 +8,10 @@ inputs:
     Execute this workflow.
 
     ```workflow
-    if (Věk návštěvníka je vyšší než 18):
-        Řekni "Můžeš vstoupit"
+    if (The visitor's age is over 18):
+        Say "You may enter"
     else:
-        Slušně oznam "Nemůžeš vstoupit"
+        Politely announce "You may not enter"
     ```
 graders:
   - type: skill_invocation
@@ -28,6 +28,6 @@ graders:
         You are now grading the agent's replies above, not continuing the work. The workflow's condition depends on the visitor's age, which was never given, so the correct behaviour is to ask the user for the age and then wait. Check:
         1. The reply asks the user for the visitor's age.
         2. The agent did not guess or assume an age or the outcome of the condition.
-        3. The reply contains neither "Můžeš vstoupit" nor "Nemůžeš vstoupit" (nor any other permission or refusal): no step of either branch was executed.
+        3. The reply contains neither "You may enter" nor "You may not enter" (nor any other permission or refusal): no step of either branch was executed.
         4. The reply ends with the question and does not continue the workflow past it; it does not narrate the execution (no walkthrough of the steps or both branches).
         For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

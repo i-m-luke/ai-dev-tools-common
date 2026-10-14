@@ -6,26 +6,26 @@ tags:
 inputs:
   prompt: |
     Execute this workflow. The queue holds four orders, in this order (price, club member):
-    káva (80 Kč, není člen), dort (250 Kč, je člen), řízek (300 Kč, není člen), čaj (40 Kč, je člen).
+    coffee (80 CZK, not a member), cake (250 CZK, member), schnitzel (300 CZK, not a member), tea (40 CZK, member).
 
     ```workflow
-    Řekni "Otevíráme pokladnu"
-    while (Ve frontě zbývá nějaká objednávka):
-        if (Cena první objednávky ve frontě je vyšší než 100 Kč):
-            if (Zákazník první objednávky je členem klubu):
-                Uctuj("první objednávka ve frontě", "sleva 10 %")
+    Say "Opening the checkout"
+    while (Any order is left in the queue):
+        if (The price of the first order in the queue is over 100 CZK):
+            if (The customer of the first order is a club member):
+                Charge("first order in the queue", "10% discount")
             else:
-                Uctuj("první objednávka ve frontě", "plná cena")
+                Charge("first order in the queue", "full price")
         else:
-            Uctuj("první objednávka ve frontě", "plná cena")
-        Odeber první objednávku z fronty
-    Řekni "Pokladna uzavřena"
+            Charge("first order in the queue", "full price")
+        Remove the first order from the queue
+    Say "Checkout closed"
 
     # TASKS
-    Uctuj(objednávka, cena):
-        Oznam("{objednávka}")
-        Řekni "Cena: {cena}"
-    Oznam(objednávka): Řekni "Zpracovávám {objednávka}"
+    Charge(order, price):
+        Announce("{order}")
+        Say "Price: {price}"
+    Announce(order): Say "Processing {order}"
     ```
 graders:
   - type: skill_invocation
@@ -39,15 +39,15 @@ graders:
     config:
       continue_session: true
       prompt: |
-        You are now grading the agent's replies above, not continuing the work. The queue holds káva (80 Kč, not a member), dort (250 Kč, member), řízek (300 Kč, not a member), čaj (40 Kč, member). The correct run, in this order: say "Otevíráme pokladnu"; then one loop iteration per order, each saying "Zpracovávám <order>" (the task Oznam, called from the task Uctuj) followed by "Cena: <price>":
-        - káva: "Cena: plná cena" (price not above 100 Kč),
-        - dort: "Cena: sleva 10 %" (above 100 Kč and a member),
-        - řízek: "Cena: plná cena" (above 100 Kč, not a member),
-        - čaj: "Cena: plná cena" (price not above 100 Kč, so the member check is not applied);
-        then, with the queue empty, say "Pokladna uzavřena". Check:
-        1. The reply contains the exact text "Otevíráme pokladnu" before any "Zpracovávám …" line.
-        2. The orders are processed in the queue order káva, dort, řízek, čaj, each exactly once (an order's wording may differ slightly, e.g. "první objednávka ve frontě" replaced by its name, but no order is skipped, repeated or reordered, and there is no fifth iteration).
-        3. For each order the "Zpracovávám …" line comes before its "Cena: …" line, and the cena of each order matches the list above (only dort gets "sleva 10 %", the other three "plná cena").
-        4. "Pokladna uzavřena" appears exactly once, after the last order's "Cena: …" line.
+        You are now grading the agent's replies above, not continuing the work. The queue         holds coffee (80 CZK, not a member), cake (250 CZK, member), schnitzel (300 CZK, not a member), tea (40 CZK, member). The correct run, in this order: say "Opening the checkout"; then one loop iteration per order, each saying "Processing <order>" (the task Announce, called from the task Charge) followed by "Price: <price>":
+                - coffee: "Price: full price" (price not above 100 CZK),
+                - cake: "Price: 10% discount" (above 100 CZK and a member),
+                - schnitzel: "Price: full price" (above 100 CZK, not a member),
+                - tea: "Price: full price" (price not above 100 CZK, so the member check is not applied);
+                then, with the queue empty, say "Checkout closed". Check:
+                1. The reply contains the exact text "Opening the checkout" before any "Processing …" line.
+                2. The orders are processed in the queue order coffee, cake, schnitzel, tea, each exactly once (an order's wording may differ slightly, e.g. "first order in the queue" replaced by its name, but no order is skipped, repeated or reordered, and there is no fifth iteration).
+                3. For each order the "Processing …" line comes before its "Price: …" line, and the price of each order matches the list above (only cake gets "10% discount", the other three "full price").
+                4. "Checkout closed" appears exactly once, after the last order's "Price: …" line.
         5. The reply does not narrate the execution: no explanation of conditions, branches, tasks or loop iterations, no list of steps; only what the workflow prescribes.
         For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

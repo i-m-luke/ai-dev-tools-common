@@ -8,14 +8,14 @@ inputs:
     Execute this workflow. The visitor is 25 years old and wants to order a coffee.
 
     ```workflow
-    if (Věk návštěvníka je vyšší než 18):
-        Řekni "Můžeš vstoupit"
-        if (Návštěvník si objedná):
-            Řekni "Jedna káva, hned to bude"
+    if (The visitor's age is over 18):
+        Say "You may enter"
+        if (The visitor places an order):
+            Say "One coffee, coming right up"
         else:
-            Zeptej se "Co si přejete?"
+            Ask "What would you like?"
     else:
-        Slušně oznam "Nemůžeš vstoupit"
+        Politely announce "You may not enter"
     ```
 graders:
   - type: skill_invocation
@@ -29,9 +29,9 @@ graders:
     config:
       continue_session: true
       prompt: |
-        You are now grading the agent's replies above, not continuing the work. The workflow had a visitor aged 25 who wants to order a coffee, so the correct path is: say "Můžeš vstoupit", then say "Jedna káva, hned to bude". Check:
-        1. The reply contains the exact text "Můžeš vstoupit".
-        2. The reply contains the exact text "Jedna káva, hned to bude".
-        3. The reply contains nothing from the skipped branches: no "Nemůžeš vstoupit" (or any other refusal to let the visitor in) and no question "Co si přejete?".
+        You are now grading the agent's replies above, not continuing the work. The workflow had a visitor aged 25 who wants to order a coffee, so the correct path is:         say "You may enter", then say "One coffee, coming right up". Check:
+                1. The reply contains the exact text "You may enter".
+                2. The reply contains the exact text "One coffee, coming right up".
+                3. The reply contains nothing from the skipped branches: no "You may not enter" (or any other refusal to let the visitor in) and no question "What would you like?".
         4. The reply does not narrate the execution: no explanation of which condition was evaluated or which branch was taken, no list of steps; only what the workflow prescribes.
         For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.
