@@ -53,6 +53,11 @@ change; leave pre-existing ones unless the user asks.
 Leave changes in the working tree; commit only when the user asks. Offer a commit only on finishing
 a step listed in a multi-step plan agreed during planning — not after a single reply or edit.
 
+## Glossary
+
+Read `agents-shared/glossary.md` when you meet an unfamiliar term (e.g. a **bolded** one in these
+instructions) or need to align terminology with the user.
+
 ## Roles
 
 Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, y`).
@@ -61,8 +66,3 @@ Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, 
 
 Read `agents-shared/triage-labels.md` before applying a triage label — it holds the canonical label
 strings.
-
-## Glossary
-
-Read `agents-shared/glossary.md` when you meet an unfamiliar term (e.g. a **bolded** one in these
-instructions) or need to align terminology with the user.
