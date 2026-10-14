@@ -5,6 +5,10 @@
   listed and the run exits 1 before any eval starts, so a typo never passes as success.
 - Run the evals of [in-progress](../in-progress.md) content instead: `./tools/evals.ps1 -InProgress`
   (combinable with `-Name`); they live in `evals/in-progress/`, never run without the switch.
+- After the run, a token usage table lists each waza eval's input, output, cache read and cache
+  write tokens and premium requests, with a total row. It comes from the `usage` waza writes to its
+  `-o` results file (a temp file the runner removes); waza's own `USAGE SUMMARY` stays in the
+  output. Script evals use no tokens and are left out.
 
 ## Requirements
 
@@ -45,3 +49,25 @@ check the skill invocations, the files the agent left, and its replies (LLM judg
   doesn't depend on what is installed.
 
 A full run consumes a lot of tokens; use `-Name` to run only the evals you changed.
+
+## Shared-instructions evals
+
+Evals of the shared instructions (`AGENTS-SHARED.md` and `agents-shared/`) have no skill. Their
+fixtures hold a strict `AGENTS.md` ("Always read AGENTS-SHARED.md in full, whatever the cost."), and
+before the run `tools/evals.ps1` copies the real shared instructions into every fixture folder that
+contains an `AGENTS.md`, so the eval tests the current text, not a stale copy. The copies are
+git-ignored and removed afterwards, also when the run fails. They are copies, not symlinks: the repo
+sets `core.symlinks=false` and waza copies fixtures into a temp workspace.
+
+- `roles` — the agent prints `ACTIVATED ROLES: x, y, z` within the first 3 lines of its reply when
+  one or several roles are assigned (listed in assigned order) and again when the set of roles
+  changes in a later turn, and prints no such line when no role is assigned. Deterministic regex
+  graders on the reply. Its Robot tasks use a Czech prompt ("Proveď instrukce níže jako robot…"):
+  complete but unusual instructions are executed literally (file graders), an ambiguous instruction
+  makes the agent ask and create nothing (file grader and LLM judge), and instructions in a fixture
+  file run as Robot while an instruction outside it keeps the agent's own judgement (LLM judge).
+- `agents-shared` — tests the shared instructions file itself: `Roles: Robot` makes the agent read
+  `agents-shared/roles.md`, and the unfamiliar glossary term **playbook** makes it read
+  `agents-shared/glossary.md` and write a list of outcome → action pairs (LLM judge, so reading the
+  glossary has an effect). The reads are checked with a `tool_constraint` grader on the agent's
+  `view` calls.

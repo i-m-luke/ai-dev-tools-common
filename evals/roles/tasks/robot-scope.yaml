@@ -1,0 +1,33 @@
+id: robot-scope
+name: Robot applies only to the file where it was assigned
+description: The instructions in the fixture file run as Robot, while an unrelated instruction in the same message outside the file is handled with the agent's own judgement, without stopping to ask.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Proveď instrukce ze souboru `instructions.md` jako robot, řiď se přitom AGENTS.md.
+    Potom ještě napiš do souboru `summary.md` krátké shrnutí toho, co jsi udělal.
+  context:
+    fixture: fixtures/robot-scope
+graders:
+  - type: file
+    name: file-instructions-and-summary-done
+    config:
+      must_exist:
+        - summary.md
+      content_patterns:
+        - path: one.txt
+          must_match:
+            - '\A\s*alpha\s*\z'
+        - path: two.txt
+          must_match:
+            - '\A\s*beta\s*\z'
+  - type: prompt
+    name: robot-only-in-file
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the conversation above, not continuing it. Check:
+        1. The agent carried out the instructions from instructions.md exactly as written.
+        2. The agent wrote the summary on its own judgement: it did not ask the user how long, what format, or what the summary should contain, and did not stop before writing it.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

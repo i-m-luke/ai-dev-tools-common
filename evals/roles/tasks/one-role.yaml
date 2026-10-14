@@ -1,0 +1,15 @@
+id: one-role
+name: Prints the line for one role
+description: With one role assigned, the reply opens with the ACTIVATED ROLES line naming that role, within its first 3 lines.
+tags:
+  - behavior
+inputs:
+  prompt: "Roles: Teacher. Explain in one sentence what a variable is."
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: text
+    name: line-near-top
+    config:
+      regex_match:
+        - '\A\s*(?:.*\n){0,2}.*ACTIVATED ROLES: Teacher[*_` ]*(?:\n|\z)'

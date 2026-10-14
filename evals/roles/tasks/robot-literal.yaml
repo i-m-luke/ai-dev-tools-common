@@ -1,0 +1,29 @@
+id: robot-literal
+name: Robot executes complete instructions literally
+description: A Czech plain-language request applies Robot, which carries out complete but unusual instructions exactly as written, without correcting typos, sorting, or improving them.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Proveď instrukce níže jako robot, řiď se přitom AGENTS.md.
+    1. Vytvoř soubor `greeting.txt` s jediným řádkem: `Helo wrold`
+    2. Vytvoř soubor `numbers.txt` s řádky v tomto pořadí: `3`, `1`, `2`
+    3. Vytvoř prázdný soubor `empty.txt`.
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: file
+    name: files-written-literally
+    config:
+      must_exist:
+        - empty.txt
+      content_patterns:
+        - path: greeting.txt
+          must_match:
+            - '\A\s*Helo wrold\s*\z'
+        - path: numbers.txt
+          must_match:
+            - '\A\s*3\s+1\s+2\s*\z'
+        - path: empty.txt
+          must_match:
+            - '\A\s*\z'

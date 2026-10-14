@@ -1,0 +1,14 @@
+name: roles
+description: Checks that the agent prints the ACTIVATED ROLES line near the top of its reply when roles are assigned or change, and not otherwise, and that the Robot role is followed only where it was assigned.
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+metrics:
+  - name: task_completion
+    weight: 1.0
+    threshold: 1.0
+tasks:
+  - "tasks/*.yaml"

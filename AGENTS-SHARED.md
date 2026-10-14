@@ -60,7 +60,8 @@ instructions) or need to align terminology with the user.
 
 ## Roles
 
-Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, y`).
+Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, y`, or in plain
+words such as "do this as a robot").
 
 ## Triage labels
 

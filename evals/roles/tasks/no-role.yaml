@@ -1,0 +1,15 @@
+id: no-role
+name: Prints no line without roles
+description: With no role assigned, the reply carries no ACTIVATED ROLES line.
+tags:
+  - behavior
+inputs:
+  prompt: "Explain in one sentence what a variable is."
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: text
+    name: no-line
+    config:
+      not_contains:
+        - "ACTIVATED ROLES"

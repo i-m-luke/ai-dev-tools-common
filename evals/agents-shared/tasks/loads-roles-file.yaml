@@ -1,0 +1,16 @@
+id: loads-roles-file
+name: Reads the roles doc when a role is assigned
+description: "Given `Roles: Robot`, the agent reads the roles doc on its own, as the shared instructions tell it to."
+tags:
+  - behavior
+inputs:
+  prompt: "Roles: Robot. Create hello.txt containing the single line: Hello"
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: tool_constraint
+    name: reads-roles-doc
+    config:
+      expect_tools:
+        - tool: "view"
+          path_pattern: 'agents-shared[\\/]roles\.md$'

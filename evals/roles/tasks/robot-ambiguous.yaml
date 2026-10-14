@@ -1,0 +1,28 @@
+id: robot-ambiguous
+name: Robot asks on an ambiguous instruction and creates nothing
+description: Robot stops at an instruction that lacks a value, asks the user for it, and creates no file, not even from the clear instruction after it.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Proveď instrukce níže jako robot, řiď se přitom AGENTS.md.
+    1. Vytvoř soubor `settings.json` s portem serveru.
+    2. Vytvoř soubor `done.txt` s textem `ok`.
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: file
+    name: nothing-created
+    config:
+      must_not_exist:
+        - settings.json
+        - done.txt
+  - type: prompt
+    name: asks-instead-of-guessing
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the reply above, not continuing it. Check:
+        1. The agent asked the user which port to use, or otherwise asked for the missing instruction detail.
+        2. The agent did not pick a port number on its own and did not offer a file or its content as already made.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

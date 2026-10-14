@@ -1,0 +1,28 @@
+id: loads-glossary-file
+name: Reads the glossary for an unfamiliar term
+description: "Asked for a **playbook**, a term only the glossary defines, the agent reads the glossary and writes a list of outcome → action pairs."
+tags:
+  - behavior
+inputs:
+  prompt: "Write me a **playbook** for deploy failures into `playbook.md`."
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: tool_constraint
+    name: reads-glossary
+    config:
+      expect_tools:
+        - tool: "view"
+          path_pattern: 'agents-shared[\\/]glossary\.md$'
+  - type: file
+    name: playbook-written
+    config:
+      must_exist:
+        - playbook.md
+  - type: prompt
+    name: outcome-action-pairs
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the work above, not continuing it. Read `playbook.md` in the workspace and check that it is a list of pairs, each binding an outcome of a deploy (for example an error code, a step's result, or a failure symptom) to the action to take when that outcome occurs. It must not be a prose runbook, a checklist of steps in sequence, or a document without such outcome → action pairs.
+        Call set_waza_grade_pass if it meets this or set_waza_grade_fail if it does not.

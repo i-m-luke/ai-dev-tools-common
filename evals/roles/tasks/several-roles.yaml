@@ -1,0 +1,15 @@
+id: several-roles
+name: Lists several roles in assigned order
+description: With several roles assigned, the ACTIVATED ROLES line lists them in the order they were assigned, within the first 3 lines.
+tags:
+  - behavior
+inputs:
+  prompt: "Roles: Teacher, Translator, Poet. Explain in one sentence what a variable is."
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: text
+    name: line-near-top
+    config:
+      regex_match:
+        - '\A\s*(?:.*\n){0,2}.*ACTIVATED ROLES: Teacher, Translator, Poet[*_` ]*(?:\n|\z)'
