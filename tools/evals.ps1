@@ -12,7 +12,8 @@ Two kinds of evals live in the repo's evals folder:
 Exits 0 when all selected evals pass, 1 otherwise.
 
 .PARAMETER Name
-Runs only the evals with these names (a script's base name or a skill eval's folder name).
+Runs only the evals with these names (a script's base name or a skill eval's folder name). Any name
+matching no eval is listed and the script exits 1 without running anything.
 
 .EXAMPLE
 ./tools/evals.ps1 -Name document-app, shallow-grill
@@ -24,14 +25,20 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $evalsDir = Join-Path $PSScriptRoot '..' 'evals'
-$evals = @(
-    @(
-        Get-ChildItem -Path $evalsDir -Filter '*.ps1' -File |
-            ForEach-Object { [pscustomobject] @{ Name = $_.BaseName; Kind = 'script'; Path = $_.FullName } }
-        Get-ChildItem -Path $evalsDir -Filter 'eval.yaml' -File -Recurse -Depth 1 |
-            ForEach-Object { [pscustomobject] @{ Name = $_.Directory.Name; Kind = 'waza'; Path = $_.FullName } }
-    ) | Where-Object { -not $Name -or $_.Name -in $Name } | Sort-Object Name
+$allEvals = @(
+    Get-ChildItem -Path $evalsDir -Filter '*.ps1' -File |
+        ForEach-Object { [pscustomobject] @{ Name = $_.BaseName; Kind = 'script'; Path = $_.FullName } }
+    Get-ChildItem -Path $evalsDir -Filter 'eval.yaml' -File -Recurse -Depth 1 |
+        ForEach-Object { [pscustomobject] @{ Name = $_.Directory.Name; Kind = 'waza'; Path = $_.FullName } }
 )
+
+$unknown = @($Name ? ($Name | Where-Object { $_ -notin $allEvals.Name }) : @())
+if ($unknown.Count) {
+    Write-Host "Unknown evals: $($unknown -join ', ')"
+    exit 1
+}
+
+$evals = @($allEvals | Where-Object { -not $Name -or $_.Name -in $Name } | Sort-Object Name)
 
 if (-not $evals) {
     Write-Host "No evals found in $evalsDir"
