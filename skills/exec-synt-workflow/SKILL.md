@@ -3,7 +3,7 @@ name: exec-synt-workflow
 description: Use when ordered to execute a workflow, or when following instructions that contain a `workflow` code block.
 ---
 
-Execute a workflow written in a fenced code block tagged `workflow`, step by step, exactly as written. It runs when the user orders it, or when the instructions you follow (e.g. another skill) contain such a block. Code or pseudocode merely discussed, in a block with another tag or none, is not a workflow.
+Execute a workflow written in a fenced code block tagged `workflow`, step by step, exactly as written. It runs when the user orders it, or when the instructions you follow (e.g. another skill) contain such a block. Code or pseudocode merely discussed, in a block with another tag or none, is not a workflow. The blocks in this file are illustrations of the syntax, tagged `text`: never execute them.
 
 A workflow may span several messages; keep executing it where it left off.
 
@@ -19,7 +19,7 @@ Indentation (4 spaces) nests steps under the `if`, `else` or `while` line above 
 
 ## Branching
 
-```workflow
+```text
 if (condition in natural language):
     steps run when the condition holds
 else:
@@ -30,7 +30,7 @@ else:
 
 ## Loops
 
-```workflow
+```text
 while (condition in natural language):
     steps repeated while the condition holds
 ```
@@ -43,7 +43,7 @@ Infinite-loop guard: if nothing the condition depends on (a user reply, a task r
 
 Reusable steps are defined as tasks under a `# TASKS` heading at the end of the block, one definition per `Name(params): body`. A task is called like a method, `Name(args)`, on a line of its own; the call runs the task's body in place, then the flow continues after the call. In the body, `{param}` stands for the argument passed for `param`.
 
-```workflow
+```text
 ZeptejSe("Co si přejete?")
 
 # TASKS
@@ -55,7 +55,7 @@ Pozdrav(jméno):
 
 A task body is either a one-line description after the colon, or an indented multi-line workflow below the definition line (`:` then nothing) with the same syntax as the main flow, which may call other tasks. Tasks have no return values.
 
-`Stop()` and `Stop("reason")` are built in. They end the whole workflow at once, from anywhere, including inside a task: run no further step, neither in the task nor in the main flow. `Stop("reason")` also tells the user the reason, verbatim; `Stop()` ends silently.
+`Stop()` and `Stop("reason")` are built in. They end the whole workflow at once, from anywhere, including inside a task: run no further step, neither in the task nor in the main flow. `Stop("reason")` also tells the user the reason, verbatim; a bare `Stop()` outputs nothing.
 
 # Execution rules
 
@@ -71,7 +71,7 @@ A workflow often spans several messages: whenever a step needs the user's reacti
 
 # Output
 
-Output only what the workflow's steps prescribe. Do not narrate the execution: no mention of conditions evaluated, branches taken or steps run, and no intro or recap. Show the execution trace or diagnostics only on an error or a `Stop`, to explain why the execution ended.
+Output only what the workflow's steps prescribe. Do not narrate the execution: no mention of conditions evaluated, branches taken or steps run, and no intro or recap. Show the execution trace or diagnostics only on an error or a `Stop("reason")`, to explain why the execution ended, and never quote a step that did not run; a bare `Stop()` outputs nothing.
 
 # Validation
 
