@@ -15,7 +15,7 @@ One step per line, run top to bottom. A step is either a quoted text or a free-t
 
 ## Nesting
 
-Indentation (4 spaces) nests steps under the `if` or `else` line above them. A nested step belongs to the nearest less-indented `if` or `else` line.
+Indentation (4 spaces) nests steps under the `if`, `else` or `while` line above them. A nested step belongs to the nearest less-indented `if`, `else` or `while` line. Branches and loops nest within each other to any depth.
 
 ## Branching
 
@@ -27,6 +27,17 @@ else:
 ```
 
 `else:` is optional and pairs with the `if` at the same indentation directly above it. Evaluate the condition from what is known in the conversation, then run only the chosen branch's steps and none of the other.
+
+## Loops
+
+```workflow
+while (condition in natural language):
+    steps repeated while the condition holds
+```
+
+Evaluate the condition before every iteration, from what is known at that moment. When it holds, run the nested steps in order, then evaluate it again; when it does not, skip the nested steps and continue with the step after the loop. If it does not hold on the first evaluation, the nested steps run zero times. There is no `else:` for a loop.
+
+Infinite-loop guard: if nothing the condition depends on (a user reply, a task result, a value the steps change) could have changed during an iteration, the loop would never end. End the whole workflow like `Stop("reason")`, telling the user that the loop could not end and why.
 
 ## Tasks and Stop
 
@@ -48,7 +59,7 @@ A task body is either a one-line description after the colon, or an indented mul
 
 # Execution rules
 
-- Run the control flow exactly as written. Never add, skip, repeat or reorder steps.
+- Run the control flow exactly as written. Never add, skip, repeat (other than as a `while` loop dictates) or reorder steps.
 - Say a quoted text verbatim: the characters between the quotes, unchanged and untranslated. A step that only quotes a text, or says it (e.g. `Say "…"`), outputs just that text.
 - Perform any other step by its meaning.
 
@@ -66,7 +77,7 @@ Output only what the workflow's steps prescribe. Do not narrate the execution: n
 
 Before the first step, check the whole workflow, including the `# TASKS` section:
 
-- Syntax: every construct is well formed (e.g. `if (…):` with parentheses and a colon, consistent indentation, task definitions as `Name(params): body`).
+- Syntax: every construct is well formed (e.g. `if (…):` and `while (…):` with parentheses and a colon, consistent indentation, task definitions as `Name(params): body`).
 - Undefined tasks: every call `Name(args)`, other than `Stop`, refers to a defined task.
 - Argument count: every call passes exactly as many arguments as the task has parameters.
 
