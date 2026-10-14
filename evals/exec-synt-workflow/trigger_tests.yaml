@@ -1,0 +1,53 @@
+skill: exec-synt-workflow
+
+should_trigger_prompts:
+  - prompt: |
+      Execute this workflow. The visitor is 25 years old.
+
+      ```workflow
+      if (The visitor is older than 18):
+          Say "Welcome in"
+      else:
+          Say "Come back when you are older"
+      ```
+  - prompt: |
+      Follow the instructions below. The weather today is rainy.
+
+      ```workflow
+      if (It is raining):
+          Say "Take an umbrella"
+      else:
+          Say "Enjoy the sun"
+      ```
+  - prompt: |
+      Run the workflow below step by step; the customer is a member.
+
+      ```workflow
+      Say "Hello"
+      if (The customer is a member):
+          Say "Your discount is 10 %"
+      ```
+    confidence: medium
+
+should_not_trigger_prompts:
+  - prompt: |
+      In one sentence, what does this pseudocode do?
+
+      ```
+      if (age > 18):
+          print("Welcome in")
+      else:
+          print("Come back later")
+      ```
+  - prompt: |
+      Rewrite this Python function to use a conditional expression:
+
+      ```python
+      def greet(age):
+          if age > 18:
+              return "Welcome in"
+          else:
+              return "Come back later"
+      ```
+  - prompt: "Explain the difference between if/else and a switch statement in one sentence."
+  - prompt: "Tell me a short joke about coffee."
