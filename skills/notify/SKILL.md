@@ -1,6 +1,6 @@
 ---
 name: notify
-description: Send the user a message. Use when asked to message or notify the user remotely.
+description: Use when asked to message or notify the user remotely.
 ---
 
 Roles: Robot — for this skill's steps only. Where no definition of Robot is available, follow the

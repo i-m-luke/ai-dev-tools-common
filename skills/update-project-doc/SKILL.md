@@ -1,6 +1,6 @@
 ---
 name: update-project-doc
-description: Update solution docs — propose wording variants and placements for each change first.
+description: Use when updating solution docs and wanting to choose the wording and placement of each change.
 disable-model-invocation: true
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: write-app-doc
-description: Write an application's UI documentation from its code.
+description: Use when documenting an application's UI, functionality and purpose from its code.
 disable-model-invocation: true
 ---
 

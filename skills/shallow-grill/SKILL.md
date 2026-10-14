@@ -1,7 +1,13 @@
 ---
 name: shallow-grill
-description: A shallow-planning interview to settle a plan or design.
+description: Use when a plan or design should be settled through a shallow-planning interview.
 disable-model-invocation: true
+metadata:
+  credits:
+    skill: grilling
+    author: Matt Pocock
+    organisation: mattpocock
+    url: https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling
 ---
 
 Run a `/grilling` session as **shallow planning**. When the `grilling` skill's instructions conflict

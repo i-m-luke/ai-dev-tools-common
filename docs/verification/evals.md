@@ -1,7 +1,7 @@
 # Evals
 
 - Run all evals: `./tools/evals.ps1`
-- Run selected evals: `./tools/evals.ps1 -Name document-app, agents-shared-symlink`
+- Run selected evals: `./tools/evals.ps1 -Name document-app, notify`
 
 ## Requirements
 
