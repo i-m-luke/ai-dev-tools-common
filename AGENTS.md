@@ -9,7 +9,23 @@ and list the doc in `docs/skills/index.md`.
 Before writing or editing a skill, read [`docs/guidelines/index.md`](docs/guidelines/index.md) for
 the skill-writing conventions.
 
-## Versioning
+## Changes
+
+## Code changes
+
+### Build
+
+Build with `dotnet build`, except `Zat.SystemTest.Toolkit.Extension` — the VSIX needs `msbuild`.
+
+### Commit subject
+
+Write the subject in format `< prefix > - < file-name >: < imperative-summary >`:
+
+- **< prefix >**: Is required. Supports one of these options: a. `Feat`: for a new capability; b. `Fix`: for a defect; c. `Change`: for reworked behaviour; d. `Dev`: for work that leaves behaviour intact (refactoring, docs, warnings, tooling)
+- **< file-name >**: Name the single edited production file; use it when the change touches that one
+  production file and the tests it drove, drop this part otherwise.
+
+### Versioning
 
 On finishing work that changes shipped plugin content (`skills/`, `agents/`), recommend a semver bump level for `version` in `.plugin/plugin.json`; apply it once the user approves. If the user declines, leave `version` unchanged and don't ask again for the same change set.
 
