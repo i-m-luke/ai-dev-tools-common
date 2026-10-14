@@ -7,6 +7,7 @@ The repository conaints agent tools (skills, agents, etc.) bundled as a plugin.
 - Installation: Install skills at once by running 'npx skills add \<floder or git repo url\>' command
 - Updating: Update the skills by 'npx skills update' command
 - Docs: [docs/skills](docs/skills/index.md)
+- In-progress (not shipped) tools: [docs/in-progress.md](docs/in-progress.md)
 
 ## AGENTS-SHARED
 

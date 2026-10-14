@@ -1,7 +1,10 @@
-param([string] $SkillsRoot = (Join-Path $PSScriptRoot '..' '..' 'skills'))
+param([string[]] $SkillsRoot = @(
+        Join-Path $PSScriptRoot '..' '..' 'skills'
+        Join-Path $PSScriptRoot '..' '..' 'in-progress' 'skills'
+    ))
 
 BeforeDiscovery {
-    $skills = Get-ChildItem -LiteralPath $SkillsRoot -Directory |
+    $skills = Get-ChildItem -LiteralPath ($SkillsRoot | Where-Object { Test-Path -LiteralPath $_ }) -Directory |
         Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') } |
         ForEach-Object { @{ name = $_.Name; path = Join-Path $_.FullName 'SKILL.md' } }
 }

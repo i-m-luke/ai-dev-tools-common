@@ -3,6 +3,8 @@
 - Run all evals: `./tools/evals.ps1`
 - Run selected evals: `./tools/evals.ps1 -Name document-app, notify` — a name matching no eval is
   listed and the run exits 1 before any eval starts, so a typo never passes as success.
+- Run the evals of [in-progress](../in-progress.md) content instead: `./tools/evals.ps1 -InProgress`
+  (combinable with `-Name`); they live in `evals/in-progress/`, never run without the switch.
 
 ## Requirements
 

@@ -9,22 +9,32 @@ Two kinds of evals live in the repo's evals folder:
 - `evals/<skill>/eval.yaml` — skill evals, run by waza (https://github.com/microsoft/waza). Each
   runs from its own folder, because waza also loads skills from the working directory and would
   otherwise pick up the eval stubs of other skills.
+Evals of in-progress content live in `evals/in-progress/` with the same layout and run only with
+-InProgress.
 Exits 0 when all selected evals pass, 1 otherwise.
 
 .PARAMETER Name
 Runs only the evals with these names (a script's base name or a skill eval's folder name). Any name
 matching no eval is listed and the script exits 1 without running anything.
 
+.PARAMETER InProgress
+Runs the in-progress evals instead of the production ones; -Name then picks among them.
+
 .EXAMPLE
 ./tools/evals.ps1 -Name document-app, shallow-grill
+
+.EXAMPLE
+./tools/evals.ps1 -InProgress
 #>
 param(
-    [string[]] $Name
+    [string[]] $Name,
+    [switch] $InProgress
 )
 
 $ErrorActionPreference = 'Stop'
 
 $evalsDir = Join-Path $PSScriptRoot '..' 'evals'
+if ($InProgress) { $evalsDir = Join-Path $evalsDir 'in-progress' }
 $allEvals = @(
     Get-ChildItem -Path $evalsDir -Filter '*.ps1' -File |
         ForEach-Object { [pscustomobject] @{ Name = $_.BaseName; Kind = 'script'; Path = $_.FullName } }

@@ -10,7 +10,7 @@ config:
   # Hide the skill body so the agent has to load the skill itself, as in real use.
   inject_skill_body: false
   skill_directories:
-    - ../../skills
+    - ../../../in-progress/skills
 metrics:
   - name: task_completion
     weight: 0.5
