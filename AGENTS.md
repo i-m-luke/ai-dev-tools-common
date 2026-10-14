@@ -6,6 +6,9 @@ A skill folder holds only what the invoking agent needs; an agent may read any f
 notes for humans (maintainers, setup) in `docs/skills/<skill>.md`, never a README in the skill folder,
 and list the doc in `docs/skills/index.md`.
 
+Before writing or editing a skill, read [`docs/guidelines/index.md`](docs/guidelines/index.md) for
+the skill-writing conventions.
+
 ## Versioning
 
 On finishing work that changes shipped plugin content (`skills/`, `agents/`), recommend a semver bump level for `version` in `.plugin/plugin.json`; apply it once the user approves. If the user declines, leave `version` unchanged and don't ask again for the same change set.

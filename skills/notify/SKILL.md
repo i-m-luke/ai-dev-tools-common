@@ -11,13 +11,17 @@ Send the user a Telegram message each time their instructions call for one — e
 work, a question, or a blocker. A standing request holds until the user says they are back or asks
 you to stop notifying; ordinary task replies do not count as being back.
 
-1. Run `pwsh -NoProfile -File <this skill's folder>/scripts/notify.ps1 -Message "<what you report>"
-   -WorkingFolderName "<repository or working folder name>"`; use `powershell` in place of `pwsh`
-   when pwsh is missing. If neither is available, tell the user the notification could not be sent
-   because PowerShell is not installed, and end the skill.
-2. Act on the script's exit code by the playbook below, then end the skill.
+## Steps
 
-# Exit-code playbook
+### 1. Run the script
+
+Run `pwsh -NoProfile -File <this skill's folder>/scripts/notify.ps1 -Message "<what you report>" -WorkingFolderName "<repository or working folder name>"`;
+use `powershell` in place of `pwsh` when pwsh is missing. If neither is available, tell the user
+the notification could not be sent because PowerShell is not installed, and end the skill.
+
+### 2. Act on the exit code
+
+Act on the script's exit code by this playbook:
 
 - `0` — none; the message was sent.
 - `*` — tell the user, in the conversation's language, the script's stderr, or the error when the

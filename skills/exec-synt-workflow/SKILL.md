@@ -44,13 +44,13 @@ Infinite-loop guard: if nothing the condition depends on (a user reply, a task r
 Reusable steps are defined as tasks under a `# TASKS` heading at the end of the block, one definition per `Name(params): body`. A task is called like a method, `Name(args)`, on a line of its own; the call runs the task's body in place, then the flow continues after the call. In the body, `{param}` stands for the argument passed for `param`.
 
 ```text
-ZeptejSe("Co si přejete?")
+AskUser("What would you like?")
 
 # TASKS
-ZeptejSe(otázka): Zeptej se "{otázka}"
-Pozdrav(jméno):
-    Řekni "Ahoj {jméno}"
-    ZeptejSe("Jak se máš?")
+AskUser(question): Ask "{question}"
+Greet(name):
+    Say "Hello {name}"
+    AskUser("How are you?")
 ```
 
 A task body is either a one-line description after the colon, or an indented multi-line workflow below the definition line (`:` then nothing) with the same syntax as the main flow, which may call other tasks. Tasks have no return values.
