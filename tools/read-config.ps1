@@ -8,12 +8,12 @@ Returns the parsed file as an object (with no properties when the file is empty)
 omits read as $null. Throws when the file is missing or is not valid JSON.
 
 .EXAMPLE
-$config = & (Join-Path $PSScriptRoot 'utils' 'read-config.ps1')
+$config = & (Join-Path $PSScriptRoot 'read-config.ps1')
 #>
 
 $ErrorActionPreference = 'Stop'
 
-$configPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..' '..' 'evals.config.json'))
+$configPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..' 'evals.config.json'))
 if (-not (Test-Path -Path $configPath -PathType Leaf)) {
     throw "Missing $configPath; create it (it may be empty, see docs/verification/evals.md)."
 }

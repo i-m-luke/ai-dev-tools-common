@@ -20,11 +20,11 @@ accounts or `GH_TOKEN` is set for another one:
 { "githubUser": "your-github-login" }
 ```
 
-Evals read it through `evals/utils/read-config.ps1`, which returns the file's values and stops the
+Evals read it through `tools/read-config.ps1`, which returns the file's values and stops the
 eval when the file is missing or not valid JSON. With `githubUser` set, an eval takes the account's
 token from GitHub CLI (`gh`, the account must be logged in via `gh auth login`) and hands it to
 Copilot CLI (via `COPILOT_GITHUB_TOKEN`, for the eval's process only; see
-`evals/utils/use-copilot-account.ps1`); without it, Copilot CLI picks its credentials as usual. A
+`tools/use-copilot-account.ps1`); without it, Copilot CLI picks its credentials as usual. A
 `githubUser` not logged in to `gh` stops the eval too.
 
 ## Skill evals

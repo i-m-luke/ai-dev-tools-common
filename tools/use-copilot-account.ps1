@@ -10,7 +10,7 @@ bundled Copilot CLI uses the account too. Does nothing when the config names no 
 when the account is not logged in to GitHub CLI.
 
 .EXAMPLE
-& (Join-Path $PSScriptRoot 'utils' 'use-copilot-account.ps1')
+& (Join-Path $PSScriptRoot 'use-copilot-account.ps1')
 #>
 
 $ErrorActionPreference = 'Stop'

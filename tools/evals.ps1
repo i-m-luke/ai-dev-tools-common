@@ -43,7 +43,7 @@ if ($evals.Kind -contains 'waza') {
     $defaultWaza = Join-Path $env:LOCALAPPDATA 'Microsoft' 'Waza' 'waza.exe'
     if (-not $waza -and (Test-Path $defaultWaza)) { $waza = $defaultWaza }
     if (-not $waza) { throw 'waza not found; install it (see docs/verification/evals.md).' }
-    & (Join-Path $evalsDir 'utils' 'use-copilot-account.ps1')
+    & (Join-Path $PSScriptRoot 'use-copilot-account.ps1')
 }
 
 $failed = foreach ($eval in $evals) {
