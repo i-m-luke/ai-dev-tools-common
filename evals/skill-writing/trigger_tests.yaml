@@ -1,0 +1,12 @@
+skill: skill-writing
+
+should_trigger_prompts:
+  - prompt: "Create a skill that formats SQL files in the repo."
+  - prompt: "Edit the description of the notify skill so it triggers more reliably."
+  - prompt: "Add a script to my changelog skill that collects merged PR titles."
+
+should_not_trigger_prompts:
+  - prompt: "Write a PowerShell script that renames all .txt files in a folder to .md."
+  - prompt: "Summarise what the README of this repo says."
+    confidence: medium
+  - prompt: "Tell me a short joke about coffee."

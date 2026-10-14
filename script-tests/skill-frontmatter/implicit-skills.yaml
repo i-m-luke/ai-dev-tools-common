@@ -1,0 +1,4 @@
+# Convention skills approved to stay implicit (see docs/guidelines/skills.md#invocation).
+# Each entry maps the skill name to the reason it loads without being named.
+skill-writing: Skill-writing convention — applies to every task that creates or edits a skill.
+vertical-slice-architecture: Architecture convention — applies to every task that places files or shapes folders.

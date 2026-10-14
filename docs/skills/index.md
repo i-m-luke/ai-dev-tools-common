@@ -7,4 +7,5 @@ skill folders, so an agent can't load them.
 - [document-app](document-app.md) — editing guidelines for the app UI documentation skill.
 - [exec-synt-workflow](exec-synt-workflow.md) — *(in progress)* how to write a workflow block for the skill that executes it strictly.
 - [notify](notify.md) — setting up the Telegram bot the skill messages through.
+- [skill-writing](skill-writing.md) — editing guidelines for the skill-writing conventions skill.
 - [vertical-slice-architecture](vertical-slice-architecture.md) — editing guidelines for the feature-slicing skill.

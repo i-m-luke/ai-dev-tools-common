@@ -1,0 +1,15 @@
+id: runs-writing-for-agents
+name: Loads the conventions and writing-for-agents
+description: Asked to create a skill, the agent loads skill-writing on its own and runs writing-for-agents as it instructs.
+tags:
+  - trigger
+inputs:
+  prompt: "Create a skill named greet in skills/greet that greets the user by name."
+graders:
+  - type: skill_invocation
+    name: loads-skills
+    config:
+      mode: any_order
+      required_skills:
+        - skill-writing
+        - writing-for-agents

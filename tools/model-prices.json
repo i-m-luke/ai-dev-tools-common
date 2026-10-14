@@ -1,0 +1,11 @@
+{
+  "_source": "https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing (USD per 1M tokens, default tier; 1 AI credit = $0.01)",
+  "claude-haiku-4.5": { "input": 1.00, "cachedInput": 0.10, "cacheWrite": 1.25, "output": 5.00 },
+  "claude-haiku-5.5": { "input": 0.10, "cachedInput": 0.01, "cacheWrite": 0.125, "output": 0.50 },
+  "claude-sonnet-4.6": { "input": 3.00, "cachedInput": 0.30, "cacheWrite": 3.75, "output": 15.00 },
+  "claude-sonnet-5": { "input": 2.00, "cachedInput": 0.20, "cacheWrite": 2.50, "output": 10.00 },
+  "claude-sonnet-5.5": { "input": 2.00, "cachedInput": 0.10, "cacheWrite": 2.50, "output": 10.00 },
+  "claude-opus-4.8": { "input": 5.00, "cachedInput": 0.50, "cacheWrite": 6.25, "output": 25.00 },
+  "claude-opus-5": { "input": 5.00, "cachedInput": 0.50, "cacheWrite": 6.25, "output": 25.00 },
+  "claude-opus-5.5": { "input": 4.00, "cachedInput": 0.20, "cacheWrite": 5.00, "output": 20.00 }
+}

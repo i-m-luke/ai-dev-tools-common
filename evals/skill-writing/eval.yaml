@@ -1,0 +1,24 @@
+name: skill-writing
+description: Checks that the agent reaches for skill-writing on its own when it writes a skill, and runs writing-for-agents with it.
+skill: skill-writing
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+  # Hide the skill body so the agent has to load the skill itself, as in real use.
+  inject_skill_body: false
+  skill_directories:
+    - ../../skills
+    # `writing-for-agents` is an external skill; a local stub keeps the eval independent of what is installed.
+    - ../_stub-skills
+metrics:
+  - name: task_completion
+    weight: 0.5
+    threshold: 1.0
+  - name: trigger_accuracy
+    weight: 0.5
+    threshold: 0.8
+tasks:
+  - "tasks/*.yaml"

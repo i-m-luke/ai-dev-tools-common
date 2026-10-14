@@ -20,15 +20,22 @@ matching no eval is listed and the script exits 1 without running anything.
 .PARAMETER InProgress
 Runs the in-progress evals instead of the production ones; -Name then picks among them.
 
+.PARAMETER Model
+Model the skill evals run on, overriding the `model` in each eval.yaml. Defaults to claude-sonnet-5.5.
+
 .EXAMPLE
 ./tools/evals.ps1 -Name document-app, shallow-grill
 
 .EXAMPLE
 ./tools/evals.ps1 -InProgress
+
+.EXAMPLE
+./tools/evals.ps1 -Model claude-sonnet-5
 #>
 param(
     [string[]] $Name,
-    [switch] $InProgress
+    [switch] $InProgress,
+    [string] $Model = 'claude-sonnet-5.5'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -74,6 +81,23 @@ function Get-SharedInstructionFixtures([string] $EvalDir) {
     }
 }
 $usageRows = [System.Collections.Generic.List[object]]::new()
+$results = [System.Collections.Generic.List[object]]::new()
+$startedAt = Get-Date
+$modelPrices = Get-Content (Join-Path $PSScriptRoot 'model-prices.json') -Raw | ConvertFrom-Json
+
+# Estimated GitHub AI credits (1 credit = $0.01) from token counts; $null when the model has no price.
+# waza's input_tokens include the cache read and write tokens, so only the rest is billed as input.
+function Get-EstimatedCredits([string] $ModelName, $Usage) {
+    $price = $modelPrices.$ModelName
+    if (-not $price) { return $null }
+    $uncachedInput = [math]::Max(0, $Usage.input_tokens - $Usage.cache_read_tokens - $Usage.cache_write_tokens)
+    ($uncachedInput * $price.input + $Usage.output_tokens * $price.output +
+        $Usage.cache_read_tokens * $price.cachedInput + $Usage.cache_write_tokens * $price.cacheWrite) / 1e6 * 100
+}
+
+# waza prints UTF-8 (box-drawing characters, check marks); decode it as such whatever the console code page.
+$originalOutputEncoding = [Console]::OutputEncoding
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 
 $failed = foreach ($eval in $evals) {
     Write-Host "=== $($eval.Name)"
@@ -91,7 +115,7 @@ $failed = foreach ($eval in $evals) {
                     Copy-Item (Join-Path $repoRoot $item) $fixture.FullName -Recurse -Force
                 }
             }
-            & $waza run eval.yaml --no-update-check -o $usageFile | Out-Host
+            & $waza run eval.yaml --model $Model --no-update-check -o $usageFile | Out-Host
         }
         finally {
             Pop-Location
@@ -109,11 +133,13 @@ $failed = foreach ($eval in $evals) {
                         Output             = [long] $usage.output_tokens
                         'Cache read'       = [long] $usage.cache_read_tokens
                         'Cache write'      = [long] $usage.cache_write_tokens
+                        'Est. credits'     = Get-EstimatedCredits $Model $usage
                         'Premium requests' = [double] $usage.premium_requests
                     })
             }
         }
     }
+    $results.Add([pscustomobject] @{ Eval = $eval.Name; Kind = $eval.Kind; ExitCode = $LASTEXITCODE })
     if ($LASTEXITCODE) {
         Write-Host "--- $($eval.Name): FAIL (exit $LASTEXITCODE)"
         $eval.Name
@@ -122,19 +148,59 @@ $failed = foreach ($eval in $evals) {
 }
 
 $failed = @($failed)
+[Console]::OutputEncoding = $originalOutputEncoding
+$total = $null
 if ($usageRows.Count) {
-    $columns = 'Input', 'Output', 'Cache read', 'Cache write', 'Premium requests'
+    $columns = 'Input', 'Output', 'Cache read', 'Cache write', 'Est. credits', 'Premium requests'
+    $decimalFormats = @{ 'Est. credits' = '0.#'; 'Premium requests' = '0.##' }
     $total = [pscustomobject] @{ Eval = 'Total' }
     foreach ($column in $columns) {
         $total | Add-Member -NotePropertyName $column -NotePropertyValue ($usageRows | Measure-Object $column -Sum).Sum
     }
     $format = @(@{ Expression = 'Eval' }) + @($columns | ForEach-Object {
-            @{ Expression = [string] $_; FormatString = $_ -eq 'Premium requests' ? '0.##' : 'N0'; Alignment = 'Right' }
+            @{ Expression = [string] $_; FormatString = $decimalFormats[$_] ?? 'N0'; Alignment = 'Right' }
         })
     Write-Host 'Token usage (waza evals):'
     $table = @($usageRows) + $total | Format-Table -Property $format -AutoSize | Out-String
     Write-Host $table.TrimEnd()
+    Write-Host 'Est. credits: GitHub AI credits estimated from tokens and tools/model-prices.json (blank = model has no price). Premium requests: legacy unit, replaced by AI credits on 2026-06-01.'
 }
 Write-Host "Passed $($evals.Count - $failed.Count)/$($evals.Count) evals"
 if ($failed) { Write-Host "Failed: $($failed -join ', ')" }
+
+# Markdown report in .artifacts/, the repo's file exchange with the user (git-ignored).
+$reportDir = Join-Path $repoRoot '.artifacts'
+New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
+$reportPath = Join-Path $reportDir "evals-report-$($startedAt.ToString('yyyyMMdd-HHmmss')).md"
+$report = [System.Collections.Generic.List[string]]::new()
+$report.Add('# Evals report')
+$report.Add('')
+$report.Add("- Started: $($startedAt.ToString('yyyy-MM-dd HH:mm:ss'))")
+$report.Add("- Duration: $(((Get-Date) - $startedAt).ToString('hh\:mm\:ss'))")
+$report.Add("- Scope: $($InProgress ? 'in-progress' : 'production') evals")
+$report.Add("- Model (skill evals): ``$Model``")
+$report.Add("- Result: $($failed ? 'FAIL' : 'PASS') ($($evals.Count - $failed.Count)/$($evals.Count) passed)")
+$report.Add('')
+$report.Add('## Evals')
+$report.Add('')
+$report.Add('| Eval | Kind | Result |')
+$report.Add('|---|---|---|')
+foreach ($result in $results) {
+    $report.Add("| $($result.Eval) | $($result.Kind) | $($result.ExitCode ? "FAIL (exit $($result.ExitCode))" : 'PASS') |")
+}
+if ($usageRows.Count) {
+    $report.Add('')
+    $report.Add('## Token usage (waza evals)')
+    $report.Add('')
+    $report.Add('| Eval | Input | Output | Cache read | Cache write | Est. credits | Premium requests |')
+    $report.Add('|---|--:|--:|--:|--:|--:|--:|')
+    foreach ($row in @($usageRows) + $total) {
+        $credits = $null -eq $row.'Est. credits' ? '' : $row.'Est. credits'.ToString('0.#')
+        $report.Add("| $($row.Eval) | $($row.Input.ToString('N0')) | $($row.Output.ToString('N0')) | $($row.'Cache read'.ToString('N0')) | $($row.'Cache write'.ToString('N0')) | $credits | $($row.'Premium requests'.ToString('0.##')) |")
+    }
+    $report.Add('')
+    $report.Add('Est. credits: GitHub AI credits estimated from tokens and `tools/model-prices.json` (blank = model has no price).')
+}
+$report | Set-Content -Path $reportPath -Encoding utf8
+Write-Host "Report: $((Resolve-Path $reportPath).Path)"
 exit ($failed ? 1 : 0)

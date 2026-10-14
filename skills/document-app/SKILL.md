@@ -18,7 +18,7 @@ Derive every description from the code, so the document reports what the app doe
 
 ## Lay out the document
 
-Scaffold a new document from [`references/TEMPLATE.md`](references/TEMPLATE.md) and lay it out as this sequence of chapters:
+Scaffold a new document from [`assets/TEMPLATE.md`](assets/TEMPLATE.md) and lay it out as this sequence of chapters:
 
 - **Introduction** — what this document covers.
 - **About the application** — what the app is for and how work reaches it.
@@ -62,7 +62,7 @@ When the documentation looks complete, propose to the user a final pass over the
 
 ## Markdown format
 
-[`references/TEMPLATE.md`](references/TEMPLATE.md) carries the Markdown shape — title, TOC markers, anchors, image tags. Beyond what it shows:
+[`assets/TEMPLATE.md`](assets/TEMPLATE.md) carries the Markdown shape — title, TOC markers, anchors, image tags. Beyond what it shows:
 
 - Write the headings and the prose in the language the user asked for, and keep every anchor ASCII — lowercase, hyphenated, diacritics stripped — so links stay stable.
 - Keep the table of contents mirroring the heading hierarchy as you add chapters.

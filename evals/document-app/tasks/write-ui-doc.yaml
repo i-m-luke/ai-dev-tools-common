@@ -20,7 +20,7 @@ graders:
       content_patterns:
         - path: docs/notes-app.md
           must_match:
-            # TOC markers from references/TEMPLATE.md
+            # TOC markers from assets/TEMPLATE.md
             - "<!--TOC-->"
             # screen parts keyed to the screenshot
             - "(?i)\\(part a\\)"

@@ -55,15 +55,15 @@ a step listed in a multi-step plan agreed during planning — not after a single
 
 ## Glossary
 
-Read `agents-shared/glossary.md` when you meet an unfamiliar term (e.g. a **bolded** one in these
+Read [glossary.md](agents-shared/glossary.md) when you meet an unfamiliar term (e.g. a **bolded** one in these
 instructions) or need to align terminology with the user.
 
 ## Roles
 
-Read `agents-shared/roles.md` when the user assigns you a role (e.g. `Roles: x, y`, or in plain
+Read [roles.md](agents-shared/roles.md) when the user assigns you a role (e.g. `Roles: x, y`, or in plain
 words such as "do this as a robot").
 
 ## Triage labels
 
-Read `agents-shared/triage-labels.md` before applying a triage label — it holds the canonical label
+Read [triage-labels.md](agents-shared/triage-labels.md) before applying a triage label — it holds the canonical label
 strings.

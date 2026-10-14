@@ -3,12 +3,25 @@
 - Run all evals: `./tools/evals.ps1`
 - Run selected evals: `./tools/evals.ps1 -Name document-app, notify` — a name matching no eval is
   listed and the run exits 1 before any eval starts, so a typo never passes as success.
+- Pick the model the skill evals run on: `./tools/evals.ps1 -Model claude-sonnet-5` (default
+  `claude-sonnet-5.5`; overrides the `model` in each `eval.yaml`).
 - Run the evals of [in-progress](../in-progress.md) content instead: `./tools/evals.ps1 -InProgress`
   (combinable with `-Name`); they live in `evals/in-progress/`, never run without the switch.
+- After the run, a Markdown report is written to `.artifacts/evals-report-<timestamp>.md`
+  (git-ignored): the model, scope, duration, per-eval PASS/FAIL and the token usage table below. No
+  report when the run stops early (unknown eval name, no evals).
 - After the run, a token usage table lists each waza eval's input, output, cache read and cache
-  write tokens and premium requests, with a total row. It comes from the `usage` waza writes to its
-  `-o` results file (a temp file the runner removes); waza's own `USAGE SUMMARY` stays in the
-  output. Script evals use no tokens and are left out.
+  write tokens, estimated AI credits and premium requests, with a total row. It comes from the
+  `usage` waza writes to its `-o` results file (a temp file the runner removes); waza's own
+  `USAGE SUMMARY` stays in the output. Script evals use no tokens and are left out.
+  - *Est. credits* is computed from the tokens and the run's model price in
+    `tools/model-prices.json` (USD per 1M tokens from GitHub's
+    [models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing);
+    1 credit = $0.01); waza's input tokens include the cache ones, so only the remainder is priced
+    as input. It is an estimate: the real bill is on github.com. A model missing from the
+    price file leaves the cell blank and out of the total; add its prices to use it.
+  - *Premium requests* is a legacy unit: GitHub replaced it with AI credits on 2026-06-01. waza
+    still reports it, so it stays for comparison only.
 
 ## Requirements
 

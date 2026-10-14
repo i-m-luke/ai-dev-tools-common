@@ -9,13 +9,13 @@ needs), so an agent can't load them.
 This skill is the shared source of truth for user-invoked wrappers that run it. An agent can only reach a
 skill that carries a `description`: with `disable-model-invocation: true` the skill
 loses its description, and nothing but a human typing its name can invoke it. It is still explicit by
-design, so its description holds only its triggers (see [Guidelines](../guidelines/index.md#skills-explicit-by-design)).
+design, so its description holds only its triggers (see [`skill-writing`](../../skills/skill-writing/SKILL.md#invocation)).
 
 ## Editing guidelines
 
 ### Keep the reference files as the source of truth
 
-[`references/TEMPLATE.md`](../../skills/document-app/references/TEMPLATE.md) is the single source of truth for the
+[`assets/TEMPLATE.md`](../../skills/document-app/assets/TEMPLATE.md) is the single source of truth for the
 document's Markdown shape — title, TOC markers, anchors, image tags — and
 [`references/TERMS.md`](../../skills/document-app/references/TERMS.md) for the wording of UI element names. `SKILL.md`
 states only the rules those files cannot show, so a shape change is an edit to the template,

@@ -6,8 +6,8 @@ A skill folder holds only what the invoking agent needs; an agent may read any f
 notes for humans (maintainers, setup) in `docs/skills/<skill>.md`, never a README in the skill folder,
 and list the doc in `docs/skills/index.md`.
 
-Before writing or editing a skill, read [`docs/guidelines/index.md`](docs/guidelines/index.md) for
-the skill-writing conventions.
+Before writing or editing a skill, run `/skill-writing`, then read
+[`docs/guidelines/skills.md`](docs/guidelines/skills.md) for this repo's additions.
 
 ## Changes
 
