@@ -28,7 +28,7 @@ New-Item -ItemType SymbolicLink -Path ~/.copilot/copilot-instructions.md -Target
 
 Two kinds of checks verify the repo:
 
-- [Script tests](docs/verification/script-tests.md): Pester tests of the scripts the skills ship. Fast and
-  free (no token consumption), run them whenever you change a script.
+- [Script tests](docs/verification/script-tests.md): Pester tests of the scripts the skills ship and of every
+  skill's frontmatter. Fast and free (no token consumption), run them whenever you change a script or a skill.
 - [Evals](docs/verification/evals.md): run Copilot CLI against the skills and agent instructions and grade its
   behaviour. They consume tokens, so run only the evals for what you changed.

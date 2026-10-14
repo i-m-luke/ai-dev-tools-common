@@ -4,7 +4,7 @@
 
 A skill folder holds only what the invoking agent needs; an agent may read any file in it. Put
 notes for humans (maintainers, setup) in `docs/skills/<skill>.md`, never a README in the skill folder,
-and list the doc in `docs/skills/index.md`.
+and list the doc in `docs/skills/index.md`. Write a skill's frontmatter per `docs/guidelines/index.md`.
 
 ## Versioning
 
