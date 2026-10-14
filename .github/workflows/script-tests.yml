@@ -1,0 +1,25 @@
+# Runs the token-free script tests (never waza evals) on every push and pull request.
+name: Script tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  script-tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install test modules
+        shell: pwsh
+        run: |
+          Install-Module Pester -Scope CurrentUser -MinimumVersion 5.0 -Force -SkipPublisherCheck
+          Install-Module powershell-yaml -Scope CurrentUser -Force
+
+      - name: Run script tests
+        shell: pwsh
+        run: pwsh -NoProfile -File tools/script-tests.ps1

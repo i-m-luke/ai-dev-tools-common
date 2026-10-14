@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks the commit when a script test fails (see docs/verification/script-tests.md).
+# Git exports repo-local variables (e.g. GIT_DIR) to hooks; clear them so tests that create their own repos are unaffected.
+unset $(git rev-parse --local-env-vars)
+exec pwsh -NoProfile -File tools/script-tests.ps1
