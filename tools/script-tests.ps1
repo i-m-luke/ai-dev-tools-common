@@ -18,6 +18,10 @@ if (-not (Get-Module -ListAvailable Pester | Where-Object Version -GE '5.0')) {
 }
 Import-Module Pester -MinimumVersion 5.0
 
+if (-not (Get-Module -ListAvailable powershell-yaml)) {
+    throw 'powershell-yaml not found; install it (see docs/verification/script-tests.md).'
+}
+
 $config = New-PesterConfiguration
 $config.Run.Path = Join-Path $PSScriptRoot '..' 'script-tests'
 $config.Run.PassThru = $true
