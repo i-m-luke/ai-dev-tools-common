@@ -1,0 +1,37 @@
+id: conditions
+name: Takes the right branch of an if/else
+description: Given a workflow with nested if/else and all needed values, the agent loads the skill on its own, takes the right branch, says quoted text verbatim and does nothing from the other branches.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Execute this workflow. The visitor is 25 years old and wants to order a coffee.
+
+    ```workflow
+    if (Věk návštěvníka je vyšší než 18):
+        Řekni "Můžeš vstoupit"
+        if (Návštěvník si objedná):
+            Řekni "Jedna káva, hned to bude"
+        else:
+            Zeptej se "Co si přejete?"
+    else:
+        Slušně oznam "Nemůžeš vstoupit"
+    ```
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - exec-synt-workflow
+  - type: prompt
+    name: follows-workflow
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the agent's replies above, not continuing the work. The workflow had a visitor aged 25 who wants to order a coffee, so the correct path is: say "Můžeš vstoupit", then say "Jedna káva, hned to bude". Check:
+        1. The reply contains the exact text "Můžeš vstoupit".
+        2. The reply contains the exact text "Jedna káva, hned to bude".
+        3. The reply contains nothing from the skipped branches: no "Nemůžeš vstoupit" (or any other refusal to let the visitor in) and no question "Co si přejete?".
+        4. The reply does not narrate the execution: no explanation of which condition was evaluated or which branch was taken, no list of steps; only what the workflow prescribes.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

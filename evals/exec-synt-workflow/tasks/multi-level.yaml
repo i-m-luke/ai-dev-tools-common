@@ -1,0 +1,53 @@
+id: multi-level
+name: Follows a multi-level workflow with nested if in a while and tasks calling tasks
+description: Given a workflow with an if/else nested inside a while loop and parameterised tasks that call other tasks, the agent loads the skill on its own and follows the whole flow exactly, with the right branch, arguments and output order for every item.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Execute this workflow. The queue holds four orders, in this order (price, club member):
+    káva (80 Kč, není člen), dort (250 Kč, je člen), řízek (300 Kč, není člen), čaj (40 Kč, je člen).
+
+    ```workflow
+    Řekni "Otevíráme pokladnu"
+    while (Ve frontě zbývá nějaká objednávka):
+        if (Cena první objednávky ve frontě je vyšší než 100 Kč):
+            if (Zákazník první objednávky je členem klubu):
+                Uctuj("první objednávka ve frontě", "sleva 10 %")
+            else:
+                Uctuj("první objednávka ve frontě", "plná cena")
+        else:
+            Uctuj("první objednávka ve frontě", "plná cena")
+        Odeber první objednávku z fronty
+    Řekni "Pokladna uzavřena"
+
+    # TASKS
+    Uctuj(objednávka, cena):
+        Oznam("{objednávka}")
+        Řekni "Cena: {cena}"
+    Oznam(objednávka): Řekni "Zpracovávám {objednávka}"
+    ```
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - exec-synt-workflow
+  - type: prompt
+    name: follows-full-flow
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the agent's replies above, not continuing the work. The queue holds káva (80 Kč, not a member), dort (250 Kč, member), řízek (300 Kč, not a member), čaj (40 Kč, member). The correct run, in this order: say "Otevíráme pokladnu"; then one loop iteration per order, each saying "Zpracovávám <order>" (the task Oznam, called from the task Uctuj) followed by "Cena: <price>":
+        - káva: "Cena: plná cena" (price not above 100 Kč),
+        - dort: "Cena: sleva 10 %" (above 100 Kč and a member),
+        - řízek: "Cena: plná cena" (above 100 Kč, not a member),
+        - čaj: "Cena: plná cena" (price not above 100 Kč, so the member check is not applied);
+        then, with the queue empty, say "Pokladna uzavřena". Check:
+        1. The reply contains the exact text "Otevíráme pokladnu" before any "Zpracovávám …" line.
+        2. The orders are processed in the queue order káva, dort, řízek, čaj, each exactly once (an order's wording may differ slightly, e.g. "první objednávka ve frontě" replaced by its name, but no order is skipped, repeated or reordered, and there is no fifth iteration).
+        3. For each order the "Zpracovávám …" line comes before its "Cena: …" line, and the cena of each order matches the list above (only dort gets "sleva 10 %", the other three "plná cena").
+        4. "Pokladna uzavřena" appears exactly once, after the last order's "Cena: …" line.
+        5. The reply does not narrate the execution: no explanation of conditions, branches, tasks or loop iterations, no list of steps; only what the workflow prescribes.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

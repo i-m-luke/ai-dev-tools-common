@@ -1,0 +1,38 @@
+id: while
+name: Repeats a while loop the right number of times and exits
+description: Given a workflow with a while loop over a list from the prompt, the agent loads the skill on its own, iterates once per item, in order, then exits the loop and continues after it.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Execute this workflow. The queue holds three items: jablko, hruška, švestka.
+
+    ```workflow
+    Řekni "Začínám"
+    while (Ve frontě zbývá nějaká položka):
+        Zpracuj("první položka ve frontě")
+        Odeber první položku z fronty
+    Řekni "Fronta je prázdná"
+
+    # TASKS
+    Zpracuj(položka): Řekni "Zpracovávám {položka}"
+    ```
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - exec-synt-workflow
+  - type: prompt
+    name: loops-and-exits
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the agent's replies above, not continuing the work. The queue holds jablko, hruška, švestka, so the correct run is: say "Začínám", then run the loop body exactly three times, saying "Zpracovávám jablko", "Zpracovávám hruška", "Zpracovávám švestka" in this order, then, with the queue empty, leave the loop and say "Fronta je prázdná". Check:
+        1. The reply contains the exact text "Začínám".
+        2. The reply says "Zpracovávám jablko", "Zpracovávám hruška" and "Zpracovávám švestka", each exactly once and in this order (the item itself may be the only difference in wording; an item must not be processed twice or skipped).
+        3. No fourth "Zpracovávám …" line appears (no extra iteration after the queue is empty).
+        4. "Fronta je prázdná" appears exactly once and after the third "Zpracovávám …" line.
+        5. The reply does not narrate the execution: no explanation of the loop condition, iteration counts or removed items, no list of steps; only what the workflow prescribes.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Execute Workflow"
+  short_description: "Execute a workflow code block strictly"
