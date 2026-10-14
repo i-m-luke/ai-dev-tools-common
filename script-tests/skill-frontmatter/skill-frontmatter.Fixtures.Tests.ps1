@@ -26,6 +26,7 @@ BeforeAll {
 
     $skillsRoot = Join-Path $TestDrive 'skills'
     New-Skill $skillsRoot 'valid' "name: valid`ndescription: Use when testing a valid skill."
+    New-Skill $skillsRoot 'valid-only' "name: valid-only`ndescription: Use ONLY when testing a valid explicit-by-design skill."
     New-Skill $skillsRoot 'invalid-yaml' "name: invalid-yaml`ndescription: Use when testing: an unquoted colon."
     New-Skill $skillsRoot 'wrong-name' "name: other-name`ndescription: Use when testing a renamed skill."
     New-Skill $skillsRoot 'missing-description' 'name: missing-description'
@@ -38,12 +39,15 @@ BeforeAll {
 Describe 'skill-frontmatter.Tests.ps1 on broken fixtures' {
     It 'runs one test case per skill' {
         $script:results.Name | Sort-Object | Should -Be @(
-            'empty-description', 'invalid-yaml', 'missing-description', 'no-use-when', 'valid', 'wrong-name'
+            'empty-description', 'invalid-yaml', 'missing-description', 'no-use-when', 'valid', 'valid-only', 'wrong-name'
         )
     }
 
-    It 'passes a valid skill' {
-        ($script:results | Where-Object Name -EQ 'valid').Result | Should -Be 'Passed'
+    It 'passes a valid skill <skill>' -ForEach @(
+        @{ skill = 'valid' }
+        @{ skill = 'valid-only' }
+    ) {
+        ($script:results | Where-Object Name -EQ $skill).Result | Should -Be 'Passed'
     }
 
     It 'fails <skill> with a message containing "<expected>"' -ForEach @(

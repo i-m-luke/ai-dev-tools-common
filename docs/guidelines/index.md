@@ -5,11 +5,19 @@ Conventions for writing the shipped skills in [`skills/`](../../skills).
 ## Skill descriptions
 
 A skill's `description` starts with "Use when" — e.g. `Use when asked to message or notify the user
-remotely.` The description is the pointer an agent reads to decide whether to load the skill, and a
-uniform leading phrase makes it read as a trigger condition. The script tests enforce it.
+remotely.` — or, for a skill explicit by design (below), "Use ONLY when". The description is the
+pointer an agent reads to decide whether to load the skill, and a uniform leading phrase makes it
+read as a trigger condition. The script tests enforce it.
 
 Avoid an unquoted `: ` inside a frontmatter value: it makes the YAML invalid and the skill fails to load.
 Prefer an em dash (—).
+
+### Skills explicit by design
+
+An **implicit skill** designed to run only on request — left implicit merely so other skills can run
+it from their instructions — has a description that lists its triggers and nothing else, e.g.
+`Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`
+Its purpose belongs in the skill body, and callers run it as `Run /<skill> …`.
 
 ## Workflow skills
 

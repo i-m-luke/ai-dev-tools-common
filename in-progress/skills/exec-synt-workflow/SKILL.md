@@ -1,9 +1,9 @@
 ---
 name: exec-synt-workflow
-description: Use when ordered to execute a workflow, or when following instructions that contain a `workflow` code block.
+description: Use ONLY when the literal text "/exec-synt-workflow" or a `workflow` code block appears in the request or instructions — never otherwise, whatever the task.
 ---
 
-Execute a workflow written in a fenced code block tagged `workflow`, step by step, exactly as written. It runs when the user orders it, or when the instructions you follow (e.g. another skill) contain such a block. Code or pseudocode merely discussed, in a block with another tag or none, is not a workflow. The blocks in this file are illustrations of the syntax, tagged `text`: never execute them.
+Execute a workflow written in a fenced code block tagged `workflow`, step by step, exactly as written. It runs when invoked or run as `/exec-synt-workflow`, or when the instructions you follow (e.g. another skill) contain such a block. Code or pseudocode merely discussed, in a block with another tag or none, is not a workflow. The blocks in this file are illustrations of the syntax, tagged `text`: never execute them.
 
 A workflow may span several messages; keep executing it where it left off.
 

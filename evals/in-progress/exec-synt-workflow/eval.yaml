@@ -1,5 +1,5 @@
 name: exec-synt-workflow
-description: Checks that the agent reaches for exec-synt-workflow on its own when it must execute a workflow block, and that it follows the workflow strictly.
+description: Checks that the agent loads exec-synt-workflow only on "/exec-synt-workflow" or a workflow block, and that it follows the workflow strictly.
 skill: exec-synt-workflow
 version: "1.0"
 config:

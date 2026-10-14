@@ -1,3 +1,5 @@
 interface:
   display_name: "Shallow Grill"
   short_description: "Settle a plan with only the blocking questions"
+policy:
+  allow_implicit_invocation: false

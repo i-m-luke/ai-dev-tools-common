@@ -1,10 +1,10 @@
 id: write-ui-doc
 name: Writes UI documentation from the code
-description: The agent loads document-app on its own and documents the notes app by what its code does, not by its labels.
+description: Asked to run /document-app, the agent loads the skill and documents the notes app by what its code does, not by its labels.
 tags:
   - behavior
 inputs:
-  prompt: "Write the UI documentation for the app in this folder into docs/notes-app.md."
+  prompt: "Run /document-app to write the UI documentation for the app in this folder into docs/notes-app.md."
   context:
     fixture: fixtures/notes-app
 graders:

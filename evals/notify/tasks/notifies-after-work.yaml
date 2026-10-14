@@ -1,10 +1,10 @@
 id: notifies-after-work
 name: Notifies after finishing work
-description: Asked to message the user remotely, the agent loads the skill on its own to notify them after finishing work.
+description: Asked to run /notify, the agent loads the skill to notify the user after finishing work.
 tags:
   - trigger
 inputs:
-  prompt: "I'm stepping away — message me when you're done. Create hello.py that prints 'Hello, world!'."
+  prompt: "I'm stepping away. Create hello.py that prints 'Hello, world!', then run /notify to tell me you're done."
 graders:
   - type: skill_invocation
     name: loads-skill

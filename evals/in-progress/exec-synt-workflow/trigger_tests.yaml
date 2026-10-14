@@ -28,8 +28,17 @@ should_trigger_prompts:
           Say "Your discount is 10 %"
       ```
     confidence: medium
+  - prompt: |
+      /exec-synt-workflow The order total is 120 EUR.
+
+      ```workflow
+      if (The order total is over 100 EUR):
+          Say "Free shipping"
+      ```
 
 should_not_trigger_prompts:
+  - prompt: "Execute this workflow: say \"Hello\", then say \"Goodbye\"."
+    confidence: medium
   - prompt: |
       In one sentence, what does this pseudocode do?
 

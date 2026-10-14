@@ -31,6 +31,6 @@ Describe 'Skill frontmatter' {
         $frontmatter.name | Should -Be $name -Because 'name must match the skill folder'
         $frontmatter.description | Should -BeOfType [string] -Because 'description is required'
         $frontmatter.description | Should -Not -BeNullOrEmpty -Because 'description is required'
-        $frontmatter.description | Should -BeLikeExactly 'Use when *' -Because 'a skill description starts with "Use when" (see docs/guidelines/index.md)'
+        $frontmatter.description | Should -MatchExactly '^Use (ONLY )?when ' -Because 'a skill description starts with "Use when" or "Use ONLY when" (see docs/guidelines/index.md)'
     }
 }

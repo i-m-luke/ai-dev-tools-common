@@ -8,7 +8,8 @@ needs), so an agent can't load them.
 
 This skill is the shared source of truth for user-invoked wrappers that run it. An agent can only reach a
 skill that carries a `description`: with `disable-model-invocation: true` the skill
-loses its description, and nothing but a human typing its name can invoke it.
+loses its description, and nothing but a human typing its name can invoke it. It is still explicit by
+design, so its description holds only its triggers (see [Guidelines](../guidelines/index.md#skills-explicit-by-design)).
 
 ## Editing guidelines
 

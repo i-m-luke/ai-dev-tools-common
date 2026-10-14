@@ -1,5 +1,5 @@
 name: document-app
-description: Checks that the agent reaches for document-app on its own and documents an app from its code.
+description: Checks that the agent loads document-app only on "/document-app" and documents an app from its code.
 skill: document-app
 version: "1.0"
 config:

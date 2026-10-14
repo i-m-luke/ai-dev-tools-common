@@ -1,6 +1,6 @@
 ---
 name: document-app
-description: Use when documenting an application's UI, functionality and purpose from the code, revising it after a code change, or when another skill needs these conventions.
+description: Use ONLY when the literal text "/document-app" appears in the request or instructions — never otherwise, whatever the task.
 ---
 
 Document the application's UI, functionality and purpose **based on the code**.

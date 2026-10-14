@@ -1,6 +1,6 @@
 ---
 name: notify
-description: Use when asked to message or notify the user remotely.
+description: Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.
 ---
 
 Roles: Robot — for this skill's steps only. Where no definition of Robot is available, follow the
