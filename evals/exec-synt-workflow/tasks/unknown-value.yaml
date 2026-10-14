@@ -1,0 +1,33 @@
+id: unknown-value
+name: Asks for an unknown value instead of guessing
+description: Given a workflow whose condition depends on a value that is not given, the agent loads the skill on its own, asks for the value, does not guess and executes nothing further until answered.
+tags:
+  - behavior
+inputs:
+  prompt: |
+    Execute this workflow.
+
+    ```workflow
+    if (Věk návštěvníka je vyšší než 18):
+        Řekni "Můžeš vstoupit"
+    else:
+        Slušně oznam "Nemůžeš vstoupit"
+    ```
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - exec-synt-workflow
+  - type: prompt
+    name: asks-and-waits
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the agent's replies above, not continuing the work. The workflow's condition depends on the visitor's age, which was never given, so the correct behaviour is to ask the user for the age and then wait. Check:
+        1. The reply asks the user for the visitor's age.
+        2. The agent did not guess or assume an age or the outcome of the condition.
+        3. The reply contains neither "Můžeš vstoupit" nor "Nemůžeš vstoupit" (nor any other permission or refusal): no step of either branch was executed.
+        4. The reply ends with the question and does not continue the workflow past it; it does not narrate the execution (no walkthrough of the steps or both branches).
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.
