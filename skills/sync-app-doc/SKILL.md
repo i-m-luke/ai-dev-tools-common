@@ -10,7 +10,7 @@ Find the **drift** between an existing app UI document and the code, report it, 
 
 ### 1. Find the document
 
-Take the document the developer named. When none was named, search the repository for a documentation folder (`docs`, `documentation`, or a sibling of that kind) and read the headings of what you find there.
+Take the document the developer named. If the named document cannot be found, say so and fall back to searching the repository for a documentation folder (`docs`, `documentation`, or a sibling of that kind). When none was named, search those folders and read the headings of what you find there.
 
 - Several candidates: list them numbered and let the developer pick.
 - No candidate: report that there is nothing to update and point the developer at `write-app-doc`.

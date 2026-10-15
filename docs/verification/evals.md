@@ -51,7 +51,8 @@ Copilot CLI (via `COPILOT_GITHUB_TOKEN`, for the eval's process only; see
 
 Each skill has a [waza](https://github.com/microsoft/waza) eval in `evals/<skill>/`: `eval.yaml`,
 behaviour tasks in `tasks/` run against the code in `fixtures/`, and, for skills the model invokes
-on its own, `trigger_tests.yaml` with prompts that must and must not trigger the skill. Graders
+on its own, `trigger_tests.yaml` with prompts that must and must not trigger the skill — they run
+against `fixtures/` too, so a prompt naming an existing file needs that file there. Graders
 check the skill invocations, the files the agent left, and its replies (LLM judge).
 
 - Skills the model invokes on its own run with their body hidden, so the agent has to pick the

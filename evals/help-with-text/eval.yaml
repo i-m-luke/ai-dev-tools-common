@@ -1,6 +1,6 @@
-name: update-project-doc
-description: Checks that /update-project-doc proposes wordings and placements first and writes only the one the user picks.
-skill: update-project-doc
+name: help-with-text
+description: Checks that /help-with-text proposes wordings and placements first and writes only the one the user picks.
+skill: help-with-text
 version: "1.0"
 config:
   trials_per_task: 1
@@ -8,7 +8,7 @@ config:
   executor: copilot-sdk
   model: claude-sonnet-5.5
   # User-invoked skill: the SDK does not expand slash commands, so the body is injected
-  # to stand in for the user typing /update-project-doc.
+  # to stand in for the user typing /help-with-text.
   inject_skill_body: true
   skill_directories:
     - ../../skills

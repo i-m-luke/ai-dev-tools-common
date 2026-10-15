@@ -9,8 +9,9 @@ metadata:
     url: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
 ---
 
-Conventions for writing a skill. Also run `/writing-for-agents` when available — it covers writing
-any document an agent reads; where it conflicts with these conventions, these win.
+Conventions for writing a skill.
+
+Run `/writing-for-agents` — it covers writing any document an agent reads; where it conflicts with these conventions, these win. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and stop.
 
 Write skills in English, like any context an agent reads.
 
@@ -25,6 +26,12 @@ it runs only when the user names it. Two kinds of skill stay implicit instead:
   lists its triggers and nothing else, e.g.
   `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`
   Its purpose belongs in the skill body, and callers run it as `Run /<skill> …`.
+
+## Naming
+
+Name a skill after its invocation: an explicit skill by a verb phrase, e.g. `write-poem`; an
+implicit skill by a noun phrase, e.g. `poem-writing`. A skill implicit only so other instructions
+can run it is explicit by design, so it takes a verb phrase.
 
 ## Skill descriptions
 
@@ -58,7 +65,7 @@ A skill folder holds `SKILL.md` and, as needed:
 `references/TERMS.md`), together with when to use it: the mention is the agent's only way to the
 file.
 
-## Scripts
+## Scripts {#scripts}
 
 When designing a skill, go through its steps and ask of each one whether a script can do it. Aim for
 scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every

@@ -21,7 +21,7 @@
 
 ## About the application {#about-the-application}
 
-<What the application is for, and how work reaches it.>
+<What the application is for, who uses it, and how input reaches it.>
 
 ## Main window {#main-window}
 

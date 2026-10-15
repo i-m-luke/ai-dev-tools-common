@@ -4,7 +4,7 @@ description: Asked to run /notify, the agent loads the skill to notify the user 
 tags:
   - trigger
 inputs:
-  prompt: "I'm stepping away. Create hello.py that prints 'Hello, world!', then run /notify to tell me you're done."
+  prompt: "Create hello.py that prints 'Hello, world!', then run /notify to tell me you're done."
 graders:
   - type: skill_invocation
     name: loads-skill

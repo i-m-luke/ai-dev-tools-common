@@ -11,7 +11,7 @@ Describe the app **top-down**: start at the highest-level screen (main window, p
 
 Derive every description from the code, so the document reports what the app does, not what its labels suggest:
 
-- Start at the UI entry point — app startup, main window, or root page — and read its layout definition. If the app has more than one top-level window, ask the user which one is the main one and start there.
+- Start at the UI entry point — app startup, main window, or root page — and read its layout definition. If the app has more than one top-level window, ask the user which one is the main one and start there. If the app has no graphical UI (a CLI tool, service, or library), tell the user this workflow documents screens and ask whether to document its entry points and commands instead.
 - For each container, identify all its child regions before descending into any of them.
 - For each element, follow the code wired to it — its handler, command, or binding target — and state what that code actually does.
 - Account for every interactive element: a control whose behavior you have not read in the code is a gap to resolve, not a blank to fill from its label. When the wired code is missing or cannot be located, mark it in the document as **[Unknown behavior — unable to determine based on code]** rather than inferring behavior from the label.
@@ -21,7 +21,7 @@ Derive every description from the code, so the document reports what the app doe
 Scaffold a new document from [`assets/TEMPLATE.md`](assets/TEMPLATE.md) and lay it out as this sequence of chapters:
 
 - **Introduction** — what this document covers.
-- **About the application** — what the app is for and how work reaches it.
+- **About the application** — what the app is for, who uses it, and how input reaches it (files the user opens, data pushed from other systems, commands the user issues).
 - **Screen chapters** — the UI and controls of each screen, top-down.
 - **Application settings** — placed here, before behavior, so the behavior chapters can refer to it.
 - **Behavior chapters** — named after the user task they serve (`Importing a file`, `Running a job`), never after the screen the task happens on.
@@ -58,11 +58,11 @@ Name every control by the established term of the document's language, taken fro
 
 ## Close
 
-When the documentation looks complete, propose to the user a final pass over the code — re-scan for any interactive element or behavior not yet described — and report the gaps before closing.
+When every screen chapter and behavior chapter of the layout is filled, propose to the user a final pass over the code — re-scan for any interactive element or behavior not yet described — and report the gaps, including every element marked **[Unknown behavior — unable to determine based on code]**, before closing.
 
 ## Markdown format
 
 [`assets/TEMPLATE.md`](assets/TEMPLATE.md) carries the Markdown shape — title, TOC markers, anchors, image tags. Beyond what it shows:
 
-- Write the headings and the prose in the language the user asked for, and keep every anchor ASCII — lowercase, hyphenated, diacritics stripped — so links stay stable.
+- Write the headings and the prose in the language the user asked for; when the user has not named one, ask before scaffolding the document. Keep every anchor ASCII — lowercase, hyphenated, diacritics stripped — so links stay stable.
 - Keep the table of contents mirroring the heading hierarchy as you add chapters.

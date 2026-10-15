@@ -1,5 +1,0 @@
-interface:
-  display_name: "Update Project Doc"
-  short_description: "Reconcile app documentation with the code"
-policy:
-  allow_implicit_invocation: false
