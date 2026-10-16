@@ -1,0 +1,5 @@
+interface:
+  display_name: "Win App Spy"
+  short_description: "Inspect and interact with a Windows app's UI"
+policy:
+  allow_implicit_invocation: true
