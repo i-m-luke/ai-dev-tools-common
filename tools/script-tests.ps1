@@ -5,6 +5,8 @@ Runs the repo's script tests and reports which ones failed.
 
 .DESCRIPTION
 Runs every Pester test (`*.Tests.ps1`) in the repo's script-tests folder, including the per-skill subfolders.
+The checks' own tests (`*.Fixtures.Tests.ps1`) run first; when one fails, the rest is skipped, since broken
+checks cannot validate the skills.
 Exits 0 when all tests pass, 1 otherwise; on failure the output ends with a "Script tests failed:" line
 followed by one "- <failure>" line per failure.
 
@@ -30,17 +32,16 @@ if (-not (Get-Module -ListAvailable powershell-yaml)) {
     Exit-WithFailure 'powershell-yaml not found; install it (see docs/verification/script-tests.md).'
 }
 
-$config = New-PesterConfiguration
-$config.Run.Path = Join-Path $PSScriptRoot '..' 'script-tests'
-$config.Run.PassThru = $true
-$config.Output.Verbosity = 'Detailed'
-if ([Console]::IsOutputRedirected) {
-    $config.Output.RenderMode = 'Plaintext'
-}
-
-$result = Invoke-Pester -Configuration $config
-if ($result.Result -eq 'Passed') {
-    exit 0
+function Invoke-Tests([string[]] $Path, [string[]] $ExcludePath = @()) {
+    $config = New-PesterConfiguration
+    $config.Run.Path = $Path
+    $config.Run.ExcludePath = $ExcludePath
+    $config.Run.PassThru = $true
+    $config.Output.Verbosity = 'Detailed'
+    if ([Console]::IsOutputRedirected) {
+        $config.Output.RenderMode = 'Plaintext'
+    }
+    Invoke-Pester -Configuration $config
 }
 
 function Get-Reason($Item) {
@@ -48,9 +49,29 @@ function Get-Reason($Item) {
     $message ? ": $(($message -split '\r?\n')[0])" : ''
 }
 
-$failures = @(
-    $result.Failed | ForEach-Object { "$($_.ExpandedPath)$(Get-Reason $_)" }
-    $result.FailedBlocks | ForEach-Object { "$($_.ExpandedPath)$(Get-Reason $_)" }
-    $result.FailedContainers | ForEach-Object { "$($_.Item)$(Get-Reason $_)" }
-) | Where-Object { $_ }
-Exit-WithFailure $failures
+function Get-Failures($Result) {
+    @(
+        $Result.Failed | ForEach-Object { "$($_.ExpandedPath)$(Get-Reason $_)" }
+        $Result.FailedBlocks | ForEach-Object { "$($_.ExpandedPath)$(Get-Reason $_)" }
+        $Result.FailedContainers | ForEach-Object { "$($_.Item)$(Get-Reason $_)" }
+    ) | Where-Object { $_ }
+}
+
+$testsRoot = Join-Path $PSScriptRoot '..' 'script-tests'
+$checkTests = @(Get-ChildItem -LiteralPath $testsRoot -Recurse -File -Filter '*.Fixtures.Tests.ps1' | ForEach-Object FullName)
+
+if ($checkTests) {
+    $result = Invoke-Tests $checkTests
+    if ($result.Result -ne 'Passed') {
+        Exit-WithFailure @(
+            'The checks are broken, so the remaining tests were skipped; fix these first:'
+            Get-Failures $result
+        )
+    }
+}
+
+$result = Invoke-Tests $testsRoot -ExcludePath $checkTests
+if ($result.Result -eq 'Passed') {
+    exit 0
+}
+Exit-WithFailure (Get-Failures $result)

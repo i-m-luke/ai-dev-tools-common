@@ -65,6 +65,13 @@ Describe 'Skill invocation' {
 
         $missing = @(Get-MissingExplicitSettings $dir)
 
+        if ($missing.Count -gt 0 -and (Get-Frontmatter $path)['disable-model-invocation'] -eq $true) {
+            $missing.Count | Should -Be 0 -Because (
+                "skill '$name' turns model invocation off in SKILL.md (``disable-model-invocation: true``), but " +
+                'agents/openai.yaml conflicts with it: set `policy.allow_implicit_invocation: false` there so both agree ' +
+                '(docs/guidelines/skills.md#invocation)')
+        }
+
         $missing.Count | Should -Be 0 -Because (
             "skill '$name' is not explicit, it lacks $($missing -join ' and '). Skills are explicit by default " +
             '(docs/guidelines/skills.md#invocation): set both `disable-model-invocation: true` in SKILL.md and ' +

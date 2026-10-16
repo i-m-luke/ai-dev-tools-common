@@ -3,7 +3,7 @@
 ## HiPrio
 
 - 'win-app-spy' skill
-- Migrace win-app-spy do MCP
+- Migrace 'win-app-spy' skillu do MCP
 
 ## LoPrio
 

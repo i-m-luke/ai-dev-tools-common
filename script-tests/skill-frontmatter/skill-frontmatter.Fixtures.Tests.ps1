@@ -105,8 +105,9 @@ Describe 'skill-frontmatter.Tests.ps1 on invocation fixtures' {
         @{ test = 'implicit'; expected = 'docs/guidelines/skills.md#invocation' }
         @{ test = 'implicit'; expected = 'implicit-skills.yaml - the list of approved exceptions' }
         @{ test = 'implicit'; expected = 'lacks *disable-model-invocation: true* in SKILL.md and *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
-        @{ test = 'no-openai'; expected = 'lacks *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
-        @{ test = 'nested-policy'; expected = 'lacks *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
+        @{ test = 'no-openai'; expected = 'agents/openai.yaml conflicts with it: set *policy.allow_implicit_invocation: false*' }
+        @{ test = 'nested-policy'; expected = 'agents/openai.yaml conflicts with it: set *policy.allow_implicit_invocation: false*' }
+        @{ test = 'no-openai'; expected = '*disable-model-invocation: true*), but*' }
         @{ test = 'policy-only'; expected = 'lacks *disable-model-invocation: true* in SKILL.md.' }
         @{ test = 'approved exception missing'; expected = 'matches no skill folder' }
         @{ test = 'approved exception approved-explicit'; expected = 'remove its entry' }

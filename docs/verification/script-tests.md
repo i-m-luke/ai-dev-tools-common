@@ -10,6 +10,9 @@ implicit skills in `implicit-skills.yaml`) and `script-tests/skill-structure/` (
 numbering, script tests, mentions of assets and references); tests of the repo's own tools live in
 `script-tests/tools/`.
 
+Each check has its own tests (`*.Fixtures.Tests.ps1`), which run first: a broken check cannot
+validate the skills, so when one of them fails, the remaining tests are skipped.
+
 Requirements:
 
 - PowerShell 7+ (`pwsh`)
