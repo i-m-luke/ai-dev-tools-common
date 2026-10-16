@@ -1,6 +1,6 @@
-name: help-with-text
-description: Checks that /help-with-text proposes wordings and placements first and writes only the one the user picks.
-skill: help-with-text
+name: help-with-writing
+description: Checks that /help-with-writing proposes wordings and placements first and writes only the one the user picks.
+skill: help-with-writing
 version: "1.0"
 config:
   trials_per_task: 1
@@ -8,7 +8,7 @@ config:
   executor: copilot-sdk
   model: claude-sonnet-5.5
   # User-invoked skill: the SDK does not expand slash commands, so the body is injected
-  # to stand in for the user typing /help-with-text.
+  # to stand in for the user typing /help-with-writing.
   inject_skill_body: true
   skill_directories:
     - ../../skills

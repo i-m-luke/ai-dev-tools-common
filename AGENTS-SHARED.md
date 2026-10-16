@@ -58,12 +58,16 @@ change; leave pre-existing ones unless the user asks.
 Leave changes in the working tree; commit only when the user asks. Offer a commit only on finishing
 a step listed in a multi-step plan agreed during planning — not after a single reply or edit.
 
+### Merging
+
+Merge only after the user approves; ask before every merge.
+
 ## Delegating to subagents
 
 Before splitting work among several subagents (e.g. implementing multiple tickets), ask whether to
 run them sequentially (saves the tokens spent merging their versions) or in parallel (saves time).
 
-A subagent working on its own branch hands its version to the parent agent, which merges it.
+A subagent working on its own branch hands its version to the parent agent, which merges it once the user approves.
 
 ## Glossary
 

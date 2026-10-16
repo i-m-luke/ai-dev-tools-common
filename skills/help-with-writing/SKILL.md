@@ -1,5 +1,5 @@
 ---
-name: help-with-text
+name: help-with-writing
 description: Use when writing or editing any text and wanting to choose the wording and placement of each change.
 disable-model-invocation: true
 ---

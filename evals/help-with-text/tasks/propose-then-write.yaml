@@ -4,7 +4,7 @@ description: The skill first offers alternative wordings and placements without 
 tags:
   - behavior
 inputs:
-  prompt: "/help-with-text Document the new --verbose flag, which prints each file's path before its counts."
+  prompt: "/help-with-writing Document the new --verbose flag, which prints each file's path before its counts."
   follow_up_prompts:
     - "Take your first wording and your first proposed place."
   context:
