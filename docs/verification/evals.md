@@ -7,12 +7,16 @@
   `claude-sonnet-5.5`; overrides the `model` in each `eval.yaml`).
 - Run the evals of [in-progress](../in-progress.md) content instead: `./tools/evals.ps1 -InProgress`
   (combinable with `-Name`); they live in `evals/in-progress/`, never run without the switch.
-- After the run, a Markdown report is written to `.artifacts/evals-report-<timestamp>.md`
-  (git-ignored): the model, scope, duration, per-eval PASS/FAIL and the token usage table below. No
-  report when the run stops early (unknown eval name, no evals).
+- Each run gets its own folder `.artifacts/evals-reports/<timestamp>/` (git-ignored) with everything
+  the run produced:
+  - `report.md` — the model, scope, duration, per-eval PASS/FAIL and the token usage table below. No
+    report when the run stops early (unknown eval name, no evals).
+  - `<eval>/` — the eval's output, so a failure can be investigated without rerunning: `console.txt`
+    (what the eval printed) and, for waza evals, `results.json` (waza's results) and `transcripts/`
+    (each task's agent transcript).
 - After the run, a token usage table lists each waza eval's input, output, cache read and cache
   write tokens, estimated AI credits and premium requests, with a total row. It comes from the
-  `usage` waza writes to its `-o` results file (a temp file the runner removes); waza's own
+  `usage` in waza's `results.json`; waza's own
   `USAGE SUMMARY` stays in the output. Script evals use no tokens and are left out.
   - *Est. credits* is computed from the tokens and the run's model price in
     `tools/model-prices.json` (USD per 1M tokens from GitHub's

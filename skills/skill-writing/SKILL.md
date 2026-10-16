@@ -1,6 +1,6 @@
 ---
 name: skill-writing
-description: Use when creating or editing a skill.
+description: Use when creating a skill or changing what one does — its instructions, description, scripts or other files. Load it before loading the skill you create or edit.
 metadata:
   credits:
     skill: writing-for-agents
@@ -15,28 +15,30 @@ Run `/writing-for-agents` — it covers writing any document an agent reads; whe
 
 Write skills in English, like any context an agent reads.
 
-## Invocation
+## Invocation type
 
-A skill is **explicit**: its `agents/openai.yaml` sets `policy.allow_implicit_invocation: false`, so
-it runs only when the user names it. Two kinds of skill stay implicit instead:
+Every skill is one of three types; the rest of this skill refers to them by name.
 
-- A **convention skill** — rules the agent applies to every task they touch, e.g. the conventions of
-  a language or an architecture.
-- A skill **run by other skills** — implicit only so their instructions can run it. Its description
-  lists its triggers and nothing else, e.g.
-  `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`
-  Its purpose belongs in the skill body, and callers run it as `Run /<skill> …`.
+- **explicit**:
+  > Runs only when the user invokes it. Both of the following hold:
+  > a. its `agents/openai.yaml` sets `policy.allow_implicit_invocation: false`
+  > b. its `disable-model-invocation` is set to `true`
+  > When only one of them holds, the skill's invocation is in conflict — point it out to the user.
+- **implicit**:
+  > Loads on its own for every task it touches, e.g. the conventions of a language or an architecture.
+- **hybrid**:
+  > Is half of each: _implicit_ in its settings, so other skills' instructions can run it; _explicit_ in behaviour, as it runs only on its literal trigger. Its description lists its triggers and nothing else, e.g.
+  > `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.` Its purpose belongs in the skill body, and callers run it as `Run /<skill> …`.
 
 ## Naming
 
-Name a skill after its invocation: an explicit skill by a verb phrase, e.g. `write-poem`; an
-implicit skill by a noun phrase, e.g. `poem-writing`. A skill implicit only so other instructions
-can run it is explicit by design, so it takes a verb phrase.
+Name a skill after its [invocation type](#invocation-type): an explicit or hybrid skill by a verb
+phrase, e.g. `write-poem`; an implicit skill by a noun phrase, e.g. `poem-writing`.
 
 ## Skill descriptions
 
 A skill's `description` starts with "Use when" — e.g. `Use when asked to message or notify the user
-remotely.` — or, for a skill run by other skills (above), "Use ONLY when". The description is the
+remotely.` — or, for a hybrid skill, "Use ONLY when". The description is the
 pointer an agent reads to decide whether to load the skill, and a uniform leading phrase makes it
 read as a trigger condition.
 
@@ -49,7 +51,7 @@ Phrase every instruction in a skill as the behaviour to take — "write one-line
 a ban on long ones: a prohibition names the unwanted behaviour and makes it more likely. A hard
 guardrail with no positive phrasing stays a prohibition, paired with the behaviour to take instead.
 One such guardrail is the closing "— never otherwise, whatever the task" in the description of a
-skill run by other skills: without it, trigger evals showed the agent loading the skill for requests
+hybrid skill: without it, trigger evals showed the agent loading the skill for requests
 that merely resemble its task.
 
 ## Skill folder
@@ -65,7 +67,7 @@ A skill folder holds `SKILL.md` and, as needed:
 `references/TERMS.md`), together with when to use it: the mention is the agent's only way to the
 file.
 
-## Scripts {#scripts}
+## Scripts
 
 When designing a skill, go through its steps and ask of each one whether a script can do it. Aim for
 scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every
@@ -77,6 +79,8 @@ drifts. The script lives in the skill's `scripts/` folder, is written in PowerSh
 interaction; it reports through its exit code and stderr. The step that runs it names the exact
 command — `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with `powershell` in
 place of `pwsh` when pwsh is missing — and acts on the result by a playbook keyed by exit code.
+When neither `pwsh` nor `powershell` is available, tell the user and ask whether to install
+PowerShell or write the script in another language.
 Pester tests cover every script.
 
 ## Artifacts

@@ -83,6 +83,9 @@ function Get-SharedInstructionFixtures([string] $EvalDir) {
 $usageRows = [System.Collections.Generic.List[object]]::new()
 $results = [System.Collections.Generic.List[object]]::new()
 $startedAt = Get-Date
+# Each run gets its own folder .artifacts/evals-reports/<timestamp>/ (.artifacts/ is the repo's file
+# exchange with the user, git-ignored), holding the report report.md and a folder per eval with its output.
+$runDir = Join-Path $repoRoot '.artifacts' 'evals-reports' $startedAt.ToString('yyyyMMdd-HHmmss')
 $modelPrices = Get-Content (Join-Path $PSScriptRoot 'model-prices.json') -Raw | ConvertFrom-Json
 
 # Estimated GitHub AI credits (1 credit = $0.01) from token counts; $null when the model has no price.
@@ -101,13 +104,15 @@ $originalOutputEncoding = [Console]::OutputEncoding
 
 $failed = foreach ($eval in $evals) {
     Write-Host "=== $($eval.Name)"
+    $evalOutDir = New-Item -ItemType Directory -Path (Join-Path $runDir $eval.Name) -Force
+    $consoleFile = Join-Path $evalOutDir 'console.txt'
     if ($eval.Kind -eq 'script') {
-        & pwsh -NoProfile -File $eval.Path | Out-Host
+        & pwsh -NoProfile -File $eval.Path | Tee-Object -FilePath $consoleFile | Out-Host
     }
     else {
         $evalDir = Split-Path $eval.Path
         $fixtures = @(Get-SharedInstructionFixtures $evalDir)
-        $usageFile = [System.IO.Path]::GetTempFileName()
+        $resultsFile = Join-Path $evalOutDir 'results.json'
         Push-Location $evalDir
         try {
             foreach ($fixture in $fixtures) {
@@ -115,7 +120,9 @@ $failed = foreach ($eval in $evals) {
                     Copy-Item (Join-Path $repoRoot $item) $fixture.FullName -Recurse -Force
                 }
             }
-            & $waza run eval.yaml --model $Model --no-update-check -o $usageFile | Out-Host
+            & $waza run eval.yaml --model $Model --no-update-check -o $resultsFile `
+                --transcript-dir (Join-Path $evalOutDir 'transcripts') |
+                Tee-Object -FilePath $consoleFile | Out-Host
         }
         finally {
             Pop-Location
@@ -124,8 +131,7 @@ $failed = foreach ($eval in $evals) {
                     Remove-Item (Join-Path $fixture.FullName $item) -Recurse -Force -ErrorAction SilentlyContinue
                 }
             }
-            $usage = try { (Get-Content $usageFile -Raw | ConvertFrom-Json).summary.usage } catch { $null }
-            Remove-Item $usageFile -ErrorAction SilentlyContinue
+            $usage = try { (Get-Content $resultsFile -Raw | ConvertFrom-Json).summary.usage } catch { $null }
             if ($usage) {
                 $usageRows.Add([pscustomobject] @{
                         Eval               = $eval.Name
@@ -168,10 +174,8 @@ if ($usageRows.Count) {
 Write-Host "Passed $($evals.Count - $failed.Count)/$($evals.Count) evals"
 if ($failed) { Write-Host "Failed: $($failed -join ', ')" }
 
-# Markdown report in .artifacts/, the repo's file exchange with the user (git-ignored).
-$reportDir = Join-Path $repoRoot '.artifacts'
-New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
-$reportPath = Join-Path $reportDir "evals-report-$($startedAt.ToString('yyyyMMdd-HHmmss')).md"
+New-Item -ItemType Directory -Path $runDir -Force | Out-Null
+$reportPath = Join-Path $runDir 'report.md'
 $report = [System.Collections.Generic.List[string]]::new()
 $report.Add('# Evals report')
 $report.Add('')
