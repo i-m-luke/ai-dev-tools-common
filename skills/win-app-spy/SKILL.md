@@ -42,8 +42,7 @@ this playbook:
 - `0` — use the JSON it printed (see [Response](#response)).
 - `1` with JSON — an `error` in the JSON says what failed (see [Error codes](#error-codes)); fix the
   request or follow the error's message.
-- `*` without JSON — the environment failed (compilation, NuGet restore, a crash); follow
-  `references/troubleshooting.md`, else show the user the output and end the skill.
+- `*` without JSON — the environment failed (compilation, NuGet restore, a crash); follow `references/troubleshooting.md`, else show the user the output and end the skill.
 
 Start the app to inspect with `launch`; it waits up to `timeout` ms (default 10000) for the app's
 window and makes the app the active one, so later requests may leave out `app`:
@@ -75,7 +74,7 @@ and the `states` keys you need; without `states` it only checks that each locato
 element:
 
 ```json
-{ "command": "get-state", "locators": [ "//MenuItem[@AutomationId='File']" ], "states": [ "enabled" ] }
+{ "command": "get-state", "locators": ["//MenuItem[@AutomationId='File']"], "states": ["enabled"] }
 ```
 
 Each locator gets its own result item, so send a fallback locator as a further item in the same
@@ -89,7 +88,7 @@ To learn an app's structure, `dump-tree` lists its element tree with a ready-to-
 narrow it with `root` (an xpath) and `depth`, see `references/output-format.md`:
 
 ```json
-{ "command": "dump-tree", "depth": 2, "states": [ "name" ] }
+{ "command": "dump-tree", "depth": 2, "states": ["name"] }
 ```
 
 Capture what the app shows with `screenshot`: it saves a PNG of the app's front window, or of the
@@ -106,7 +105,7 @@ match exactly one element, else nothing happens. `action` is one of `click`, `do
 `expand`, `collapse`, `key` (+ `keys`, e.g. `Ctrl+A`, `Escape`); send `states` to check the effect:
 
 ```json
-{ "command": "act", "locator": "//MenuItem[@AutomationId='View']", "action": "expand", "states": [ "expanded" ] }
+{ "command": "act", "locator": "//MenuItem[@AutomationId='View']", "action": "expand", "states": ["expanded"] }
 ```
 
 When the UI changes asynchronously (a dialog opens, a button enables), `wait` polls a `locator`
@@ -133,20 +132,20 @@ in `references/output-format.md`.
 
 ## Error codes
 
-| Code | Meaning |
-|---|---|
-| `INVALID_REQUEST` | The request file is missing, not a JSON object, or a field is missing or of the wrong type; on an item, its xpath is outside the supported subset. |
-| `UNKNOWN_COMMAND` | No such command; the message lists the known ones. |
-| `APP_NOT_FOUND` | The exe cannot be started, no process has the pid, no app with a window matches `app`, or there is no active app. |
-| `APP_AMBIGUOUS` | Several apps match `app`'s `process` or `title`; the message lists their pids and titles. |
-| `APP_ALREADY_RUNNING` | `launch` saw the window open in an instance that was already running and not launched by you; ask the user to close that app, then launch again. |
-| `NOT_LAUNCHED` | `close` targets an app not launched in this working folder. |
-| `CLOSE_FAILED` | The app has no window to close; send `"force": true`. |
-| `ELEMENT_NOT_FOUND` | A locator matched no element. |
-| `AMBIGUOUS_MATCH` | A locator matched several elements; `count` gives how many, `candidates` the concrete xpaths of the first 5 — send the intended one. |
-| `ACTION_FAILED` | `act` could not perform the action, e.g. the element lacks its pattern; the message suggests an alternative. |
-| `TIMEOUT` | `launch` saw no window in time (it stopped the process it started), `close` saw the app still running, or `wait`'s condition did not hold in time. |
-| `UNEXPECTED` | Any other failure; the message holds the details. |
+| Code                  | Meaning                                                                                                                                            |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `INVALID_REQUEST`     | The request file is missing, not a JSON object, or a field is missing or of the wrong type; on an item, its xpath is outside the supported subset. |
+| `UNKNOWN_COMMAND`     | No such command; the message lists the known ones.                                                                                                 |
+| `APP_NOT_FOUND`       | The exe cannot be started, no process has the pid, no app with a window matches `app`, or there is no active app.                                  |
+| `APP_AMBIGUOUS`       | Several apps match `app`'s `process` or `title`; the message lists their pids and titles.                                                          |
+| `APP_ALREADY_RUNNING` | `launch` saw the window open in an instance that was already running and not launched by you; ask the user to close that app, then launch again.   |
+| `NOT_LAUNCHED`        | `close` targets an app not launched in this working folder.                                                                                        |
+| `CLOSE_FAILED`        | The app has no window to close; send `"force": true`.                                                                                              |
+| `ELEMENT_NOT_FOUND`   | A locator matched no element.                                                                                                                      |
+| `AMBIGUOUS_MATCH`     | A locator matched several elements; `count` gives how many, `candidates` the concrete xpaths of the first 5 — send the intended one.               |
+| `ACTION_FAILED`       | `act` could not perform the action, e.g. the element lacks its pattern; the message suggests an alternative.                                       |
+| `TIMEOUT`             | `launch` saw no window in time (it stopped the process it started), `close` saw the app still running, or `wait`'s condition did not hold in time. |
+| `UNEXPECTED`          | Any other failure; the message holds the details.                                                                                                  |
 
 ## Safety
 

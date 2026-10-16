@@ -4,9 +4,7 @@
 Runs the repo's script tests and reports which ones failed.
 
 .DESCRIPTION
-Runs every Pester test (`*.Tests.ps1`) in the repo's script-tests folder, including the per-skill subfolders.
-The checks' own tests (`*.Fixtures.Tests.ps1`) run first; when one fails, the rest is skipped, since broken
-checks cannot validate the skills.
+Runs every Pester test (`*.Tests.ps1`) in the repo's script-tests folder: the tests of the scripts the skills ship.
 Exits 0 when all tests pass, 1 otherwise; on failure the output ends with a "Script tests failed:" line
 followed by one "- <failure>" line per failure.
 
@@ -28,14 +26,9 @@ if (-not (Get-Module -ListAvailable Pester | Where-Object Version -GE '5.0')) {
 }
 Import-Module Pester -MinimumVersion 5.0
 
-if (-not (Get-Module -ListAvailable powershell-yaml)) {
-    Exit-WithFailure 'powershell-yaml not found; install it (see docs/verification/script-tests.md).'
-}
-
-function Invoke-Tests([string[]] $Path, [string[]] $ExcludePath = @()) {
+function Invoke-Tests([string[]] $Path) {
     $config = New-PesterConfiguration
     $config.Run.Path = $Path
-    $config.Run.ExcludePath = $ExcludePath
     $config.Run.PassThru = $true
     $config.Output.Verbosity = 'Detailed'
     if ([Console]::IsOutputRedirected) {
@@ -57,20 +50,7 @@ function Get-Failures($Result) {
     ) | Where-Object { $_ }
 }
 
-$testsRoot = Join-Path $PSScriptRoot '..' 'script-tests'
-$checkTests = @(Get-ChildItem -LiteralPath $testsRoot -Recurse -File -Filter '*.Fixtures.Tests.ps1' | ForEach-Object FullName)
-
-if ($checkTests) {
-    $result = Invoke-Tests $checkTests
-    if ($result.Result -ne 'Passed') {
-        Exit-WithFailure @(
-            'The checks are broken, so the remaining tests were skipped; fix these first:'
-            Get-Failures $result
-        )
-    }
-}
-
-$result = Invoke-Tests $testsRoot -ExcludePath $checkTests
+$result = Invoke-Tests (Join-Path $PSScriptRoot '..' 'script-tests')
 if ($result.Result -eq 'Passed') {
     exit 0
 }

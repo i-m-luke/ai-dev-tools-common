@@ -1,4 +1,4 @@
-skill: skill-writing
+skill: skill-authoring
 
 should_trigger_prompts:
   - prompt: "Create a skill that formats SQL files in the repo."

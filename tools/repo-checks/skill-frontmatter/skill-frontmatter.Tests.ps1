@@ -1,9 +1,9 @@
 param(
     [string[]] $SkillsRoot = @(
-        Join-Path $PSScriptRoot '..' '..' 'skills'
-        Join-Path $PSScriptRoot '..' '..' 'in-progress' 'skills'
+        Join-Path $PSScriptRoot '..' '..' '..' 'skills'
+        Join-Path $PSScriptRoot '..' '..' '..' 'in-progress' 'skills'
     ),
-    [string] $ImplicitSkillsPath = (Join-Path $PSScriptRoot 'implicit-skills.yaml')
+    [string] $ImplicitSkillsPath = (Join-Path $PSScriptRoot '..' '..' '..' 'implicit-skills.yaml')
 )
 
 BeforeDiscovery {
@@ -77,7 +77,7 @@ Describe 'Skill invocation' {
             '(docs/guidelines/skills.md#invocation): set both `disable-model-invocation: true` in SKILL.md and ' +
             '`policy.allow_implicit_invocation: false` in agents/openai.yaml, or start the description with ' +
             '"Use ONLY when" if other skills run it. If it is a convention skill that must load implicitly, add it ' +
-            'with a reason to script-tests/skill-frontmatter/implicit-skills.yaml - the list of approved exceptions')
+            'with a reason to implicit-skills.yaml - the list of approved exceptions')
     }
 
     It 'approved exception <name>' -ForEach $approvedSkills {

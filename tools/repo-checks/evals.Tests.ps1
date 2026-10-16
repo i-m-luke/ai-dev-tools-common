@@ -1,5 +1,5 @@
 BeforeAll {
-    $script:evals = Join-Path $PSScriptRoot '..' '..' 'tools' 'evals.ps1'
+    $script:evals = Join-Path $PSScriptRoot '..' 'evals.ps1'
 
     function Invoke-Evals([string[]] $Name, [switch] $InProgress) {
         $names = ($Name | ForEach-Object { "'$_'" }) -join ','

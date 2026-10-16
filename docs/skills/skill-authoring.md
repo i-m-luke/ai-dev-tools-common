@@ -1,8 +1,11 @@
-# skill-writing
+# skill-authoring
 
 These notes are for anyone modifying this skill. They are intentionally kept out of the skill folder
-([`SKILL.md`](../../skills/skill-writing/SKILL.md) holds only the instructions the invoking agent
+([`SKILL.md`](../../skills/skill-authoring/SKILL.md) holds only the instructions the invoking agent
 needs), so an agent can't load them.
+
+Authoring a skill is creating or changing the whole skill — its instructions, description,
+scripts, assets and folder layout — not only its text, which "writing" would suggest.
 
 ## Why this skill is implicit
 
@@ -16,5 +19,5 @@ skill and runs it when available.
 ### Keep the skill repo-agnostic
 
 The skill holds conventions that hold wherever a skill is written. What holds only in this repo —
-how the script tests enforce the conventions, where the approved implicit skills are listed — goes
+how the repo checks enforce the conventions, where the approved implicit skills are listed — goes
 to [`docs/guidelines/skills.md`](../guidelines/skills.md).

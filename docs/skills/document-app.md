@@ -9,7 +9,7 @@ needs), so an agent can't load them.
 This skill is the shared source of truth for user-invoked wrappers that run it. An agent can only reach a
 skill that carries a `description`: with `disable-model-invocation: true` the skill
 loses its description, and nothing but a human typing its name can invoke it. It is still explicit by
-design, so its description holds only its triggers (see [`skill-writing`](../../skills/skill-writing/SKILL.md#invocation-type)).
+design, so its description holds only its triggers (see [`skill-authoring`](../../skills/skill-authoring/SKILL.md#invocation-type)).
 
 ## Editing guidelines
 

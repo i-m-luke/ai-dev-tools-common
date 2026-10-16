@@ -1,5 +1,5 @@
 ---
-name: skill-writing
+name: skill-authoring
 description: Use when creating a skill or changing what one does — its instructions, description, scripts or other files. Load it before loading the skill you create or edit.
 metadata:
   credits:
@@ -9,7 +9,7 @@ metadata:
     url: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
 ---
 
-Conventions for writing a skill.
+Conventions for authoring a skill.
 
 Run `/writing-for-agents` — it covers writing any document an agent reads; where it conflicts with these conventions, these win. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and stop.
 

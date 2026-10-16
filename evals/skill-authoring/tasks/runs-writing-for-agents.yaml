@@ -1,6 +1,6 @@
 id: runs-writing-for-agents
 name: Loads the conventions and writing-for-agents
-description: Asked to create a skill, the agent loads skill-writing on its own and runs writing-for-agents as it instructs.
+description: Asked to create a skill, the agent loads skill-authoring on its own and runs writing-for-agents as it instructs.
 tags:
   - trigger
 inputs:
@@ -11,5 +11,5 @@ graders:
     config:
       mode: any_order
       required_skills:
-        - skill-writing
+        - skill-authoring
         - writing-for-agents

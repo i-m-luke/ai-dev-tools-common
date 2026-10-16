@@ -1,9 +1,9 @@
 param(
     [string[]] $SkillsRoot = @(
-        Join-Path $PSScriptRoot '..' '..' 'skills'
-        Join-Path $PSScriptRoot '..' '..' 'in-progress' 'skills'
+        Join-Path $PSScriptRoot '..' '..' '..' 'skills'
+        Join-Path $PSScriptRoot '..' '..' '..' 'in-progress' 'skills'
     ),
-    [string] $ScriptTestsRoot = (Join-Path $PSScriptRoot '..')
+    [string] $ScriptTestsRoot = (Join-Path $PSScriptRoot '..' '..' '..' 'script-tests')
 )
 
 BeforeDiscovery {

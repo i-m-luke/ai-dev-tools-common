@@ -8,7 +8,7 @@ Windows desktop app through one script and a JSON request/response contract; the
 
 The skill runs on the .NET SDK and the global tool `dotnet-script`
 (`dotnet tool install -g dotnet-script`); its preflight script checks both and prints how to install
-whatever is missing. CI lacks `dotnet-script`, so the script tests that need it are skipped there.
+whatever is missing. Without `dotnet-script`, the script tests that need it are skipped.
 
 ## Working folder
 
