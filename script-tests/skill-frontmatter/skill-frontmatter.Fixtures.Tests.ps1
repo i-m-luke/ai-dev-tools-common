@@ -29,10 +29,11 @@ BeforeAll {
         } -args $script:frontmatterTests, $SkillsRoot, $ImplicitSkillsPath
     }
 
+    $explicitFlag = "`ndisable-model-invocation: true"
     $explicitPolicy = "policy:`n  allow_implicit_invocation: false"
 
     $skillsRoot = Join-Path $TestDrive 'skills'
-    New-Skill $skillsRoot 'valid' "name: valid`ndescription: Use when testing a valid skill." $explicitPolicy
+    New-Skill $skillsRoot 'valid' "name: valid`ndescription: Use when testing a valid skill.$explicitFlag" $explicitPolicy
     New-Skill $skillsRoot 'valid-only' "name: valid-only`ndescription: Use ONLY when testing a valid skill run by other skills."
     New-Skill $skillsRoot 'invalid-yaml' "name: invalid-yaml`ndescription: Use when testing: an unquoted colon."
     New-Skill $skillsRoot 'wrong-name' "name: other-name`ndescription: Use when testing a renamed skill."
@@ -40,9 +41,11 @@ BeforeAll {
     New-Skill $skillsRoot 'empty-description' "name: empty-description`ndescription: `"`""
     New-Skill $skillsRoot 'no-use-when' "name: no-use-when`ndescription: Tests a skill without the leading phrase."
     New-Skill $skillsRoot 'implicit' "name: implicit`ndescription: Use when testing an implicit skill." "interface:`n  display_name: Implicit"
-    New-Skill $skillsRoot 'no-openai' "name: no-openai`ndescription: Use when testing a skill without agents/openai.yaml."
+    New-Skill $skillsRoot 'no-openai' "name: no-openai`ndescription: Use when testing a skill without agents/openai.yaml.$explicitFlag"
+    New-Skill $skillsRoot 'policy-only' "name: policy-only`ndescription: Use when testing a skill with only the openai.yaml policy." $explicitPolicy
+    New-Skill $skillsRoot 'nested-policy' "name: nested-policy`ndescription: Use when testing a policy nested in interface.$explicitFlag" "interface:`n  display_name: Nested`n  $($explicitPolicy -replace "`n", "`n  ")"
     New-Skill $skillsRoot 'approved' "name: approved`ndescription: Use when testing an approved convention skill."
-    New-Skill $skillsRoot 'approved-explicit' "name: approved-explicit`ndescription: Use when testing a stale exception." $explicitPolicy
+    New-Skill $skillsRoot 'approved-explicit' "name: approved-explicit`ndescription: Use when testing a stale exception.$explicitFlag" $explicitPolicy
     New-Skill $skillsRoot 'approved-no-reason' "name: approved-no-reason`ndescription: Use when testing an exception without a reason."
 
     $implicitSkillsPath = Join-Path $TestDrive 'implicit-skills.yaml'
@@ -62,7 +65,7 @@ Describe 'skill-frontmatter.Tests.ps1 on frontmatter fixtures' {
     It 'runs one frontmatter test case per skill' {
         $script:frontmatter.Name | Sort-Object | Should -Be @(
             'approved', 'approved-explicit', 'approved-no-reason', 'empty-description', 'implicit', 'invalid-yaml',
-            'missing-description', 'no-openai', 'no-use-when', 'valid', 'valid-only', 'wrong-name'
+            'missing-description', 'nested-policy', 'no-openai', 'no-use-when', 'policy-only', 'valid', 'valid-only', 'wrong-name'
         )
     }
 
@@ -101,7 +104,10 @@ Describe 'skill-frontmatter.Tests.ps1 on invocation fixtures' {
     It 'fails <test> with a message containing "<expected>"' -ForEach @(
         @{ test = 'implicit'; expected = 'docs/guidelines/skills.md#invocation' }
         @{ test = 'implicit'; expected = 'implicit-skills.yaml - the list of approved exceptions' }
-        @{ test = 'no-openai'; expected = 'allow_implicit_invocation: false' }
+        @{ test = 'implicit'; expected = 'lacks *disable-model-invocation: true* in SKILL.md and *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
+        @{ test = 'no-openai'; expected = 'lacks *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
+        @{ test = 'nested-policy'; expected = 'lacks *policy.allow_implicit_invocation: false* in agents/openai.yaml.' }
+        @{ test = 'policy-only'; expected = 'lacks *disable-model-invocation: true* in SKILL.md.' }
         @{ test = 'approved exception missing'; expected = 'matches no skill folder' }
         @{ test = 'approved exception approved-explicit'; expected = 'remove its entry' }
         @{ test = 'approved exception approved-no-reason'; expected = 'without the reason' }

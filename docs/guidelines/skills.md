@@ -6,7 +6,9 @@ repo; the [script tests](../verification/script-tests.md) enforce it.
 
 ## Invocation
 
-Skills are explicit by default. A convention skill that stays implicit is listed, with the reason,
+Skills are explicit by default: `disable-model-invocation: true` in `SKILL.md` and
+`policy.allow_implicit_invocation: false` in `agents/openai.yaml`, both checked by the script tests.
+A convention skill that stays implicit is listed, with the reason,
 in [`implicit-skills.yaml`](../../script-tests/skill-frontmatter/implicit-skills.yaml).
 
 ## Skill descriptions

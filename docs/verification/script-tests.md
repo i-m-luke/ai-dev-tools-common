@@ -25,3 +25,5 @@ every push and pull request (never waza evals, so it consumes no tokens); a fail
 
 The versioned `.githooks/pre-commit` hook runs the script tests (never waza evals) and blocks the
 commit when one fails. Enable it once per clone with `git config core.hooksPath .githooks`.
+On failure it lists the failed tests first, then the full output; skip it once with VS Code's
+"Commit (No Verify)" (enabled in `.vscode/settings.json`) or `git commit --no-verify`.

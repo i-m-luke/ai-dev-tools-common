@@ -1,5 +1,5 @@
 interface:
   display_name: "Help With Text"
   short_description: "Help user with text"
-  policy:
-    allow_implicit_invocation: false
+policy:
+  allow_implicit_invocation: false

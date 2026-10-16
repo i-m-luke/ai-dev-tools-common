@@ -37,12 +37,14 @@ BeforeAll {
         }
     }
 
-    # Explicit: run by other skills ("Use ONLY when") or barred from implicit invocation in agents/openai.yaml.
-    function Test-Explicit([string] $Dir) {
-        if ((Get-Frontmatter (Join-Path $Dir 'SKILL.md')).description -cmatch '^Use ONLY when ') { return $true }
+    # Explicit when run by other skills ("Use ONLY when"), or with model invocation off in both SKILL.md and agents/openai.yaml.
+    function Get-MissingExplicitSettings([string] $Dir) {
+        $frontmatter = Get-Frontmatter (Join-Path $Dir 'SKILL.md')
+        if ($frontmatter.description -cmatch '^Use ONLY when ') { return }
+        if ($frontmatter['disable-model-invocation'] -ne $true) { '`disable-model-invocation: true` in SKILL.md' }
         $openai = Join-Path $Dir 'agents' 'openai.yaml'
-        if (-not (Test-Path -LiteralPath $openai)) { return $false }
-        (Get-Content -LiteralPath $openai -Raw | ConvertFrom-Yaml).policy.allow_implicit_invocation -eq $false
+        $policy = (Test-Path -LiteralPath $openai) ? (Get-Content -LiteralPath $openai -Raw | ConvertFrom-Yaml).policy : $null
+        if ($null -eq $policy -or $policy.allow_implicit_invocation -ne $false) { '`policy.allow_implicit_invocation: false` in agents/openai.yaml' }
     }
 }
 
@@ -61,9 +63,12 @@ Describe 'Skill invocation' {
     It '<name>' -ForEach $skills {
         if ($approved) { return }
 
-        Test-Explicit $dir | Should -BeTrue -Because (
-            "skill '$name' is implicit. Skills are explicit by default (docs/guidelines/skills.md#invocation): " +
-            'set `policy.allow_implicit_invocation: false` in agents/openai.yaml, or start the description with ' +
+        $missing = @(Get-MissingExplicitSettings $dir)
+
+        $missing.Count | Should -Be 0 -Because (
+            "skill '$name' is not explicit, it lacks $($missing -join ' and '). Skills are explicit by default " +
+            '(docs/guidelines/skills.md#invocation): set both `disable-model-invocation: true` in SKILL.md and ' +
+            '`policy.allow_implicit_invocation: false` in agents/openai.yaml, or start the description with ' +
             '"Use ONLY when" if other skills run it. If it is a convention skill that must load implicitly, add it ' +
             'with a reason to script-tests/skill-frontmatter/implicit-skills.yaml - the list of approved exceptions')
     }
@@ -71,6 +76,6 @@ Describe 'Skill invocation' {
     It 'approved exception <name>' -ForEach $approvedSkills {
         $dir | Should -Not -BeNullOrEmpty -Because "implicit-skills.yaml lists '$name', which matches no skill folder; remove the entry"
         $reason | Should -Not -BeNullOrEmpty -Because "implicit-skills.yaml lists '$name' without the reason it stays implicit"
-        Test-Explicit $dir | Should -BeFalse -Because "skill '$name' is explicit; remove its entry from implicit-skills.yaml"
+        @(Get-MissingExplicitSettings $dir).Count | Should -BeGreaterThan 0 -Because "skill '$name' is explicit; remove its entry from implicit-skills.yaml"
     }
 }
