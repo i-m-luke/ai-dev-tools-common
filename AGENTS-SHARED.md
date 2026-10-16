@@ -30,11 +30,45 @@ When you don't know and can't find out by looking, ask: a question is cheaper th
 
 Planning is exhausted once the user has answered every question and the answers raise no new one.
 Only then close it with a plan summary for approval, in a reply whose sole question is that
-approval; start implementing only once the user approves.
+approval; once approved, continue with [Design visualization](#design-visualization).
 
 ### Shared files
 
 `.artifacts/` in the repository root is the file exchange between you and the user: put every file meant for the user there, and look there for files the user refers to. When you create the folder, check that `.gitignore` ignores it; if it does not, tell the user and leave `.gitignore` to them.
+
+## Design visualization
+
+Visualize a plan that shapes code — its types, APIs, relations or algorithms; implement any other plan as soon as it is approved.
+
+Once the plan is approved, sketch its design decisions as visuals so you and the user confirm a
+shared understanding of the architecture. Start implementing only once the user confirms them; the
+approved plan and its visuals together form the final **specification**.
+
+Run `/show-me` to render the visuals. When the `show-me` skill is missing or cannot be invoked,
+tell the user and render them yourself by own rules defined here. Where its instructions conflict
+with these rules, these rules win.
+
+Show each part the plan adds or changes:
+
+- **Model** — the shape of data alone, nested types drawn inline:
+  ```
+  Building {
+    color: string,
+    dimension: Dimension {
+      height: int,
+      width: int,
+    },
+    walls: array of Wall { ... },
+  }
+  ```
+- **API** — each type's public contract: its properties and method signatures.
+  ```
+  class OrderService
+    + Orders: IReadOnlyList<Order>
+    + Place(order: Order): Result<OrderId>
+  ```
+- **Relations** — between the types, as a Mermaid diagram.
+- **Algorithm** — only when the design cannot be understood without it: a Mermaid flowchart.
 
 ## Writing docs
 
