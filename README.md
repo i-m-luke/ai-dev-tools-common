@@ -31,7 +31,8 @@ Three kinds of checks verify the repo:
 
 - [Repository checks](docs/verification/repository-checks.md): Pester tests of the skill conventions (frontmatter,
   folder structure) and of the repo's tools. Fast and free (no token consumption); the pre-commit hook and CI run them.
-- [Script tests](docs/verification/script-tests.md): Pester tests of the scripts the skills ship. Free, but they
+- [Script tests](docs/verification/script-tests.md): Pester tests of the scripts the skills ship, run through Vitest
+  (`npm run script-tests`). Free, but they
   drive real apps and services, so neither the hook nor CI runs them; run them whenever you change a script.
 - [Evals](docs/verification/evals.md): run Copilot CLI against the skills and agent instructions and grade its
-  behaviour. They consume tokens, so run only the evals for what you changed.
+  behaviour (`npm run evals`). They consume tokens, so run only the evals for what you changed.

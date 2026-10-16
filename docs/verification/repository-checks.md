@@ -1,13 +1,12 @@
 # Repository checks
 
 `./tools/repo-checks.ps1` runs every [Pester](https://pester.dev) test in `tools/repo-checks/`; they
-enforce the [guidelines](../guidelines/skills.md) every skill follows and test the repo's own tools,
-and consume no tokens.
+enforce the [guidelines](../guidelines/skills.md) every skill follows and consume no tokens.
 
 The checks that cover all skills live in `tools/repo-checks/skill-frontmatter/` (frontmatter and
 invocation, with the approved implicit skills in the root `implicit-skills.yaml`) and
 `tools/repo-checks/skill-structure/` (folder layout, step numbering, script tests, mentions of assets
-and references); tests of the repo's tools live directly in `tools/repo-checks/`.
+and references).
 
 Each check has its own tests (`*.Fixtures.Tests.ps1`), which run first: a broken check cannot
 validate the skills, so when one of them fails, the remaining tests are skipped.

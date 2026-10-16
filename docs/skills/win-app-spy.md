@@ -25,7 +25,7 @@ tab Notepad restored from the user's session; open a new tab before typing, and 
 emptied. The script tests leave out these Notepad runs: parallel runs would share one desktop and
 one Notepad process. Tests that need a window use their own fixture app instead, which never takes
 focus, and skip in CI, which has no desktop; get-state's fixture
-(`script-tests/win-app-spy/fixture-app.ps1`) stays open only while its tests hold the shared GUI
+(`tests/script-tests/win-app-spy/fixture-app.ps1`) stays open only while its tests hold the shared GUI
 lock.
 
 ## FlaUI and the WindowsDesktop runtime

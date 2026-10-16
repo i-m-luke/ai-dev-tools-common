@@ -3,7 +3,7 @@ param(
         Join-Path $PSScriptRoot '..' '..' '..' 'skills'
         Join-Path $PSScriptRoot '..' '..' '..' 'in-progress' 'skills'
     ),
-    [string] $ScriptTestsRoot = (Join-Path $PSScriptRoot '..' '..' '..' 'script-tests')
+    [string] $ScriptTestsRoot = (Join-Path $PSScriptRoot '..' '..' '..' 'tests' 'script-tests')
 )
 
 BeforeDiscovery {
@@ -68,7 +68,7 @@ Describe 'Skill script tests' {
         $untested = $scripts | Where-Object { -not $testsText.Contains($_.Name) } | ForEach-Object Name
 
         $untested | Should -BeNullOrEmpty -Because (
-            "every script is covered by Pester tests in script-tests/$name/ that name it " +
+            "every script is covered by Pester tests in tests/script-tests/$name/ that name it " +
             "(see docs/guidelines/skills.md#scripts); add tests for: $($untested -join ', ')")
     }
 }

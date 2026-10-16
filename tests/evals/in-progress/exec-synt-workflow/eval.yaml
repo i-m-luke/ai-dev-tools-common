@@ -1,0 +1,22 @@
+name: exec-synt-workflow
+description: Checks that the agent loads exec-synt-workflow only on "/exec-synt-workflow" or a workflow block, and that it follows the workflow strictly.
+skill: exec-synt-workflow
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+  # Hide the skill body so the agent has to load the skill itself, as in real use.
+  inject_skill_body: false
+  skill_directories:
+    - ../../../../in-progress/skills
+metrics:
+  - name: task_completion
+    weight: 0.5
+    threshold: 1.0
+  - name: trigger_accuracy
+    weight: 0.5
+    threshold: 0.8
+tasks:
+  - "tasks/*.yaml"

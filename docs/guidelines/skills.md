@@ -22,7 +22,7 @@ The repo checks verify the folder layout and that `SKILL.md` mentions every file
 
 ## Scripts
 
-The Pester tests of a skill's scripts live in `script-tests/<skill>/` (see
+The Pester tests of a skill's scripts live in `tests/script-tests/<skill>/` (see
 [script tests](../verification/script-tests.md)); the repo checks verify that each script has them.
 
 ## Workflow skills

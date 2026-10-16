@@ -1,0 +1,16 @@
+{
+  "name": "ai-dev-tools-common",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "script-tests": "vitest run --project script-tests",
+    "evals": "vitest run --project evals",
+    "evals:in-progress": "vitest run --project evals-in-progress",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

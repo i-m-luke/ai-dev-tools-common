@@ -1,25 +1,33 @@
 # Evals
 
-- Run all evals: `./tools/evals.ps1`
-- Run selected evals: `./tools/evals.ps1 -Name document-app, notify` — a name matching no eval is
-  listed and the run exits 1 before any eval starts, so a typo never passes as success.
-- Pick the model the skill evals run on: `./tools/evals.ps1 -Model claude-sonnet-5` (default
-  `claude-sonnet-5.5`; overrides the `model` in each `eval.yaml`).
-- Run the evals of [in-progress](../in-progress.md) content instead: `./tools/evals.ps1 -InProgress`
-  (combinable with `-Name`); they live in `evals/in-progress/`, never run without the switch.
+[Vitest](https://vitest.dev) runs each waza eval (`tests/evals/<eval>/eval.yaml`) as one test; an eval
+runs complete, with all its tasks and trigger tests.
+
+A new eval needs its `evalTest('<eval>')` line in `tests/evals.test.ts` (in-progress ones in
+`tests/evals-in-progress.test.ts`), so the VS Code Test Explorer lists it before a run; a test there
+fails when the list and the eval folders differ.
+
+- Run all evals: `npm run evals`
+- Run selected evals: `npm run evals '--' -t "notify|document-app"` (a regex on the eval name; quote
+  `--` in PowerShell) — a filter matching no eval fails the run, so a typo never passes as success.
+- Pick the model the evals run on: set `EVAL_MODEL` (default `claude-sonnet-5.5`; overrides the
+  `model` in each `eval.yaml`), e.g. `$env:EVAL_MODEL = 'claude-sonnet-5'; npm run evals`.
+- Run the evals of [in-progress](../in-progress.md) content: `npm run evals:in-progress` (combinable
+  with `-t`); they live in `tests/evals/in-progress/`, in the Vitest project `evals-in-progress`
+  (`tests/evals-in-progress.test.ts`), which `npm run evals` never runs. A bare `npx vitest run`
+  runs every project, evals included.
 - Each run gets its own folder `.artifacts/evals-reports/<timestamp>/` (git-ignored) with everything
   the run produced:
-  - `report.md` — the model, scope, duration, per-eval PASS/FAIL and the token usage table below. No
-    report when the run stops early (unknown eval name, no evals).
+  - `report.md` — the model, scope, duration, per-eval PASS/FAIL and the token usage table below.
+    No report when no eval ran.
   - `<eval>/` — the eval's output, so a failure can be investigated without rerunning: `console.txt`
-    (what the eval printed) and, for waza evals, `results.json` (waza's results) and `transcripts/`
-    (each task's agent transcript).
-- After the run, a token usage table lists each waza eval's input, output, cache read and cache
+    (what waza printed), `results.json` (waza's results) and `transcripts/` (each task's agent
+    transcript).
+- After the run, a token usage table lists each eval's input, output, cache read and cache
   write tokens, estimated AI credits and premium requests, with a total row. It comes from the
-  `usage` in waza's `results.json`; waza's own
-  `USAGE SUMMARY` stays in the output. Script evals use no tokens and are left out.
+  `usage` in waza's `results.json`; waza's own `USAGE SUMMARY` stays in the output.
   - *Est. credits* is computed from the tokens and the run's model price in
-    `tools/model-prices.json` (USD per 1M tokens from GitHub's
+    `tests/evals-executor/model-prices.json` (USD per 1M tokens from GitHub's
     [models and pricing](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing);
     1 credit = $0.01); waza's input tokens include the cache ones, so only the remainder is priced
     as input. It is an estimate: the real bill is on github.com. A model missing from the
@@ -29,7 +37,7 @@
 
 ## Requirements
 
-- PowerShell 7+ (`pwsh`)
+- Node.js 22+ and `npm install` in the repo root
 - Copilot CLI (`copilot`) on PATH, logged in, and allowed by your Copilot policy (https://github.com/settings/copilot)
 - [waza](https://github.com/microsoft/waza) for the skill evals, on PATH or in its default install folder (Windows: `irm https://raw.githubusercontent.com/microsoft/waza/main/install.ps1 | iex`)
 - `evals.config.json` in the repo root (see below)
@@ -44,16 +52,15 @@ accounts or `GH_TOKEN` is set for another one:
 { "githubUser": "your-github-login" }
 ```
 
-Evals read it through `tools/read-config.ps1`, which returns the file's values and stops the
-eval when the file is missing or not valid JSON. With `githubUser` set, an eval takes the account's
-token from GitHub CLI (`gh`, the account must be logged in via `gh auth login`) and hands it to
-Copilot CLI (via `COPILOT_GITHUB_TOKEN`, for the eval's process only; see
-`tools/use-copilot-account.ps1`); without it, Copilot CLI picks its credentials as usual. A
-`githubUser` not logged in to `gh` stops the eval too.
+The evals read it before the first eval runs, and fail when the file is missing or not valid JSON.
+With `githubUser` set, they take the account's token from GitHub CLI (`gh`, the account must be
+logged in via `gh auth login`) and hand it to Copilot CLI (via `COPILOT_GITHUB_TOKEN`, for waza's
+process only; see `tests/evals-executor/account.ts`); without it, Copilot CLI picks its credentials
+as usual. A `githubUser` not logged in to `gh` fails the evals too.
 
 ## Skill evals
 
-Each skill has a [waza](https://github.com/microsoft/waza) eval in `evals/<skill>/`: `eval.yaml`,
+Each skill has a [waza](https://github.com/microsoft/waza) eval in `tests/evals/<skill>/`: `eval.yaml`,
 behaviour tasks in `tasks/` run against the code in `fixtures/`, and, for skills the model invokes
 on its own, `trigger_tests.yaml` with prompts that must and must not trigger the skill — they run
 against `fixtures/` too, so a prompt naming an existing file needs that file there. Graders
@@ -63,16 +70,16 @@ check the skill invocations, the files the agent left, and its replies (LLM judg
   skill itself.
 - Skills only the user invokes (`disable-model-invocation`) run with their body injected: the agent
   receives a slash command as plain text, so injection stands in for the user typing it.
-- External skills a skill relies on are replaced by stubs in `evals/_stub-skills/`, so the result
+- External skills a skill relies on are replaced by stubs in `tests/evals/_stub-skills/`, so the result
   doesn't depend on what is installed.
 
-A full run consumes a lot of tokens; use `-Name` to run only the evals you changed.
+A full run consumes a lot of tokens; use `-t` to run only the evals you changed.
 
 ## Shared-instructions evals
 
 Evals of the shared instructions (`AGENTS-SHARED.md` and `agents-shared/`) have no skill. Their
 fixtures hold a strict `AGENTS.md` ("Always read AGENTS-SHARED.md in full, whatever the cost."), and
-before the run `tools/evals.ps1` copies the real shared instructions into every fixture folder that
+before each eval runs, the evals executor copies the real shared instructions into every fixture folder that
 contains an `AGENTS.md`, so the eval tests the current text, not a stale copy. The copies are
 git-ignored and removed afterwards, also when the run fails. They are copies, not symlinks: the repo
 sets `core.symlinks=false` and waza copies fixtures into a temp workspace.

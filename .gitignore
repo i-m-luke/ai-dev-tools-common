@@ -1,8 +1,9 @@
 /evals.config.json
+/node_modules/
 /.artifacts/
 # Copies of the shared instructions the evals run against (see docs/verification/evals.md)
-/evals/*/fixtures/*/AGENTS-SHARED.md
-/evals/*/fixtures/*/agents-shared/
-/evals/in-progress/*/fixtures/*/AGENTS-SHARED.md
-/evals/in-progress/*/fixtures/*/agents-shared/
+/tests/evals/*/fixtures/*/AGENTS-SHARED.md
+/tests/evals/*/fixtures/*/agents-shared/
+/tests/evals/in-progress/*/fixtures/*/AGENTS-SHARED.md
+/tests/evals/in-progress/*/fixtures/*/agents-shared/
 agents.secrets.yaml

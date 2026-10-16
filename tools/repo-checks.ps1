@@ -4,7 +4,7 @@
 Runs the repo checks and reports which ones failed.
 
 .DESCRIPTION
-Runs every Pester test (`*.Tests.ps1`) in tools/repo-checks: the repo's conventions and the tests of its own tools.
+Runs every Pester test (`*.Tests.ps1`) in tools/repo-checks: the repo's conventions.
 The checks' own tests (`*.Fixtures.Tests.ps1`) run first; when one fails, the rest is skipped, since broken
 checks cannot validate the skills.
 Exits 0 when all tests pass, 1 otherwise; on failure the output ends with a "Repo checks failed:" line

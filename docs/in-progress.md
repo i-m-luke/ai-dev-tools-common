@@ -4,8 +4,8 @@
 the plugin: [`in-progress/skills/`](../in-progress/skills) mirrors [`skills/`](../skills) for unfinished
 skills.
 
-- Their evals live in [`evals/in-progress/`](../evals/in-progress) and run separately from the production
-  ones: `./tools/evals.ps1 -InProgress` (see [Evals](verification/evals.md)).
+- Their evals live in [`tests/evals/in-progress/`](../tests/evals/in-progress) and run separately from
+  the production ones: `npm run evals:in-progress` (see [Evals](verification/evals.md)).
 - The repo checks verify their frontmatter like that of the shipped skills.
-- To ship a skill, move its folder to `skills/` and its eval to `evals/`, and point the eval's
-  `skill_directories` back at `../../skills`.
+- To ship a skill, move its folder to `skills/` and its eval to `tests/evals/`, and point the eval's
+  `skill_directories` back at `../../../skills`.
