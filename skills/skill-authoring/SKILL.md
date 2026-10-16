@@ -9,41 +9,93 @@ metadata:
     url: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
 ---
 
-Conventions for authoring a skill.
+Conventions for authoring a skill, so that every skill follows one contract.
 
-Run `/writing-for-agents` — it covers writing any document an agent reads; where it conflicts with these conventions, these win. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and stop.
+Run `/writing-for-agents` — it covers writing any document an agent reads. When the
+`writing-for-agents` skill is missing or cannot be invoked, tell the user and stop. Where its
+instructions conflict with this skill's, this skill's win.
 
 Write skills in English, like any context an agent reads.
 
-## Invocation type
+## Skill categorization
 
-Every skill is one of three types; the rest of this skill refers to them by name.
+What characteristics suit the requirements the most? Compare the three categories below and pick
+the one that fits; the rest of this skill refers to them by name.
 
-- **explicit**:
-  > Runs only when the user invokes it. Both of the following hold:
-  > a. its `agents/openai.yaml` sets `policy.allow_implicit_invocation: false`
-  > b. its `disable-model-invocation` is set to `true`
-  > When only one of them holds, the skill's invocation is in conflict — point it out to the user.
-- **implicit**:
-  > Loads on its own for every task it touches, e.g. the conventions of a language or an architecture.
-- **hybrid**:
-  > Is half of each: _implicit_ in its settings, so other skills' instructions can run it; _explicit_ in behaviour, as it runs only on its literal trigger. Its description lists its triggers and nothing else, e.g.
-  > `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.` Its purpose belongs in the skill body, and callers run it as `Run /<skill> …`.
+### Explicit
 
-## Naming
+- **Characteristics**: runs only when the user invokes it; neither the agent nor another skill can
+  start it. Both settings hold: `disable-model-invocation: true` in `SKILL.md` and
+  `policy.allow_implicit_invocation: false` in `agents/openai.yaml`. When only one of them holds,
+  the skill's invocation is in conflict — point it out to the user.
+- **When to choose**: the user alone decides when the skill runs, e.g. a workflow that changes
+  things or costs many tokens. It costs no context, as its description is never loaded.
+- **Naming**: a verb phrase, e.g. `write-poem`.
+- **Description**: `Use when …` and a one-line summary for the human who picks the skill.
+- **How others call it**: they cannot; a skill that needs it tells the user to run `/<skill>`.
 
-Name a skill after its [invocation type](#invocation-type): an explicit or hybrid skill by a verb
-phrase, e.g. `write-poem`; an implicit skill by a noun phrase, e.g. `poem-writing`.
+### Implicit
 
-## Skill descriptions
+- **Characteristics**: model invocation stays on — neither setting is set — so the agent loads the
+  skill on its own for every task its description matches, and other skills can run it.
+- **When to choose**: the skill applies to every task it touches, e.g. the conventions of a language
+  or an architecture. Its description stays loaded on every turn, so the reach must be worth it.
+- **Naming**: a noun phrase, e.g. `poem-writing`.
+- **Description**: `Use when …` followed by every distinct situation the skill applies to, one
+  trigger each.
+- **How others call it**: as described in [Calling another skill](#calling-another-skill).
 
-A skill's `description` starts with "Use when" — e.g. `Use when asked to message or notify the user
-remotely.` — or, for a hybrid skill, "Use ONLY when". The description is the
-pointer an agent reads to decide whether to load the skill, and a uniform leading phrase makes it
-read as a trigger condition.
+### Hybrid
+
+- **Characteristics**: half of each — _implicit_ in its settings, so other skills' instructions can
+  run it; _explicit_ in behaviour, as it runs only on its literal trigger.
+- **When to choose**: the user runs it by hand and other skills must be able to run it too, e.g.
+  sending a notification.
+- **Naming**: a verb phrase, e.g. `notify`.
+- **Description**: `Use ONLY when` followed by its triggers and nothing else, e.g.
+  `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`
+  Its purpose belongs in the skill body.
+- **How others call it**: as described in [Calling another skill](#calling-another-skill).
+
+## Skill type
+
+Every skill is one of two types, each with its own template:
+
+- **Workflow skill** — walks the agent through ordered steps towards a goal; usually explicit or
+  hybrid. A tool skill, one built around scripts, is a workflow skill too. Read
+  `references/workflow-skills.md` when you create or change a workflow skill.
+- **Convention skill** — rules the agent returns to on demand while it works; usually implicit. Read
+  `references/convention-skills.md` when you create or change a convention skill.
+
+## Frontmatter
+
+A skill's `description` starts with "Use when", or "Use ONLY when" for a hybrid skill. The
+description is the pointer an agent reads to decide whether to load the skill, and a uniform leading
+phrase makes it read as a trigger condition.
 
 Write frontmatter values without an unquoted `:` — it makes the YAML invalid and the skill fails to
 load. Use an em dash (—) instead.
+
+## Calling another skill
+
+Call another skill with these three sentences, filled in:
+
+> Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and
+> stop. Where its instructions conflict with this skill's, this skill's win.
+
+Write no fallback copy of the called skill's instructions: the calling skill depends on it as on a
+prerequisite, and a copy drifts from the original.
+
+## Standard phrases
+
+Point at a skill's files and decisions with these phrases, so the agent recognises each pointer:
+
+- reference — `Read references/<file> when <condition>.`
+- template — `Fill in assets/<file> …` when the agent completes it, or `Use assets/<file> as …`
+  when it uses the file as it is.
+- script — `Run <exact command> …`.
+- playbook — `Act on the script's exit code by this playbook:`, followed by one `<outcome>` —
+  `<action>` item per outcome.
 
 ## Wording
 
@@ -65,37 +117,24 @@ A skill folder holds `SKILL.md` and, as needed:
 
 `SKILL.md` mentions every file in `assets/` and `references/` by its path in the skill folder (e.g.
 `references/TERMS.md`), together with when to use it: the mention is the agent's only way to the
-file.
+file. Keep `SKILL.md` a short overview: move detail that only some tasks need into a reference.
 
 ## Scripts
 
 When designing a skill, go through its steps and ask of each one whether a script can do it. Aim for
 scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every
-step moved to a script is cheaper, faster and repeatable.
+step moved to a script is cheaper, faster and repeatable. A step whose outcome is fixed by its
+input — calling an API, parsing, transforming or validating files — runs as a script, so the agent
+spends no judgement or tokens on it and its result never drifts.
 
-A step whose outcome is fixed by its input — calling an API, parsing, transforming or validating
-files — runs as a script, so the agent spends no judgement or tokens on it and its result never
-drifts. The script lives in the skill's `scripts/` folder, is written in PowerShell and runs without
-interaction; it reports through its exit code and stderr. The step that runs it names the exact
-command — `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with `powershell` in
-place of `pwsh` when pwsh is missing — and acts on the result by a playbook keyed by exit code.
-When neither `pwsh` nor `powershell` is available, tell the user and ask whether to install
-PowerShell or write the script in another language.
-Pester tests cover every script.
+Read `references/scripts.md` when a skill gets a script or you write, change or call one; it holds
+the contract every script follows, in any language. Read `references/powershell-scripts.md` when
+the skill's scripts are in PowerShell; it works the contract out in that language.
 
 ## Artifacts
 
-Files a skill produces for its own work or for the user — reports, previews, state — go to
+Files a skill produces for its own work or for the user — reports, previews, state files — go to
 `.artifacts/<skill>/<yyyyMMdd-HHmmss>/` in the workspace root, one folder per run. The skill's script
-creates the folder and prints its path for the agent; in a skill without scripts, the agent creates
-it. A script keeps its state in `state.json` in that folder; state that must outlive a run lives in
-`.artifacts/<skill>/state.json`, an exception the skill justifies in its body. Output that belongs in
-the user's repository, such as documentation, goes where the skill writes it.
-
-## Workflow skills
-
-A workflow skill — one that walks the agent through ordered steps — puts those steps under a
-`## Steps` chapter, so the sequence stands apart from the reference it consults. Each step is a
-chapter of its own, `### N. <action>`, named by what the agent does. Reference used by a single
-step, such as a playbook, lives inside that step; reference shared by several steps gets a chapter
-beside `Steps`.
+creates the folder and returns its path in its result; in a skill without scripts, the agent creates
+it. A script that writes there receives the path from its caller. Output that belongs in the user's
+repository, such as documentation, goes where the skill writes it.

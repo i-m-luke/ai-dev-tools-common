@@ -1,10 +1,10 @@
 name: skill-authoring
-description: Checks that the agent reaches for skill-authoring on its own when it writes a skill, and runs writing-for-agents with it.
+description: Checks that the agent reaches for skill-authoring on its own when it writes a skill, runs writing-for-agents with it, and writes workflow and convention skills by its templates and script contract.
 skill: skill-authoring
 version: "1.0"
 config:
   trials_per_task: 1
-  timeout_seconds: 300
+  timeout_seconds: 600
   executor: copilot-sdk
   model: claude-sonnet-5.5
   # Hide the skill body so the agent has to load the skill itself, as in real use.

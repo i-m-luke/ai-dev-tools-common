@@ -6,9 +6,9 @@ description: Use when a task requires UI inspection of a Windows app, whether to
 Inspect the UI of any Windows desktop app — its element tree, element states and screenshots — and
 interact with it, without needing the app's source code.
 
-## Steps
+## Initialization
 
-Steps 1 and 2 run once per conversation.
+Run the initialization once per conversation.
 
 ### 1. Check the environment
 
@@ -17,7 +17,8 @@ of `pwsh` when pwsh is missing. Act on its exit code by this playbook:
 
 - `0` — continue; the script printed the versions it found.
 - `1` — show the user the installation instructions the script printed to stderr and ask whether to
-  run them; once the prerequisites are installed, run this step again.
+  run them; once the prerequisites are installed, run this check again — at most once; when it
+  still exits `1`, show the user its stderr and end the skill.
 - `*` — tell the user the script's stderr, or the error when the script failed to run, and end the
   skill.
 
@@ -32,7 +33,9 @@ Keep the folder when the task ends: the user reviews the requests and screenshot
 it when they choose. It deliberately replaces the usual `.artifacts/` folder in the workspace,
 because the skill works in any repository, or none.
 
-### 3. Send a request
+## Steps
+
+### 1. Send a request
 
 Write the request as a JSON object into `req.json` in the working folder; its `command` selects
 what the script does. From the working folder, run `dotnet script win-app-spy.csx -- req.json` —
@@ -116,7 +119,7 @@ until its `condition` holds — `exists` (default), `gone`, `enabled` or `visibl
 { "command": "wait", "locator": "//MenuItem[@AutomationId='File']", "condition": "enabled", "timeout": 5000 }
 ```
 
-### 4. Close the apps you launched
+### 2. Close the apps you launched
 
 When the task ends, close every app you launched: `{ "command": "close" }` closes the active app,
 `"app": { "pid": 1234 }` another one. `close` closes the app's windows and waits up to `timeout` ms

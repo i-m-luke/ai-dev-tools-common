@@ -1,0 +1,42 @@
+id: creates-convention-skill
+name: Creates a convention skill
+description: Asked for rules the agent applies on its own, the agent writes an implicit convention skill with Rules, Guidelines and examples in the fixed form.
+tags:
+  - behavior
+inputs:
+  prompt: "Create a skill named commit-message-writing in skills/commit-message-writing that the agent loads on its own whenever it writes or reviews a git commit message. Our rules: the subject is in the imperative mood, at most 50 characters, with no trailing period, and a blank line separates it from the body. As a judgement call, the body explains why the change was made rather than what it does. Decide everything else yourself without asking me."
+graders:
+  - type: skill_invocation
+    name: loads-skill-authoring
+    config:
+      mode: any_order
+      required_skills:
+        - skill-authoring
+  - type: file
+    name: convention-shape
+    config:
+      content_patterns:
+        - path: skills/commit-message-writing/SKILL.md
+          must_match:
+            - '(?m)^description:\s*["'']?Use when'
+            - '(?m)^## Rules\s*$'
+            - '(?m)^## Guidelines\s*$'
+            - '❌'
+            - '✅'
+          must_not_match:
+            # an implicit skill keeps model invocation on
+            - 'disable-model-invocation:\s*true'
+            # guardrails belong to the rules
+            - '(?m)^## Guardrails'
+  - type: prompt
+    name: follows-convention-template
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the work above, not continuing it. Read every file in skills/commit-message-writing in the workspace and check:
+        1. The body of SKILL.md opens with a sentence stating why the rules exist.
+        2. The imperative mood, the 50-character limit, the missing trailing period and the blank line are under "## Rules"; explaining why rather than what is under "## Guidelines".
+        3. Every example shows ❌ with the reason and a sample, followed by ✅ with a sample.
+        4. The description starts with "Use when" and names the distinct situations the rules apply to (at least writing and reviewing commit messages), so the agent can load the skill on its own.
+        5. The skill is implicit: SKILL.md does not set `disable-model-invocation: true`, and no agents/openai.yaml sets `allow_implicit_invocation: false`.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

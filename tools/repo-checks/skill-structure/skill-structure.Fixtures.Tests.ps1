@@ -32,7 +32,7 @@ BeforeAll {
     $script:skillsRoot = Join-Path $TestDrive 'skills'
     $scriptTestsRoot = Join-Path $TestDrive 'script-tests'
 
-    New-Skill 'valid' "## Steps`n`n### 1. Run`n`nSee ``references/guide.md`` and ``assets/page.html``.`n`n### 2. Close`n`n## Notes" @{
+    New-Skill 'valid' "## Initialization`n`n### 1. Check`n`n## Steps`n`n### 1. Run`n`nSee ``references/guide.md`` and ``assets/page.html``.`n`n### 2. Close`n`n## Notes" @{
         'agents/openai.yaml'  = 'interface: {}'
         'scripts/run.ps1'     = 'exit 0'
         'references/guide.md' = 'Guide.'
@@ -44,6 +44,7 @@ BeforeAll {
     New-Skill 'unknown-entry' 'Body.' @{ 'README.md' = 'Notes.' }
     New-Skill 'unnumbered-step' "## Steps`n`n### Run"
     New-Skill 'skipped-step' "## Steps`n`n### 1. Run`n`n### 3. Close"
+    New-Skill 'skipped-init-step' "## Initialization`n`n### 2. Check`n`n## Steps`n`n### 1. Run"
     New-Skill 'prose-steps' "# Syntax`n`n## Steps`n`nOne step per line.`n`n``````text`n### not a step`n```````n`n## Loops`n`n### Loop syntax"
     New-Skill 'untested-script' 'Body.' @{ 'scripts/run.ps1' = 'exit 0' }
     New-Skill 'unmentioned-file' 'Uses a template.' @{ 'assets/page.html' = '<html></html>' }
@@ -66,6 +67,7 @@ Describe 'skill-structure.Tests.ps1 on fixtures' {
         @{ test = 'Skill folder layout / unknown-entry'; expected = 'README.md' }
         @{ test = 'Skill steps / unnumbered-step'; expected = '### N. <action>' }
         @{ test = 'Skill steps / skipped-step'; expected = '### 3. Close' }
+        @{ test = 'Skill steps / skipped-init-step'; expected = '## Initialization' }
         @{ test = 'Skill script tests / untested-script'; expected = 'add tests for: run.ps1' }
         @{ test = 'Skill file mentions / unmentioned-file'; expected = 'mention: assets/page.html' }
     ) {

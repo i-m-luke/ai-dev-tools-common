@@ -46,16 +46,23 @@ Describe 'Skill folder layout' {
 
 Describe 'Skill steps' {
     It '<name>' -ForEach $skills {
-        $inSteps = $false
-        $steps = @(foreach ($line in Get-ProseLines $path) {
-                if ($line -match '^#{1,2} ') { $inSteps = $line -match '^## Steps\s*$'; continue }
-                if ($inSteps -and $line -match '^### ') { $line }
-            })
+        $chapters = @{ 'Initialization' = @(); 'Steps' = @() }
+        $chapter = $null
+        foreach ($line in Get-ProseLines $path) {
+            if ($line -match '^#{1,2} ') {
+                $chapter = if ($line -match '^## (Initialization|Steps)\s*$') { $Matches[1] }
+                continue
+            }
+            if ($chapter -and $line -match '^### ') { $chapters[$chapter] += $line }
+        }
 
-        for ($i = 0; $i -lt $steps.Count; $i++) {
-            $steps[$i] | Should -Match "^### $($i + 1)\. \S" -Because (
-                'the chapters under "## Steps" are numbered from 1 as "### N. <action>" ' +
-                '(see docs/guidelines/skills.md#workflow-skills)')
+        foreach ($name in $chapters.Keys) {
+            $steps = $chapters[$name]
+            for ($i = 0; $i -lt $steps.Count; $i++) {
+                $steps[$i] | Should -Match "^### $($i + 1)\. \S" -Because (
+                    "the chapters under `"## $name`" are numbered from 1 as `"### N. <action>`" " +
+                    '(see docs/guidelines/skills.md#workflow-skills)')
+            }
         }
     }
 }

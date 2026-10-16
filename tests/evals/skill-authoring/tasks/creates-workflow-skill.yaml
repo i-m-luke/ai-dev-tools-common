@@ -1,0 +1,46 @@
+id: creates-workflow-skill
+name: Creates a workflow skill with scripts
+description: Asked for a skill built around a script that needs a tool beyond its runtime, the agent writes a workflow skill whose scripts follow the script contract and whose initialization checks the prerequisites.
+tags:
+  - behavior
+inputs:
+  prompt: "Create a skill named resize-images in skills/resize-images that the user runs as /resize-images to shrink every image in a folder to a given maximum width with ImageMagick. Write its scripts in PowerShell. Decide everything else yourself without asking me."
+graders:
+  - type: skill_invocation
+    name: loads-skill-authoring
+    config:
+      mode: any_order
+      required_skills:
+        - skill-authoring
+  - type: file
+    name: workflow-shape
+    config:
+      must_exist:
+        - skills/resize-images/scripts/check-prerequisites.ps1
+      content_patterns:
+        - path: skills/resize-images/SKILL.md
+          must_match:
+            - '(?m)^## Initialization\s*$'
+            - '(?m)^## Steps\s*$'
+            - '(?m)^### 1\. \S'
+            - 'check-prerequisites\.ps1'
+            - '::result::'
+          must_not_match:
+            # script names are kebab-case
+            - 'scripts/[^\s/`]*[A-Z_][^\s/`]*\.ps1'
+        - path: skills/resize-images/scripts/check-prerequisites.ps1
+          must_match:
+            - '\.SYNOPSIS'
+            - '\.NOTES'
+  - type: prompt
+    name: follows-script-contract
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the work above, not continuing it. Read every file in skills/resize-images in the workspace and check:
+        1. Every script documents its purpose, input, result, exit codes and stderr in its comment-based help, and SKILL.md names the command that prints the help instead of describing the scripts' responses and errors itself.
+        2. A script that returns a result prints it as exactly one stdout line starting with `::result::` followed by compact JSON, and SKILL.md tells the agent to read it only on exit code 0 and to stop, reporting a broken contract, when the line is missing or appears more than once.
+        3. Expected failures use exit codes from 2 up, never 1, and every playbook in SKILL.md ends with a `*` row that shows the user the script's stderr and stops.
+        4. The `## Initialization` chapter, placed before `## Steps`, runs check-prerequisites.ps1, which checks ImageMagick but not PowerShell itself; on a missing prerequisite the agent offers to install it and runs the check again at most once, and no step under `## Steps` sends the agent back to initialization.
+        5. Every step ends with a completion condition, and any instruction that sends the agent back to an earlier step states a maximum number of rounds.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

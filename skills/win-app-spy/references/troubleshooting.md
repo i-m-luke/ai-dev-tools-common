@@ -25,7 +25,8 @@ The first run restores the FlaUI packages from nuget.org.
 ## dotnet-script missing
 
 `dotnet script` fails with "could not execute because the specified command or file was not found",
-or preflight exits 1: run step 1 again and follow the installation instructions preflight prints
+or preflight exits 1: run `scripts/preflight.ps1` as initialization step 1 does and follow the
+installation instructions it prints
 (`dotnet tool install -g dotnet-script`; open a new shell so `PATH` picks it up).
 
 ## Empty tree

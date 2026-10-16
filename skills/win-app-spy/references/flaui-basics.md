@@ -11,7 +11,7 @@ Save the script as `<name>.csx` in the working folder, beside `core.csx`, and st
 `#load "core.csx"`. The core brings FlaUI 5.0.0 and works out the working folder from its own path,
 so the script shares `session.json` — the active app and the launched apps — with the requests.
 Run it from the working folder with `dotnet script <name>.csx -- req.json`; the request file is
-optional, and its first run compiles the script. Read the result by the playbook of step 3.
+optional, and its first run compiles the script. Read the result by the playbook of step 1.
 
 Each `.csx` file lists its own `using`s; they do not carry over through `#load`. Under
 `#nullable enable`, dotnet-script fails the compilation on nullable warnings; mark a value you know

@@ -11,7 +11,7 @@ Skills are explicit by default: `disable-model-invocation: true` in `SKILL.md` a
 A convention skill that stays implicit is listed, with the reason,
 in [`implicit-skills.yaml`](../../implicit-skills.yaml).
 
-## Skill descriptions
+## Frontmatter
 
 The repo checks verify that every description starts with "Use when" or "Use ONLY when".
 
@@ -22,9 +22,11 @@ The repo checks verify the folder layout and that `SKILL.md` mentions every file
 
 ## Scripts
 
-The Pester tests of a skill's scripts live in `tests/script-tests/<skill>/` (see
+The tests of a skill's scripts are Pester tests in `tests/script-tests/<skill>/` (see
 [script tests](../verification/script-tests.md)); the repo checks verify that each script has them.
+They do not check the rest of the script contract — names, help, result line, exit codes, one
+language per skill.
 
 ## Workflow skills
 
-The repo checks verify the step numbering.
+The repo checks verify the numbering of steps under `## Initialization` and `## Steps`.
