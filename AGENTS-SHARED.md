@@ -34,7 +34,7 @@ approval; once approved, continue with [Design visualization](#design-visualizat
 
 ### Shared files
 
-`.artifacts/` in the repository root is the file exchange between you and the user: put every file meant for the user there, and look there for files the user refers to. When you create the folder, check that `.gitignore` ignores it; if it does not, tell the user and leave `.gitignore` to them.
+`.artifacts/` in the repository root is the file exchange between you and the user: put every file meant for the user there, and look there for files the user refers to. When you create the folder, tell the user, and make sure `.gitignore` ignores it: add the entry if missing and tell the user you added it.
 
 ## Design visualization
 
@@ -58,7 +58,7 @@ Show each part the plan adds or changes:
       height: int,
       width: int,
     },
-    walls: array of Wall { ... },
+    walls: many of Wall { ... },
   }
   ```
 - **API** — each type's public contract: its properties and method signatures.

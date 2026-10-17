@@ -4,4 +4,4 @@ description: Use when writing or editing any text and wanting to choose the word
 disable-model-invocation: true
 ---
 
-Write or edit the text, new or existing. For each change, first propose alternative wordings and, when the current place may not fit, suitable places to put it; write only after the user picks.
+Write or edit the text, new or existing. For each text passage you write or edit, first propose alternative wordings. Also propose suitable places for it: for an edited passage, when its current place may not fit; for a new one, only when the user named the text it belongs in. Write only after the user picks.
