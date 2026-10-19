@@ -1,5 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
+import { pathToFileURL } from "node:url";
 import { afterAll, beforeAll, expect, it } from "vitest";
 import { copilotAccountEnv, readConfig } from "./account.ts";
 import { EvalsReport } from "./report.ts";
@@ -40,12 +41,12 @@ export function useEvals(scope: "shipped" | "in-progress") {
           env,
         });
         report.add(name, outcome);
+        const reportLink = pathToFileURL(join(report.runDir, name, "console.txt")).href;
+        const verdict = outcome.exitCode === 0 ? "PASS" : `FAIL (waza exit ${outcome.exitCode})`;
         // Logged inside the test so VS Code Test Results shows it under this eval.
-        console.log(
-          `Eval ${name}: ${outcome.exitCode === 0 ? "PASS" : `FAIL (exit ${outcome.exitCode})`}\n` +
-            `Reports: ${join(report.runDir, name)}`,
-        );
-        expect(outcome.exitCode, `waza failed; see ${join(report.runDir, name)}`).toBe(0);
+        console.log(`Eval ${name}: ${verdict}\nReport: ${reportLink}`);
+        if (outcome.exitCode !== 0)
+          expect.fail(`Eval '${name}' failed (waza exit ${outcome.exitCode}). Report: ${reportLink}`);
       });
     },
     // Fails when the evalTest calls and the eval folders differ, so no eval is left out.
@@ -53,7 +54,8 @@ export function useEvals(scope: "shipped" | "in-progress") {
       const found = readdirSync(evalsDir, { withFileTypes: true })
         .filter((entry) => entry.isDirectory() && existsSync(join(evalsDir, entry.name, "eval.yaml")))
         .map((entry) => entry.name);
-      expect([...declared].sort(), `evalTest calls must match the evals in ${evalsDir}`).toEqual(found.sort());
+      const dir = relative(repoRoot, evalsDir).replaceAll("\\", "/");
+      expect([...declared].sort(), `Eval test list does not match the evals in '${dir}'`).toEqual(found.sort());
     },
   };
 }

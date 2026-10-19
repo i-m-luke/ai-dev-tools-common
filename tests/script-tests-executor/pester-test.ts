@@ -1,11 +1,12 @@
 import { spawn } from 'node:child_process';
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { expect, it } from 'vitest';
 
 // Runs Pester files (`*.Tests.ps1`) under tests/script-tests as Vitest tests.
-const scriptTestsDir = join(import.meta.dirname, '..', 'script-tests');
+const repoRoot = join(import.meta.dirname, '..', '..');
+const scriptTestsDir = join(repoRoot, 'tests', 'script-tests');
 
 const pesterScript = `
 $ErrorActionPreference = 'Stop'
@@ -47,7 +48,8 @@ export function expectAllPesterFilesDeclared() {
   const found = readdirSync(scriptTestsDir, { recursive: true, encoding: 'utf8' })
     .filter((file) => file.endsWith('.Tests.ps1'))
     .map((file) => file.replaceAll('\\', '/'));
-  expect([...declared].sort(), `pesterTest calls must match the files in ${scriptTestsDir}`).toEqual(found.sort());
+  const dir = relative(repoRoot, scriptTestsDir).replaceAll('\\', '/');
+  expect([...declared].sort(), `Script test list does not match the Pester files in '${dir}'`).toEqual(found.sort());
 }
 
 async function runPester(testFile: string): Promise<string[]> {
