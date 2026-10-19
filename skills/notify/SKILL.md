@@ -1,6 +1,7 @@
 ---
 name: notify
 description: Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.
+argument-hint: "What to report and when, e.g. when the task is done or you are blocked"
 ---
 
 Roles: Robot — for this skill's steps only. If the role definition is not available use this one instead:
