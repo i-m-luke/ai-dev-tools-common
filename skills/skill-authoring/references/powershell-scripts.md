@@ -4,12 +4,9 @@ The contract of `references/scripts.md`, worked out in PowerShell.
 
 ## Invocation
 
-Run a script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with
-`powershell` in place of `pwsh` when pwsh is missing; write it so it runs on Windows PowerShell 5.1
-and PowerShell 7+ alike, so the fallback works.
+Run a script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with `powershell` in place of `pwsh` when pwsh is missing; write it so it runs on Windows PowerShell 5.1 and PowerShell 7+ alike, so the fallback works.
 
-For input on stdin, the agent writes the JSON object to a file — e.g. in the run's artifacts
-folder — and pipes it in, which keeps the JSON clear of shell quoting:
+For input on stdin, the agent writes the JSON object to a file — e.g. in the run's artifacts folder — and pipes it in, which keeps the JSON clear of shell quoting:
 
 - PowerShell: `Get-Content -Raw -Encoding utf8 <input>.json | pwsh -NoProfile -File …`
 - bash or cmd: `pwsh -NoProfile -File … < <input>.json`
@@ -19,23 +16,20 @@ folder — and pipes it in, which keeps the JSON clear of shell quoting:
 Write the help as comment-based help at the top of the script; the skill prints it with
 `pwsh -NoProfile -Command "Get-Help '<this skill's folder>/scripts/<script>.ps1' -Full"`.
 
-| Outline part | Keyword                         |
-| ------------ | ------------------------------- |
-| Purpose      | `.SYNOPSIS`, `.DESCRIPTION`     |
-| Input        | `.PARAMETER` for each parameter |
-| Input        | `.INPUTS` for the stdin JSON    |
-| Result       | `.OUTPUTS`                      |
-| Exit codes   | `.NOTES`                        |
-| Stderr       | `.NOTES`                        |
+| Outline part | Keyword                                                         |
+| ------------ | --------------------------------------------------------------- |
+| Purpose      | `.SYNOPSIS`, `.DESCRIPTION`                                     |
+| Input        | `.PARAMETER` for each parameter                                 |
+| Input        | `.INPUTS` for the stdin JSON, or `None.` when it takes no input |
+| Result       | `.OUTPUTS`, or `None.` when it returns no result                |
+| Exit codes   | `.NOTES`                                                        |
+| Stderr       | `.NOTES`                                                        |
 
 ## Body
 
-- `$ErrorActionPreference = 'Stop'` turns every error the script does not handle into an unhandled
-  one, which exits with 1.
-- Set `[Console]::InputEncoding` and `[Console]::OutputEncoding` to UTF-8, so non-ASCII text
-  survives stdin and stdout.
-- Read the stdin JSON with `[Console]::In.ReadToEnd() | ConvertFrom-Json`, only in a script whose
-  help documents it: reading stdin waits for input.
+- `$ErrorActionPreference = 'Stop'` turns every error the script does not handle into an unhandled one, which exits with 1.
+- Set `[Console]::InputEncoding` and `[Console]::OutputEncoding` to UTF-8, so non-ASCII text survives stdin and stdout.
+- Read the stdin JSON with `[Console]::In.ReadToEnd() | ConvertFrom-Json`, only in a script whose help documents it: reading stdin waits for input.
 - Write log lines with `Write-Host`.
 - Emit the result with `[Console]::Out.WriteLine('::result::' + (… | ConvertTo-Json -Compress -Depth 10))`.
 - End an expected failure with `[Console]::Error.WriteLine('<message>')` and `exit <code>`, the code
@@ -90,8 +84,7 @@ $issues | ForEach-Object {
 
 ## Tests
 
-Cover every script with [Pester](https://pester.dev) tests that run it as a child process, so the
-exit code, stdout and stderr are the real ones:
+Cover every script with [Pester](https://pester.dev) tests that run it as a child process, so the exit code, stdout and stderr are the real ones:
 
 ```powershell
 It 'returns the path of the CSV file' {
