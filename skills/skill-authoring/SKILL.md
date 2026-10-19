@@ -17,6 +17,13 @@ instructions conflict with this skill's, this skill's win.
 
 Write skills in English, like any context an agent reads.
 
+## Skill type
+
+Every skill is one of two types, each with its own template:
+
+- **Workflow skill** — walks the agent through ordered steps towards a goal; usually explicit or hybrid. A tool skill, one built around scripts, is a workflow skill too. Read `references/workflow-skills.md` when you create or change a workflow skill.
+- **Convention skill** — rules the agent returns to on demand while it works; usually implicit. Read `references/convention-skills.md` when you create or change a convention skill.
+
 ## Skill categorization
 
 What characteristics suit the requirements the most? Compare the three categories below and pick
@@ -31,7 +38,7 @@ the one that fits; the rest of this skill refers to them by name.
 - **When to choose**: the user alone decides when the skill runs, e.g. a workflow that changes
   things or costs many tokens. It costs no context, as its description is never loaded.
 - **Naming**: a verb phrase, e.g. `write-poem`.
-- **Description**: `Use when …` and a one-line summary for the human who picks the skill.
+- **Description**: starts with `Use when`, followed by a one-sentence summary for the human who picks the skill.
 - **How others call it**: they cannot; a skill that needs it tells the user to run `/<skill>`.
 
 ### Implicit
@@ -41,8 +48,7 @@ the one that fits; the rest of this skill refers to them by name.
 - **When to choose**: the skill applies to every task it touches, e.g. the conventions of a language
   or an architecture. Its description stays loaded on every turn, so the reach must be worth it.
 - **Naming**: a noun phrase, e.g. `poem-writing`.
-- **Description**: `Use when …` followed by every distinct situation the skill applies to, one
-  trigger each.
+- **Description**: starts with `Use when`, followed by every distinct situation the skill applies to, one trigger each. The agent reads it to decide whether to load the skill, and the uniform leading phrase makes it read as a trigger condition.
 - **How others call it**: as described in [Calling another skill](#calling-another-skill).
 
 ### Hybrid
@@ -52,26 +58,12 @@ the one that fits; the rest of this skill refers to them by name.
 - **When to choose**: the user runs it by hand and other skills must be able to run it too, e.g.
   sending a notification.
 - **Naming**: a verb phrase, e.g. `notify`.
-- **Description**: `Use ONLY when` followed by its triggers and nothing else, e.g.
-  `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`
-  Its purpose belongs in the skill body.
+- **Description**: starts with `Use ONLY when`, followed by its triggers and nothing else, e.g. `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`. Its purpose belongs in the skill body.
 - **How others call it**: as described in [Calling another skill](#calling-another-skill).
-
-## Skill type
-
-Every skill is one of two types, each with its own template:
-
-- **Workflow skill** — walks the agent through ordered steps towards a goal; usually explicit or
-  hybrid. A tool skill, one built around scripts, is a workflow skill too. Read
-  `references/workflow-skills.md` when you create or change a workflow skill.
-- **Convention skill** — rules the agent returns to on demand while it works; usually implicit. Read
-  `references/convention-skills.md` when you create or change a convention skill.
 
 ## Frontmatter
 
-A skill's `description` starts with "Use when", or "Use ONLY when" for a hybrid skill. The
-description is the pointer an agent reads to decide whether to load the skill, and a uniform leading
-phrase makes it read as a trigger condition.
+Start the `description` and `name` as its [category](#skill-categorization) prescribes.
 
 Write frontmatter values without an unquoted `:` — it makes the YAML invalid and the skill fails to
 load. Use an em dash (—) instead.
@@ -80,8 +72,7 @@ load. Use an em dash (—) instead.
 
 Call another skill with these three sentences, filled in:
 
-> Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and
-> stop. Where its instructions conflict with this skill's, this skill's win.
+> Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
 
 Write no fallback copy of the called skill's instructions: the calling skill depends on it as on a
 prerequisite, and a copy drifts from the original.
