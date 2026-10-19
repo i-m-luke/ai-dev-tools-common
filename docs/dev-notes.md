@@ -1,8 +1,16 @@
 # Development notes
 
+## AGENTS-SHARED.md improvements
+
+### MEMORY.md
+
+- Agent may maintain a workspace-scoped MEMORY.md (in `.artifacts`)
+- Before adding anything, it asks first (it never maintains the file on its own, but it must only add decisions made by the user), and whenever it uses a specific piece of knowledge, it always reports that it took it from memory
+- It could ask once whether it should set up an ADR, and if not, the decision would be recorded in the memory.
+
 ## Skill changes
 
-...
+None
 
 ## Future skills
 
@@ -18,18 +26,18 @@
 - If initialization is needed: At the start, the agent will launch a Terminal.Gui app via a "script" and from the process output the agent will obtain the necessary configuration (data into DEVNOTES)
 - v1: FlaUI , v2: Čisté UIA, v3: Použít yaml namísto json? Údajně lepší optimalizace, ale po migraci na MCP horší parsování?
 
-#### Zmigorvat win-app-spy do MCP serveru
+#### Migrate win-app-spy to an MCP server
 
-- Jeden tool bude "instructions"
-- Navrátí obsah skill.md
-- V Description bude: "Before use call instructions to get usage guidelines"?
-- Skill má výhodu oproti MCP: Nemusí se vydávat extension
-- Výhody MCP:
-  - úspora tokenů
-  - determinističnost
-  - Lepší testování: Testuje se jako API
-  - Testy: Bude existovat základní aplikace, ta se spustí bez vykreslení UI a provedou se na ni základní testy
-  - Bude se nacházet v 'agent-toolkit-mcps' repo: Repo sturktura: src, docs, tools
+- One tool will be "instructions"
+- It will return the content of skill.md
+- The Description will say: "Before use call instructions to get usage guidelines"?
+- A skill has an advantage over MCP: no extension needs to be published
+- Advantages of MCP:
+  - token savings
+  - determinism
+  - Better testing: it is tested like an API
+  - Tests: there will be a basic application, which is launched without rendering the UI, and basic tests are run against it
+  - It will be located in the 'agent-toolkit-mcps' repo: Repo structure: src, docs, tools
 
 ### browser-app-spy
 
