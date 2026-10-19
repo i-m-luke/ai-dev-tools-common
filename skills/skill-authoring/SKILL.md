@@ -11,7 +11,7 @@ metadata:
 
 Conventions for authoring a skill, so that every skill follows one contract.
 
-Run `/writing-for-agents` — it covers writing any document an agent reads. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
+Run `/writing-for-agents` skill (authored by Matt Pocock) — it covers writing any document an agent reads. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
 
 Write skills in English, like any context an agent reads.
 
@@ -29,7 +29,7 @@ What characteristics suit the requirements the most? Compare the three categorie
 ### Explicit
 
 - **Characteristics**: runs only when the user invokes it; neither the agent nor another skill can start it. Its frontmatter sets `disable-model-invocation: true`.
-- **When to choose**: the user alone decides when the skill runs, e.g. a workflow that changes things or costs many tokens. It costs no context, as its description is never loaded.
+- **When to choose**: the user alone decides when the skill runs, e.g. a workflow that changes things or costs many tokens. It costs no context, as its description is never loaded, and its invocation is deterministic: it runs exactly when the user invokes it, never on the agent's guess.
 - **Naming**: a verb phrase, e.g. `write-poem`.
 - **Description**: starts with `Use when`, followed by a one-sentence summary for the human who picks the skill.
 - **How others call it**: they cannot; a skill that needs it tells the user to run `/<skill>`.
@@ -39,14 +39,14 @@ What characteristics suit the requirements the most? Compare the three categorie
 - **Characteristics**: model invocation stays on — `disable-model-invocation` stays unset — so the agent loads the skill on its own for every task its description matches, and other skills can run it.
 - **When to choose**: the skill applies to every task it touches, e.g. the conventions of a language or an architecture. Its description stays loaded on every turn, so the reach must be worth it.
 - **Naming**: a noun phrase, e.g. `poem-writing`.
-- **Description**: starts with `Use when`, followed by every distinct situation the skill applies to, one trigger each. The agent reads it to decide whether to load the skill, and the uniform leading phrase makes it read as a trigger condition.
+- **Description**: starts with `Use when`, followed by every distinct situation the skill applies to, one trigger each, e.g. `Use when writing, reviewing or refactoring C# code — classes, constructors, method calls, file and namespace layout.` The agent reads it to decide whether to load the skill, and the uniform leading phrase makes it read as a trigger condition.
 - **How others call it**: as described in [Calling another skill](#calling-another-skill).
 
 ### Hybrid
 
 - **Characteristics**: half of each — _implicit_ in its settings, so other skills' instructions can run it; _explicit_ in behaviour, as it runs only on its literal trigger.
 - **When to choose**: the user runs it by hand and other skills must be able to run it too, e.g. sending a notification.
-- **Naming**: a verb phrase, e.g. `notify`.
+- **Naming**: same as [Explicit](#explicit).
 - **Description**: starts with `Use ONLY when`, followed by its triggers and nothing else, e.g. `Use ONLY when the literal text "/notify" appears in the request or instructions — never otherwise, whatever the task.`. Its purpose belongs in the skill body.
 - **How others call it**: as described in [Calling another skill](#calling-another-skill).
 
@@ -58,11 +58,14 @@ Write frontmatter values without an unquoted `:` — it makes the YAML invalid a
 
 ## Calling another skill
 
-Call another skill with these three sentences, filled in:
+Call another skill with three sentences, filled in. The middle one depends on whether the call is required or optional:
 
-> Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
+- **Required** — the calling skill cannot deliver its result without the called one, so the agent stops:
+  > Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
+- **Optional** — the called skill only improves the result, so the agent goes on:
+  > Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
 
-Write no fallback copy of the called skill's instructions: the calling skill depends on it as on a prerequisite, and a copy drifts from the original.
+Write no fallback copy of the called skill's instructions: a copy drifts from the original.
 
 ## Standard phrases
 
@@ -73,10 +76,11 @@ Point at a skill's files and decisions with these phrases, so the agent recognis
 - script — `Run <exact command> …`.
 - playbook — `Act on the script's exit code by this playbook:`, followed by one `<outcome>` — `<action>` item per outcome.
 
-## Wording
+## Positive instructions
 
-Phrase every instruction in a skill as the behaviour to take — "write one-line comments" rather than a ban on long ones: a prohibition names the unwanted behaviour and makes it more likely. A hard guardrail with no positive phrasing stays a prohibition, paired with the behaviour to take instead.
-One such guardrail is the closing "— never otherwise, whatever the task" in the description of a hybrid skill: without it, trigger evals showed the agent loading the skill for requests that merely resemble its task.
+Write each instruction as what the agent should do, not what it must avoid: "write one-line comments", not "don't write long comments". Naming the unwanted behaviour puts it into the agent's context and makes it more likely.
+
+Write a prohibition only where no positive phrasing exists, and pair it with what to do instead. Example: a hybrid skill's description ends with "— never otherwise, whatever the task"; without it, trigger evals showed the agent loading the skill for requests that merely resemble its task.
 
 ## Skill folder
 

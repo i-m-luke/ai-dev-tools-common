@@ -1,7 +1,6 @@
 # Convention skills
 
-A convention skill holds rules the agent returns to on demand while it works, e.g. the conventions
-of a language or an architecture.
+A convention skill holds rules the agent returns to on demand while it works, e.g. the conventions of a language or an architecture.
 
 ## Shape
 
@@ -30,7 +29,3 @@ Show a rule or guideline by example in this fixed form: ❌ with the reason and 
 <sample>
 ```
 ````
-
-## Description
-
-A convention skill is usually implicit, so its description is all the agent sees when it decides whether the rules apply. Describe the situations it applies to more fully than a hybrid skill's literal trigger: name every distinct kind of task the rules touch, one trigger each, e.g. `Use when writing, reviewing or refactoring C# code — classes, constructors, method calls, file and namespace layout.`

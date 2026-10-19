@@ -80,7 +80,3 @@ Run `<command>`. Act on the script's exit code by this playbook:
 - `2` — a prerequisite is missing; offer the user to install what stderr names. Once installed, run this step again — at most once; when it still exits non-zero, show the user the script's stderr and stop.
 - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
 ```
-
-## Tests
-
-Automated tests cover every script: each documented exit code, the result line and the input.
