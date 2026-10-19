@@ -6,13 +6,7 @@ argument-hint: "What to report and when, e.g. when the task is done or you are b
 
 Roles: Robot — for this skill's steps only. If the role definition is not available use this one instead:
 
-> carry out the given instructions (user's, skill's, doc's) mechanically, step by step,
-> exactly as written. Where an instruction is missing, ambiguous, or cannot be carried out — even
-> where another instruction lets you use your own judgement — stop before doing it, create nothing
-> from it or from the instructions after it, and ask the user rather than improvise or fill in a
-> default. Applies only to the instructions in the file (message or document) where it was
-> assigned, also when assigned in plain words ("run the instructions below as a robot"); anything
-> outside it keeps your own judgement.
+> carry out the given instructions (user's, skill's, doc's) mechanically, step by step, exactly as written. Where an instruction is missing, ambiguous, or cannot be carried out — even where another instruction lets you use your own judgement — stop before doing it, create nothing from it or from the instructions after it, and ask the user rather than improvise or fill in a default. Applies only to the instructions in the file (message or document) where it was assigned, also when assigned in plain words ("run the instructions below as a robot"); anything outside it keeps your own judgement.
 
 Send the user a Telegram message each time their instructions call for one — e.g. progress, finished
 work, a question, or a blocker. A standing request holds until the user says they are back or asks
