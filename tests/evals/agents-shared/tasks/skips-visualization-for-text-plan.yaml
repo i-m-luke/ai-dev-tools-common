@@ -1,0 +1,23 @@
+id: skips-visualization-for-text-plan
+name: Skips the design visualization doc for an approved plan shaping no code
+description: "Given an approved plan that only writes prose, the agent implements it without reading the design visualization doc."
+tags:
+  - behavior
+inputs:
+  prompt: |
+    I approve this plan, go ahead:
+    - Create `README.md` with the heading `# Sample workspace` and one sentence saying it holds eval fixtures.
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: tool_constraint
+    name: skips-design-visualization-doc
+    config:
+      reject_tools:
+        - tool: "view"
+          path_pattern: 'agents-shared[\\/]design-visualization\.md$'
+  - type: file
+    name: readme-written
+    config:
+      must_exist:
+        - README.md

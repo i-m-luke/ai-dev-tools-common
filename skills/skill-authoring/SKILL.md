@@ -19,8 +19,8 @@ Write skills in English, like any context an agent reads.
 
 Every skill is one of two types, each with its own template:
 
-- **Workflow skill** — walks the agent through ordered steps towards a goal; usually explicit or hybrid. A tool skill, one built around scripts, is a workflow skill too. Read `references/workflow-skills.md` when you create or change a workflow skill.
-- **Convention skill** — rules the agent returns to on demand while it works; usually implicit. Read `references/convention-skills.md` when you create or change a convention skill.
+- **Workflow skill** — walks the agent through ordered steps towards a goal; usually categorizes as either _explicit_ or _hybrid_. A tool skill, one built around scripts, is a workflow skill too. Read `references/workflow-skills.md` when you create or change a workflow skill.
+- **Convention skill** — rules the agent returns to on demand while it works; usually categorizes as _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
 
 ## Skill categorization
 

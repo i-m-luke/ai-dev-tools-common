@@ -1,0 +1,21 @@
+id: skips-visualization-without-plan
+name: Skips the design visualization doc for a direct code request
+description: "Given a small code request with no plan, the agent writes the code without reading the design visualization doc."
+tags:
+  - behavior
+inputs:
+  prompt: "Create `add.js` exporting a function `add(a, b)` that returns `a + b`."
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: tool_constraint
+    name: skips-design-visualization-doc
+    config:
+      reject_tools:
+        - tool: "view"
+          path_pattern: 'agents-shared[\\/]design-visualization\.md$'
+  - type: file
+    name: code-written
+    config:
+      must_exist:
+        - add.js

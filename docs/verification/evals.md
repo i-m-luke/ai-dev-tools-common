@@ -94,5 +94,8 @@ sets `core.symlinks=false` and waza copies fixtures into a temp workspace.
 - `agents-shared` — tests the shared instructions file itself: `Roles: Robot` makes the agent read
   `agents-shared/roles.md`, and the unfamiliar glossary term **playbook** makes it read
   `agents-shared/glossary.md` and write a list of outcome → action pairs (LLM judge, so reading the
-  glossary has an effect). The reads are checked with a `tool_constraint` grader on the agent's
-  `view` calls.
+  glossary has an effect). An approved plan that shapes code (types, or services calling each other)
+  makes it read `agents-shared/design-visualization.md` and create none of the planned files before
+  the user confirms the visuals; an approved prose-only plan and a direct code request without a
+  plan make it do the work without reading that doc. The reads are checked with a
+  `tool_constraint` grader on the agent's `view` calls (`expect_tools` / `reject_tools`).
