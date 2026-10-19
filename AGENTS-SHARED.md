@@ -51,7 +51,8 @@ with these rules, these rules win.
 Show each part the plan adds or changes:
 
 - **Model** — the shape of data alone, nested types drawn inline:
-  ```
+
+  ```text
   Building {
     color: string,
     dimension: Dimension {
@@ -61,12 +62,15 @@ Show each part the plan adds or changes:
     walls: many of Wall { ... },
   }
   ```
+
 - **API** — each type's public contract: its properties and method signatures.
-  ```
+
+  ```text
   class OrderService
     + Orders: IReadOnlyList<Order>
     + Place(order: Order): Result<OrderId>
   ```
+
 - **Relations** — between the types, as a Mermaid diagram.
 - **Algorithm** — only when the design cannot be understood without it: a Mermaid flowchart.
 
@@ -110,8 +114,8 @@ instructions) or need to align terminology with the user.
 
 ## Roles
 
-Read [roles.md](agents-shared/roles.md) when the user assigns you a role (e.g. `Roles: x, y`, or in plain
-words such as "do this as a robot").
+Read [roles.md](agents-shared/roles.md) when the user assigns you a role (e.g. `Roles: <role-a>, <role-b>`, or in plain
+words such as `do this as <role>`).
 
 ## Triage labels
 
