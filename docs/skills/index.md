@@ -10,4 +10,5 @@ skill folders, so an agent can't load them.
 - [notify](notify.md) — setting up the Telegram bot the skill messages through.
 - [skill-authoring](skill-authoring.md) — editing guidelines for the skill-authoring conventions skill.
 - [vertical-slice-architecture](vertical-slice-architecture.md) — editing guidelines for the feature-slicing skill.
+- [write-app-doc](write-app-doc.md) — why the explicit alias of `document-app` exists.
 - [win-app-spy](win-app-spy.md) — prerequisites, working folder and verification rules for the Windows UI inspection skill.
