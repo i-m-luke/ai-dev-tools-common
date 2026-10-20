@@ -61,9 +61,9 @@ Write frontmatter values without an unquoted `:` — it makes the YAML invalid a
 Call another skill with three sentences, filled in. The middle one depends on whether the call is required or optional:
 
 - **Required** — the calling skill cannot deliver its result without the called one, so the agent stops:
-  > Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
+  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
 - **Optional** — the called skill only improves the result, so the agent goes on:
-  > Run `/<skill>` …. When the `<skill>` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
+  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
 
 Write no fallback copy of the called skill's instructions: a copy drifts from the original.
 

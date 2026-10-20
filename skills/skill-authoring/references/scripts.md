@@ -8,7 +8,7 @@ This document describes the contract every script of a skill follows, in any lan
 
 All scripts of a skill share one language, so the skill needs one runtime. Propose the language by the runtime the skill's users already have or the one its domain needs, PowerShell when nothing decides, and let the user confirm it before you write a script.
 
-`references/powershell-scripts.md` works the contract out in PowerShell. For another language, derive the equivalent of each of its parts — invocation, help, reading stdin, emitting the result, tests — from the rules below.
+`references/powershell-scripts.md` works the contract out in PowerShell. For another language, derive the equivalent of each of its parts — invocation, help, emitting the result, tests — from the rules below.
 
 ## Name
 
@@ -17,10 +17,7 @@ Name a script `<verb>-<noun>.<ext>`, kebab-case, starting with an imperative ver
 
 ## Input
 
-- Up to five inputs: scalar named parameters.
-- More inputs, or a value that is not a scalar: the whole input as one JSON object on stdin, with no parameters beside it.
-
-A call with many parameters is hard to read, and every value on a command line is a quoting trap; one JSON object keeps the input readable and in one place.
+A script takes its input only as named parameters.
 
 ## Output
 
@@ -43,7 +40,7 @@ A call with many parameters is hard to read, and every value on a command line i
 Document each script inside it, through the language's native help mechanism, in this outline:
 
 1. **Purpose** — what the script does.
-2. **Input** — each parameter, the shape of the JSON object on stdin, or that the script takes none.
+2. **Input** — each parameter, or that the script takes none.
 3. **Result** — the shape of the result JSON, or that the script returns none.
 4. **Exit codes** — `0` and each expected failure from `2` up.
 5. **Stderr** — what the script writes there.
