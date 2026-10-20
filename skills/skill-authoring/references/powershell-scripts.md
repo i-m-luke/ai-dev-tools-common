@@ -5,6 +5,7 @@ The contract of `references/scripts.md`, worked out in PowerShell.
 ## Invocation
 
 Run a script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with `powershell` in place of `pwsh` when pwsh is missing; write it so it runs on Windows PowerShell 5.1 and PowerShell 7+ alike, so the fallback works.
+
 ## Help
 
 Write the help as comment-based help at the top of the script; the skill prints it with
@@ -72,19 +73,4 @@ $issues | ForEach-Object {
 } | Export-Csv -LiteralPath $OutputPath -NoTypeInformation -Encoding UTF8
 
 [Console]::Out.WriteLine('::result::' + (@{ path = $OutputPath; count = $issues.Count } | ConvertTo-Json -Compress))
-```
-
-## Tests
-
-Cover every script with [Pester](https://pester.dev) tests that run it as a child process, so the exit code, stdout and stderr are the real ones:
-
-```powershell
-It 'returns the path of the CSV file' {
-    $stdout = pwsh -NoProfile -File $script -Repository 'owner/name' -OutputPath $csv 2>$null
-
-    $LASTEXITCODE | Should -Be 0
-    $result = @($stdout | Where-Object { $_ -like '::result::*' })
-    $result.Count | Should -Be 1
-    ($result[0] -replace '^::result::' | ConvertFrom-Json).path | Should -Be $csv
-}
 ```
