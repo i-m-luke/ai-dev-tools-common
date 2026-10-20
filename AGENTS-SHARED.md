@@ -39,7 +39,7 @@ When the user picks visuals, read [design-visualization.md](agents-shared/design
 
 Write code, comments, docs and commit messages in the repo's existing language; English by default.
 
-## Design
+### Design
 
 Read [code-design.md](agents-shared/code-design.md) before designing or writing code.
 

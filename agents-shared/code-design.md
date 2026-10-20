@@ -50,3 +50,12 @@ When the chain needs I/O midway, split it into consecutive sandwiches: impure â†
 ## Errors
 
 Prefer **errors as values** for expected failures (invalid input, not found, rejected request) where the language or project already offers an idiomatic way; elsewhere throw. Unexpected failures (bugs, unrecoverable states) throw.
+
+## View and logic separation
+
+A **view** holds only UI layout and **UI logic**; all **app logic** lives outside it. Prefer **MVVM**: the view binds to a view model's state and commands, and the view model delegates app logic to the core. Where the framework has no native MVVM, keep the same split with its equivalent (e.g. a hook or store as the view model).
+
+- **UI logic**, the behaviour of the screen itself: layout, animations and transitions, focus and scroll, showing or hiding elements by view-model state, visual states (hover, disabled), formatting values for display.
+- **App logic**, what the application decides and does: validation, calculations and derived data, state transitions, API and storage calls, permissions, rule-driven navigation.
+
+Test the split: replacing the view (with another UI, a CLI or a test) moves no app logic.
