@@ -29,7 +29,7 @@ When asked for your opinion, give an honest, objective one: say what you actuall
 
 `.artifacts/` in the repository root is the file exchange between you and the user: put every file meant for the user there, and look there for files the user refers to. When you create the folder, tell the user, and make sure `.gitignore` ignores it: add the entry if missing and tell the user you added it.
 
-### Planning
+## Planning
 
 Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary for approval, in a reply whose sole question is that approval. When the plan shapes code — its types, APIs, relations or algorithms — end the summary with that question as a choice: approve as is, or approve with its design decisions sketched as visuals first.
 
@@ -38,6 +38,10 @@ When the user picks visuals, read [design-visualization.md](agents-shared/design
 ## Code changes
 
 Write code, comments, docs and commit messages in the repo's existing language; English by default.
+
+## Design
+
+Read [code-design.md](agents-shared/code-design.md) before designing or writing code.
 
 ### Implementation
 
