@@ -6,6 +6,31 @@ using System.Text.Json.Nodes;
 
 public static class DumpTreeCommand
 {
+    public const string Help = """
+        Lists the app's element tree, level by level, with a concrete xpath per node.
+
+        Request
+          { "command": "dump-tree", "depth": 2, "states": [ "name" ] }
+          root              An xpath; lists the one element it matches and its descendants (default:
+                            all the app's top-level windows).
+          depth             Levels below the app or root (default 4).
+          maxNodes          At most this many nodes (default 300).
+          includeOffscreen  true lists offscreen elements too (default false; root itself is always
+                            listed).
+          states            The state keys to read per node (see --help).
+
+        Result data
+          { "truncated": true, "nodes": [
+              { "xpath": "/Window", "state": { "name": "Untitled - Notepad" }, "children": [
+                  { "xpath": "/Window/Pane[1]", "childCount": 1 } ] } ] }
+          Each node carries its concrete xpath (send it to other commands as is), its state and its
+          children. When the dump is cut, truncated is true and every node whose children were not
+          all listed carries childCount (on data itself when windows were left out).
+
+        Errors
+          ELEMENT_NOT_FOUND / AMBIGUOUS_MATCH for root, APP_NOT_FOUND, INVALID_REQUEST.
+        """;
+
     public const int DefaultDepth = 4;
     public const int DefaultMaxNodes = 300;
 

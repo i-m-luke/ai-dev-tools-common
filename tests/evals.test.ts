@@ -16,6 +16,7 @@ evalTest("shallow-grill");
 evalTest("skill-authoring");
 evalTest("sync-app-doc");
 evalTest("vertical-slice-architecture");
+evalTest("win-app-spy");
 evalTest("write-app-doc");
 
 it("eval test list matches the eval folders", expectAllEvalsDeclared);

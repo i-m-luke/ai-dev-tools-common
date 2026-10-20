@@ -1,4 +1,4 @@
-# Covers the wait command of win-app-spy.csx (wait.csx and the polling of core.csx) through its JSON
+# Covers the wait command of spy.csx (wait.csx and the polling of core.csx) through its JSON
 # contract, against the Waiter window of fixture-app.ps1 (fixture-waiter.ps1), whose elements change
 # on request. GUI runs are skipped in CI, which has no desktop to show the fixture on.
 BeforeDiscovery {
@@ -40,15 +40,15 @@ Describe 'wait' {
         ) {
             $result = Invoke-Spy $request
 
-            $result.ExitCode | Should -Be 1
-            $result.Json.command | Should -Be 'wait'
+            $result.ExitCode | Should -Be 2
+            $result.ResultLines | Should -Be 0
             $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         }
 
         It 'answers launch with a poll of 0 with INVALID_REQUEST, as it polls the same way' {
             $result = Invoke-Spy '{ "command": "launch", "exe": "notepad.exe", "poll": 0 }'
 
-            $result.ExitCode | Should -Be 1
+            $result.ExitCode | Should -Be 2
             $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         }
     }
@@ -88,7 +88,7 @@ Describe 'wait' {
         ) {
             $result = Wait-Element $xpath @{ condition = $condition; timeout = 1000 }
 
-            $result.ExitCode | Should -Be 1
+            $result.ExitCode | Should -Be 2
             $result.Json.error.code | Should -Be 'TIMEOUT'
             $result.Json.error.message | Should -Match '1000 ms'
         }
@@ -115,7 +115,7 @@ Describe 'wait' {
         It 'answers a locator that matches several elements with AMBIGUOUS_MATCH at once' {
             $result = Wait-Element "//Button[@Name='OK']" @{ timeout = 60000 }
 
-            $result.ExitCode | Should -Be 1
+            $result.ExitCode | Should -Be 2
             $result.Json.error.code | Should -Be 'AMBIGUOUS_MATCH'
             $result.Json.error.count | Should -Be 3
         }

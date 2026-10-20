@@ -1,26 +1,49 @@
 # Shared helpers for the win-app-spy script tests; dot-source it in BeforeAll.
 
-# Copies the skill's scripts into a working folder under $TestDrive, as the skill does, and makes it
-# the folder Invoke-Spy runs in; the copy also keeps session.json out of the repo.
+$script:spyScript = Join-Path $PSScriptRoot '..' '..' '..' 'skills' 'win-app-spy' 'scripts' 'spy.csx'
+
+# Makes a working folder under $TestDrive the folder Invoke-Spy sends its requests from, so
+# session.json and screenshots stay out of the repo.
 function Initialize-SpyWorkingFolder {
     $script:spyWorkingFolder = Join-Path $TestDrive 'working-folder'
     New-Item -ItemType Directory -Path $script:spyWorkingFolder -Force | Out-Null
-    Copy-Item -Path (Join-Path $PSScriptRoot '..' '..' '..' 'skills' 'win-app-spy' 'scripts' '*') -Destination $script:spyWorkingFolder -Recurse -Force
     $script:spyOriginalEncoding = [Console]::OutputEncoding
     [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 }
 
 function Restore-SpyConsoleEncoding { [Console]::OutputEncoding = $script:spyOriginalEncoding }
 
-# Writes the request (a JSON string or a hashtable) to req.json, runs the main script on it and parses the JSON it prints.
+# Runs a script with the arguments and parses its outcome: Json is the result on exit 0, otherwise
+# @{ error = <the error object on stderr> }; ResultLines counts the ::result:: lines on stdout.
+function Invoke-SpyScript {
+    param([string] $Script = $script:spyScript, [string[]] $Arguments = @())
+    $output = & dotnet script $Script -- @Arguments 2>&1
+    $exitCode = $LASTEXITCODE
+    $stderr = ($output | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] } | ForEach-Object { $_.ToString() }) -join "`n"
+    $stdout = @($output | Where-Object { $_ -isnot [System.Management.Automation.ErrorRecord] } | ForEach-Object { "$_" })
+    $results = @($stdout | Where-Object { $_ -like '::result::*' })
+    $json = if ($exitCode -eq 0) {
+        if ($results.Count -eq 1) { $results[0].Substring('::result::'.Length) | ConvertFrom-Json -AsHashtable }
+    }
+    elseif ($stderr) {
+        try { @{ error = $stderr | ConvertFrom-Json -AsHashtable } } catch { $null }
+    }
+    [pscustomobject] @{
+        ExitCode    = $exitCode
+        Raw         = (@($stdout) + $stderr) -join "`n"
+        Stdout      = $stdout
+        ResultLines = $results.Count
+        Json        = $json
+    }
+}
+
+# Writes the request (a JSON string or a hashtable) to req.json in the working folder and runs spy.csx on it.
 function Invoke-Spy {
     param($Request)
     if ($Request -isnot [string]) { $Request = $Request | ConvertTo-Json -Depth 10 }
-    Set-Content -LiteralPath (Join-Path $script:spyWorkingFolder 'req.json') -Value $Request -Encoding utf8
-    Push-Location $script:spyWorkingFolder
-    try { $stdout = & dotnet script (Join-Path $script:spyWorkingFolder 'win-app-spy.csx') -- req.json 2>$null | Out-String }
-    finally { Pop-Location }
-    [pscustomobject] @{ ExitCode = $LASTEXITCODE; Raw = $stdout; Json = $stdout | ConvertFrom-Json -AsHashtable }
+    $path = Join-Path $script:spyWorkingFolder 'req.json'
+    Set-Content -LiteralPath $path -Value $Request -Encoding utf8
+    Invoke-SpyScript -Arguments '--request-path', $path
 }
 
 # Parallel runs share one desktop: hold this lock while an app the tests start is open.

@@ -2,31 +2,33 @@
 
 Recover from environment problems; each section names the symptom first.
 
-## No JSON and a non-zero exit
+## A run fails without an error code to act on
 
-The script did not get to run. Read its output:
+The script did not get to run, or failed unexpectedly. Read its output:
 
 - `error CS…` — a compilation error, usually in an ad hoc script; fix the line it names. Under
   `#nullable enable` nullable warnings fail the build too.
 - `NU1100` / `Unable to resolve` / `NU1301` — NuGet restore failed; see [NuGet](#nuget).
-- Anything else — show the user the output and end the skill.
+- Anything else, such as an error object with the code `UNEXPECTED` — show the user the output and
+  end the skill.
 
 ## NuGet
 
 The first run restores the FlaUI packages from nuget.org.
 
-- `NU1100` with "package source mapping": a `NuGet.Config` in a parent folder maps packages to
-  other feeds. The working folder under `%TEMP%` avoids this; when it still happens, put a
-  `NuGet.Config` holding `<packageSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources>`
-  beside the scripts.
+- `NU1100` with "package source mapping": a `NuGet.Config` in a folder above the script maps
+  packages to other feeds. The skill's own scripts carry a `NuGet.Config` that keeps it out; for an
+  ad hoc script, put a `NuGet.Config` holding
+  `<packageSources><clear /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources>`
+  beside it.
 - `NU1301` (no connection): the machine is offline or behind a proxy; ask the user to restore
   access to nuget.org, then retry.
 
 ## dotnet-script missing
 
-`dotnet script` fails with "could not execute because the specified command or file was not found",
-or preflight exits 1: run `scripts/preflight.ps1` as initialization step 1 does and follow the
-installation instructions it prints
+`dotnet script` fails with "could not execute because the specified command or file was not found":
+run `scripts/check-prerequisites.ps1` as initialization step 1 does and follow the installation
+instructions it prints
 (`dotnet tool install -g dotnet-script`; open a new shell so `PATH` picks it up).
 
 ## Empty tree

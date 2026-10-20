@@ -1,4 +1,4 @@
-# Covers the dump-tree command of win-app-spy.csx (dump-tree.csx) through its JSON contract, against
+# Covers the dump-tree command of spy.csx (dump-tree.csx) through its JSON contract, against
 # fixture-app.ps1. Skipped in CI, which has no desktop to show it on.
 BeforeDiscovery {
     $script:skip = -not (Get-Command dotnet-script -ErrorAction SilentlyContinue) -or [bool] $env:CI
@@ -99,9 +99,9 @@ Describe 'dump-tree' -Skip:$skip {
     ) {
         $result = Get-Dump @{ root = $root }
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be $code
-        $result.Json.Keys | Should -Not -Contain 'data'
+        $result.ResultLines | Should -Be 0
     }
 
     It 'lists <depth> level(s) below the app and gives the cut nodes their childCount' -ForEach @(
@@ -165,7 +165,7 @@ Describe 'dump-tree' -Skip:$skip {
     ) {
         $result = Get-Dump $fields
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 }

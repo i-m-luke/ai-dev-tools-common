@@ -1,5 +1,5 @@
-// Shared core of win-app-spy: the JSON envelope, request parsing, session state and app connection.
-// The main script and ad hoc scripts load it with #load "core.csx".
+// Shared core of win-app-spy: the output contract, request parsing, session state and app connection.
+// The main script loads it with #load "core.csx", ad hoc scripts by its full path.
 #nullable enable
 #r "nuget: FlaUI.UIA3, 5.0.0"
 // Restored for its DLL only: Apps.CreateAutomation loads UIA2 in a context of its own.
@@ -21,7 +21,7 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.UIA3;
 
 /// <summary>
-/// A failure reported as an error object: thrown from a command it replaces the envelope's data,
+/// A failure reported as an error object: thrown from a command it goes to stderr in place of the result,
 /// caught per item it sits on that item. <paramref name="details"/> adds fields to the error object.
 /// </summary>
 public class SpyError(string code, string message, JsonObject? details = null) : Exception(message)
@@ -129,19 +129,18 @@ public sealed class Request(JsonObject json)
         new(ErrorCodes.InvalidRequest, $"'{name}' must be {expected}.");
 }
 
-/// <summary>The response envelope: <c>command</c>, <c>data</c>, <c>error</c>, with empty fields omitted.</summary>
+/// <summary>
+/// The output contract: the result <c>{ command, data }</c> on one <c>::result::</c> stdout line, an error
+/// object on stderr; empty fields are omitted.
+/// </summary>
 public static class Envelope
 {
+    public const string ResultPrefix = "::result::";
+
     private static readonly JsonSerializerOptions Options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
-
-    public static JsonObject Success(string? command, JsonNode? data) =>
-        new() { ["command"] = command, ["data"] = data };
-
-    public static JsonObject Failure(string? command, string code, string message) =>
-        new() { ["command"] = command, ["error"] = Error(code, message) };
 
     public static JsonObject Error(string code, string message) =>
         new() { ["code"] = code, ["message"] = message };
@@ -152,31 +151,34 @@ public static class Envelope
             ? spyError.ToJson()
             : Error(ErrorCodes.Unexpected, $"{exception.GetType().Name}: {exception.Message}");
 
-    /// <summary>Runs <paramref name="handler"/>, prints its envelope and returns the exit code.</summary>
+    /// <summary>
+    /// Runs <paramref name="handler"/> and prints its outcome; returns the exit code: 0 with the result,
+    /// 2 with a <see cref="SpyError"/>'s error object, 1 with the error object of any other exception.
+    /// </summary>
     public static int Run(string? command, Func<JsonNode?> handler)
     {
-        JsonObject envelope;
-        try { envelope = Success(command, handler()); }
-        catch (Exception e) { envelope = new JsonObject { ["command"] = command, ["error"] = Error(e) }; }
-        return Print(envelope);
+        try { return Result(new JsonObject { ["command"] = command, ["data"] = handler() }); }
+        catch (SpyError e) { return Fail(e.ToJson(), 2); }
+        catch (Exception e) { return Fail(Error(e), 1); }
     }
 
-    /// <summary>Prints the envelope as one line of JSON; returns 1 when an error appears anywhere in it, else 0.</summary>
-    public static int Print(JsonObject envelope)
+    /// <summary>Prints the result line; returns 0.</summary>
+    public static int Result(JsonObject result)
     {
-        Console.OutputEncoding = new System.Text.UTF8Encoding(false);
-        var pruned = Prune(envelope) ?? new JsonObject();
-        Console.WriteLine(pruned.ToJsonString(Options));
-        return HasError(pruned) ? 1 : 0;
+        UseUtf8();
+        Console.WriteLine(ResultPrefix + (Prune(result) ?? new JsonObject()).ToJsonString(Options));
+        return 0;
     }
 
-    private static bool HasError(JsonNode? node) =>
-        node switch
-        {
-            JsonObject obj => obj.ContainsKey("error") || obj.Any(property => HasError(property.Value)),
-            JsonArray array => array.Any(HasError),
-            _ => false,
-        };
+    /// <summary>Prints the error object to stderr; returns <paramref name="exitCode"/>.</summary>
+    public static int Fail(JsonObject error, int exitCode)
+    {
+        UseUtf8();
+        Console.Error.WriteLine((Prune(error) ?? new JsonObject()).ToJsonString(Options));
+        return exitCode;
+    }
+
+    public static void UseUtf8() => Console.OutputEncoding = new System.Text.UTF8Encoding(false);
 
     // Returns a copy without nulls, empty strings, empty arrays and empty objects; null when nothing is left.
     private static JsonNode? Prune(JsonNode? node)
@@ -450,35 +452,89 @@ public sealed class DesktopRuntime : AssemblyLoadContext
     }
 }
 
-/// <summary>Entry point of the main script: reads the request file and dispatches its command.</summary>
+/// <summary>A command of the main script: its handler and its help, whose first line summarises it.</summary>
+public sealed record Command(Func<Request, JsonNode?> Run, string Help);
+
+/// <summary>Entry points of the main script and of ad hoc scripts: parse the arguments and run.</summary>
 public static class Spy
 {
-    /// <summary>The folder holding the scripts, session.json and the requests.</summary>
-    public static string WorkingFolder { get; } = FolderOf();
+    /// <summary>The folder holding the request file, session.json and the screenshots.</summary>
+    public static string WorkingFolder { get; private set; } = "";
 
-    public static int Run(IList<string> args, IReadOnlyDictionary<string, Func<Request, JsonNode?>> commands)
+    /// <summary>The main script: <c>--new-working-folder</c>, <c>--request-path &lt;file&gt;</c> or <c>--help [&lt;command&gt;]</c>.</summary>
+    public static int Run(IList<string> args, string help, IReadOnlyDictionary<string, Command> commands)
     {
-        Request request;
-        try
+        if (args.Count >= 1 && args[0] == "--help") return PrintHelp(args, help, commands);
+        if (args.Count == 1 && args[0] == "--new-working-folder")
         {
-            request = args.Count == 1
-                ? Request.Load(Path.GetFullPath(args[0]))
-                : throw new SpyError(ErrorCodes.InvalidRequest, "Pass exactly one argument, the request file: dotnet script win-app-spy.csx -- req.json");
+            try { return NewWorkingFolder(); }
+            catch (Exception e) { return Envelope.Fail(Envelope.Error(e), 1); }
         }
-        catch (SpyError e) { return Envelope.Print(Envelope.Failure(null, e.Code, e.Message)); }
 
-        return Envelope.Run(SafeCommand(request), () =>
+        return RunRequest(args, request =>
         {
             var command = request.String("command")
                 ?? throw new SpyError(ErrorCodes.InvalidRequest, "'command' is missing.");
             return commands.TryGetValue(command, out var handler)
-                ? handler(request)
+                ? handler.Run(request)
                 : throw new SpyError(ErrorCodes.UnknownCommand, $"Unknown command '{command}'; known commands: {string.Join(", ", commands.Keys.Order())}.");
         });
+    }
+
+    /// <summary>An ad hoc script: runs <paramref name="handler"/> on the request <c>--request-path</c> names.</summary>
+    public static int Run(IList<string> args, string command, Func<Request, JsonNode?> handler) =>
+        RunRequest(args, handler, command);
+
+    private static int RunRequest(IList<string> args, Func<Request, JsonNode?> handler, string? command = null)
+    {
+        Request request;
+        try
+        {
+            var path = args.Count == 2 && args[0] == "--request-path"
+                ? Path.GetFullPath(args[1])
+                : throw new SpyError(ErrorCodes.InvalidRequest, "Pass --request-path <file>, --new-working-folder or --help [<command>].");
+            request = Request.Load(path);
+            WorkingFolder = Path.GetDirectoryName(path)!;
+        }
+        catch (SpyError e) { return Envelope.Fail(e.ToJson(), 2); }
+
+        return Envelope.Run(command ?? SafeCommand(request), () => handler(request));
     }
 
     private static string? SafeCommand(Request request) =>
         request.Json["command"] is JsonValue value && value.TryGetValue(out string? command) ? command : null;
 
-    private static string FolderOf([CallerFilePath] string path = "") => Path.GetDirectoryName(path)!;
+    // One folder per conversation; a suffix keeps folders created within the same second apart.
+    private static int NewWorkingFolder()
+    {
+        var parent = Path.Combine(Path.GetTempPath(), "win-app-spy");
+        var name = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+        var folder = Path.Combine(parent, name);
+        for (var suffix = 2; Directory.Exists(folder); suffix++) folder = Path.Combine(parent, $"{name}-{suffix}");
+        Directory.CreateDirectory(folder);
+        return Envelope.Result(new JsonObject { ["workingFolder"] = folder });
+    }
+
+    private static int PrintHelp(IList<string> args, string help, IReadOnlyDictionary<string, Command> commands)
+    {
+        Envelope.UseUtf8();
+        if (args.Count == 1)
+        {
+            var width = commands.Keys.Max(name => name.Length);
+            var list = commands.OrderBy(pair => pair.Key, StringComparer.Ordinal)
+                .Select(pair => $"  {pair.Key.PadRight(width)}  {pair.Value.Help.Split('\n')[0].Trim()}");
+            Console.WriteLine(help.TrimEnd() + "\n\nCommands (details: --help <command>):\n" + string.Join("\n", list));
+            return 0;
+        }
+
+        if (args.Count == 2 && commands.TryGetValue(args[1], out var command))
+        {
+            Console.WriteLine($"{args[1]} — {command.Help.TrimEnd()}");
+            return 0;
+        }
+
+        return Envelope.Fail(
+            Envelope.Error(ErrorCodes.UnknownCommand, $"Pass --help or --help <command>; known commands: {string.Join(", ", commands.Keys.Order())}."),
+            2);
+    }
 }

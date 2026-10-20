@@ -6,6 +6,25 @@ using System.Text.Json.Nodes;
 
 public static class WaitCommand
 {
+    public const string Help = """
+        Polls a locator until its element meets a condition.
+
+        Request
+          { "command": "wait", "locator": "//MenuItem[@AutomationId='File']", "condition": "enabled", "timeout": 5000 }
+          locator    Required; an xpath.
+          condition  exists (default; the locator matches one element), gone (it matches nothing),
+                     enabled (the one match is enabled) or visible (the one match is not offscreen).
+          timeout    How long to poll, in ms (default 10000).
+          poll       How often to take a fresh look at the UI, in ms (default 250, at least 1).
+
+        Result data
+          { "xpath": "//MenuItem[@AutomationId='File']", "condition": "enabled" }
+
+        Errors
+          TIMEOUT (the condition did not hold in time), AMBIGUOUS_MATCH (at once, when the locator
+          matches several elements), APP_NOT_FOUND, INVALID_REQUEST.
+        """;
+
     private static readonly Dictionary<string, (string Verb, Func<IReadOnlyList<UiNode>, bool> Met)> Conditions = new()
     {
         ["exists"] = ("exist", matches => matches.Count == 1),

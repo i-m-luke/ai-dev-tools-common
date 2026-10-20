@@ -6,6 +6,25 @@ using System.Text.Json.Nodes;
 
 public static class AttachCommand
 {
+    public const string Help = """
+        Connects to a running app and makes it the active app; close never closes it.
+
+        Request
+          { "command": "attach", "app": { "process": "notepad" } }
+          app  Required; selects the app like every request's `app` (see --help).
+          uia  The UI Automation mode later requests use for the app.
+
+        Result data
+          { "app": { "pid": 29080, "title": "Untitled - Notepad", "uia": "UIA3" } }
+          title is that of a window matching the request's title, when it sent one. Windows 11
+          Notepad runs all its windows in one process, so a title or process matching several
+          Notepad windows still selects that one app.
+
+        Errors
+          APP_NOT_FOUND, APP_AMBIGUOUS (the message lists each match's pid and title),
+          INVALID_REQUEST.
+        """;
+
     public static JsonNode? Run(Request request)
     {
         var selector = request.Object("app") ?? throw new SpyError(

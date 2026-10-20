@@ -11,6 +11,28 @@ using FlaUI.Core.Definitions;
 
 public static class ScreenshotCommand
 {
+    public const string Help = """
+        Captures the app's front window, or one element of it, as a PNG in the working folder.
+
+        Request
+          { "command": "screenshot", "xpath": "//MenuItem[@AutomationId='File']" }
+          xpath  Captures just the one element it matches (default: the app's front window). To
+                 capture another top-level window, send its xpath, e.g. //Window[@AutomationId='…'].
+
+        Result data
+          { "path": "C:\\…\\win-app-spy\\20261016-103311\\screenshot-20261016-103316-005.png",
+            "window": { "handle": 4850202, "title": "Untitled - Notepad" },
+            "element": "//MenuItem[@AutomationId='File']" }
+          path is the PNG's full path; window is the window the image comes from; element echoes
+          the request's xpath. The image comes from the window's own rendering: a window behind
+          others comes out whole, and nothing is brought to the front.
+
+        Errors
+          ELEMENT_NOT_FOUND / AMBIGUOUS_MATCH / INVALID_REQUEST for the xpath (no file is written),
+          UNEXPECTED for a minimized window or an element with no visible area (the message says
+          which), APP_NOT_FOUND.
+        """;
+
     public static JsonNode? Run(Request request)
     {
         var xpath = request.String("xpath");

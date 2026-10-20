@@ -7,6 +7,24 @@ using FlaUI.Core.AutomationElements;
 
 public static class CloseCommand
 {
+    public const string Help = """
+        Closes an app launched from this working folder: the active app, or the one `app` selects.
+
+        Request
+          { "command": "close", "force": false, "timeout": 10000 }
+          force    true kills the app instead of closing its windows (default false).
+          timeout  How long to wait for the app to exit, in ms (default 10000).
+
+        Result data
+          { "pid": 25776, "closed": "gracefully" }
+          closed is gracefully (its windows were closed) or killed (force).
+
+        Errors
+          NOT_LAUNCHED (the app was not launched from this working folder; it stays open), TIMEOUT
+          (the app still runs, e.g. it asks to save changes; send force: true), CLOSE_FAILED (no
+          window to close; send force: true), APP_NOT_FOUND.
+        """;
+
     public static JsonNode? Run(Request request)
     {
         var session = Session.Load();

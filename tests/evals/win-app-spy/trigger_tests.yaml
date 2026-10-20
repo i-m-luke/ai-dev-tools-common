@@ -1,0 +1,15 @@
+skill: win-app-spy
+
+should_trigger_prompts:
+  - prompt: "Is the Save button in the Contoso Invoicing desktop app enabled right now?"
+  - prompt: "Take a screenshot of the Contoso Invoicing window and tell me what it shows."
+  - prompt: "List the menu items of the Contoso Invoicing app that is running on my machine."
+  - prompt: "Click the Export button in the Contoso Invoicing app."
+    confidence: medium
+
+should_not_trigger_prompts:
+  - prompt: "Write a C# WinForms dialog with OK and Cancel buttons."
+    confidence: medium
+  - prompt: "Explain in two sentences what the AutomationId property in UI Automation is for."
+    confidence: medium
+  - prompt: "Tell me a short joke about coffee."

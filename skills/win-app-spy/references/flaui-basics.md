@@ -1,17 +1,19 @@
 # FlaUI basics for ad hoc scripts
 
 When no command does what the task needs, write an ad hoc script on the shared core. The core
-connects to the app, keeps the session and prints the standard envelope; the script adds only the
-FlaUI calls the task needs. FlaUI's own documentation: <https://github.com/FlaUI/FlaUI> and its
+connects to the app, keeps the session and prints the result or error the way `spy.csx` does; the
+script adds only the FlaUI calls the task needs. FlaUI's own documentation: <https://github.com/FlaUI/FlaUI> and its
 wiki <https://github.com/FlaUI/FlaUI/wiki>.
 
 ## Load the core
 
-Save the script as `<name>.csx` in the working folder, beside `core.csx`, and start it with
-`#load "core.csx"`. The core brings FlaUI 5.0.0 and works out the working folder from its own path,
-so the script shares `session.json` — the active app and the launched apps — with the requests.
-Run it from the working folder with `dotnet script <name>.csx -- req.json`; the request file is
-optional, and its first run compiles the script. Read the result by the playbook of step 1.
+Save the script as `<name>.csx` in the working folder and start it with
+`#load "<this skill's folder>/scripts/core.csx"`, the core's full path. The core brings FlaUI 5.0.0.
+Write the script's request into `req.json` in the working folder — `{}` when it needs no fields —
+and run `dotnet script <working folder>/<name>.csx -- --request-path <working folder>/req.json`;
+the request's folder is the working folder, so the script shares `session.json` — the active app
+and the launched apps — with `spy.csx`. Its first run compiles the script. Act on the result by the
+playbook of step 1.
 
 Each `.csx` file lists its own `using`s; they do not carry over through `#load`. Under
 `#nullable enable`, dotnet-script fails the compilation on nullable warnings; mark a value you know
@@ -19,10 +21,11 @@ is set with `!`.
 
 ## The core's API
 
-- `Envelope.Run(command, () => data)` — runs the body, prints the envelope with its `data` (or the
-  `error` it threw) and returns the exit code; make it the script's `return`.
-- `Request.Load(path)` reads a request file; `String`, `RequiredString`, `Int`, `Bool` and
-  `Object(name)` read its fields and answer a wrong type with `INVALID_REQUEST`.
+- `Spy.Run(Args, "<name>", request => data)` — reads the request `--request-path` names, makes its
+  folder the working folder, runs the body and prints `data` as the result (or the error it threw)
+  with the exit code `spy.csx` uses; make it the script's `return`.
+- The request's `String`, `RequiredString`, `Int`, `Bool` and `Object(name)` read its fields and
+  answer a wrong type with `INVALID_REQUEST`.
 - `Apps.Target(request, Session.Load())` — the `pid` and `uia` mode the request targets: its `app`,
   otherwise the active app.
 - `Apps.CreateAutomation(uia)` — the UIA automation to search with; create every automation
@@ -32,7 +35,7 @@ is set with `!`.
 - `Poll.Until(probe, timeoutMs)` — repeats the probe every 250 ms until it returns non-null or the
   timeout passes; use it to wait for UI to appear. `Poll.Until(probe, Poll.Options.Read(request))`
   takes the request's `timeout` and `poll` the way the `wait` command does.
-- `throw new SpyError(ErrorCodes.X, message)` fails the whole run; `Envelope.Error(code, message)`
+- `throw new SpyError(ErrorCodes.X, message)` fails the whole run with exit 2; `Envelope.Error(code, message)`
   is the `error` to put on a single item inside `data`, `Envelope.Error(exception)` the one for a
   caught exception.
 - `Locator.Root(automation, pid)` — the root xpaths start from, over all the app's top-level
@@ -62,14 +65,13 @@ Lists the buttons in every window of the active app, or of the app the request n
 
 ```csharp
 #nullable enable
-#load "core.csx"
+#load "<this skill's folder>/scripts/core.csx"
 
 using System.Text.Json.Nodes;
 using FlaUI.Core.Definitions;
 
-return Envelope.Run("list-buttons", () =>
+return Spy.Run(Args, "list-buttons", request =>
 {
-    var request = Args.Count > 0 ? Request.Load(Path.GetFullPath(Args[0])) : new Request(new JsonObject());
     var target = Apps.Target(request, Session.Load());
     using var automation = Apps.CreateAutomation(target.Uia);
     var windows = new JsonArray();
@@ -92,7 +94,8 @@ return Envelope.Run("list-buttons", () =>
 });
 ```
 
-Run against Windows 11 Notepad after `launch` (abridged):
+Its result against Windows 11 Notepad after `launch`, without the `::result::` prefix
+(pretty-printed, abridged):
 
 ```json
 {

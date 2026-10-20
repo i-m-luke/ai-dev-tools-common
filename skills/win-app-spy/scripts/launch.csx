@@ -11,6 +11,27 @@ using FlaUI.Core.AutomationElements;
 
 public static class LaunchCommand
 {
+    public const string Help = """
+        Starts an app, waits for its window and makes it the active app.
+
+        Request
+          { "command": "launch", "exe": "notepad.exe", "args": "", "timeout": 10000 }
+          exe      Required; the program to start, a path or a name on the PATH.
+          args     Its command-line arguments (default none).
+          timeout  How long to wait for its window, in ms (default 10000); `poll` sets how often to
+                   look (ms, default 250).
+          uia      The UI Automation mode later requests use for the app.
+
+        Result data
+          { "app": { "pid": 31652, "title": "Untitled - Notepad", "uia": "UIA3" } }
+          The pid is the process that owns the window, which can differ from the process exe started
+          (Windows 11 Notepad hands over from a launcher process).
+
+        Errors
+          APP_NOT_FOUND (the exe cannot be started), TIMEOUT (no window in time; the started process
+          is stopped), APP_ALREADY_RUNNING, INVALID_REQUEST.
+        """;
+
     public static JsonNode? Run(Request request)
     {
         var exe = request.RequiredString("exe");

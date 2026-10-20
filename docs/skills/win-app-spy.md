@@ -1,20 +1,26 @@
 # win-app-spy
 
 [`win-app-spy`](../../skills/win-app-spy/SKILL.md) lets an agent inspect and drive the UI of any
-Windows desktop app through one script and a JSON request/response contract; the design lives in
+Windows desktop app through one script, `spy.csx`, that takes JSON requests; the design lives in
 [issue #1](https://github.com/i-m-luke/ai-dev-tools-common/issues/1).
 
 ## Prerequisites
 
 The skill runs on the .NET SDK and the global tool `dotnet-script`
-(`dotnet tool install -g dotnet-script`); its preflight script checks both and prints how to install
-whatever is missing. Without `dotnet-script`, the script tests that need it are skipped.
+(`dotnet tool install -g dotnet-script`); `check-prerequisites.ps1` checks both and prints how to
+install whatever is missing. It is in PowerShell, unlike the other scripts, because the runtime it
+checks is the one they need. Without `dotnet-script`, the script tests that need it are skipped.
 
 ## Working folder
 
-Each conversation gets its own folder under `%TEMP%\win-app-spy\`, kept after the task so the user
-can review what the agent did. It replaces the repo's `.artifacts/` convention on purpose: the skill
-runs in any repository, or none.
+Each conversation gets its own folder under `%TEMP%\win-app-spy\`, created by
+`spy.csx -- --new-working-folder` and kept after the task so the user can review what the agent
+did. It replaces the repo's `.artifacts/` convention on purpose: the skill runs in any repository,
+or none. The scripts run from the skill's folder; a request's folder is the working folder.
+
+dotnet-script restores packages with the `NuGet.Config` nearest to the script, so `scripts/` carries
+its own: it clears the feeds and package source mappings of the folders above the skill, which would
+otherwise break the restore of FlaUI.
 
 ## Verifying changes
 
@@ -44,7 +50,8 @@ write PNGs; plain `net10.0` lacks it. It captures through the window's own rende
 ## Adding a command
 
 Each command is a `<command>.csx` file with a `JsonNode? Run(Request)` handler that returns the
-response's `data` and throws `SpyError` for a command-level error. `win-app-spy.csx` `#load`s it and
-lists it in its dispatch table, both kept alphabetical. Shared pieces — the envelope, request
+result's `data` and throws `SpyError` for a command-level error, and a `Help` string — the
+command's part of the script's help, the only documentation of its request and result. `spy.csx`
+`#load`s it and lists it in its dispatch table, both kept alphabetical. Shared pieces — the envelope, request
 fields, session state, app connection, polling and locators — live in `core.csx` and the files it
 loads, which ad hoc scripts load too.

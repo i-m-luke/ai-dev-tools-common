@@ -12,6 +12,32 @@ using FlaUI.Core.WindowsAPI;
 
 public static class ActCommand
 {
+    public const string Help = """
+        Performs one action on the one element a locator matches.
+
+        Request
+          { "command": "act", "locator": "//MenuItem[@AutomationId='View']", "action": "expand", "states": [ "expanded" ] }
+          locator  Required; an xpath that must match exactly one element, else nothing is done.
+          action   Required; one of:
+                     click, doubleClick, rightClick  moves the mouse to the element and clicks
+                     focus                           gives the element keyboard focus
+                     type (+ text)                   focuses the element and types the text
+                     setValue (+ value)              sets the value (Value pattern); "" clears it
+                     invoke, toggle, select,         uses the element's Invoke, Toggle,
+                     expand, collapse                SelectionItem or ExpandCollapse pattern
+                     key (+ keys)                    focuses the element and presses the keys
+                                                     together, e.g. Ctrl+A, Enter, Escape, F5
+          states   The state keys to read after the action (see --help).
+
+        Result data
+          { "xpath": "//MenuItem[@AutomationId='View']", "state": { "expanded": true } }
+
+        Errors
+          ELEMENT_NOT_FOUND / AMBIGUOUS_MATCH (nothing is done), ACTION_FAILED (the element lacks
+          the pattern or the action threw), INVALID_REQUEST (unknown action or key, missing field),
+          APP_NOT_FOUND.
+        """;
+
     // Time the UI gets to react before the state after the action is read.
     private const int SettleMs = 300;
 

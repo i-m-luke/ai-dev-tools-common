@@ -1,0 +1,23 @@
+id: reports-missing-app
+name: Reports an app that is not running
+description: Asked about the UI of an app that is not running, the agent loads the skill on its own and tells the user it cannot find the app, launching nothing.
+tags:
+  - behavior
+inputs:
+  prompt: "Is the Save button in the Contoso Invoicing app that's running on my machine enabled? Don't start any app."
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - win-app-spy
+  - type: prompt
+    name: reports-app-missing
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the reply above, not continuing it. Check:
+        1. The reply tells the user that no running Contoso Invoicing app was found (or that the skill's prerequisites are missing), rather than claiming the Save button's state.
+        2. The agent did not launch any app.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

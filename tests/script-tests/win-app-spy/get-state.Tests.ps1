@@ -1,5 +1,5 @@
-# Covers the get-state command of win-app-spy.csx (get-state.csx and the XPath locators of locator.csx)
-# through its JSON contract, against fixture-app.ps1. Skipped in CI, which has no desktop to show it on.
+# Covers the get-state command of spy.csx (get-state.csx and the XPath locators of locator.csx)
+# through its contract, against fixture-app.ps1. Skipped in CI, which has no desktop to show it on.
 BeforeDiscovery {
     $script:skip = -not (Get-Command dotnet-script -ErrorAction SilentlyContinue) -or [bool] $env:CI
 }
@@ -82,10 +82,10 @@ Describe 'get-state' -Skip:$skip {
         $result.Items["//Button[@AutomationId='SaveBtn']"].state.Keys | Should -Be @('name')
     }
 
-    It 'answers ELEMENT_NOT_FOUND for a locator without a match, keeps the other items and exits 1' {
+    It 'answers ELEMENT_NOT_FOUND for a locator without a match, keeps the other items and exits 0' {
         $result = Get-State "//Button[@AutomationId='NoSuchBtn']", "//Button[@AutomationId='SaveBtn']" -States name
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 0
         $result.Json.Keys | Should -Not -Contain 'error'
         $result.Items["//Button[@AutomationId='NoSuchBtn']"].error.code | Should -Be 'ELEMENT_NOT_FOUND'
         $result.Items["//Button[@AutomationId='NoSuchBtn']"].Keys | Should -Not -Contain 'state'
@@ -95,7 +95,7 @@ Describe 'get-state' -Skip:$skip {
     It 'answers AMBIGUOUS_MATCH with the count and every candidate''s concrete xpath and state' {
         $result = Get-State "//Button[@Name='OK']" -States automationId
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 0
         $itemError = $result.Items["//Button[@Name='OK']"].error
         $itemError.code | Should -Be 'AMBIGUOUS_MATCH'
         $itemError.count | Should -Be 3
@@ -180,7 +180,7 @@ Describe 'get-state' -Skip:$skip {
     ) {
         $result = Get-State $xpath, "//Button[@AutomationId='SaveBtn']"
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 0
         $result.Items[$xpath].error.code | Should -Be 'INVALID_REQUEST'
         $result.Items[$xpath].error.message | Should -Not -BeNullOrEmpty
         $result.Items["//Button[@AutomationId='SaveBtn']"].Keys | Should -Not -Contain 'error'
@@ -197,9 +197,9 @@ Describe 'get-state' -Skip:$skip {
 
         $result = Invoke-Spy $request
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
+        $result.ResultLines | Should -Be 0
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
-        $result.Json.Keys | Should -Not -Contain 'data'
     }
 }
 
@@ -210,7 +210,7 @@ Describe 'get-state without an app' -Skip:(-not (Get-Command dotnet-script -Erro
 
         $result = Invoke-Spy @{ command = 'get-state'; app = @{ pid = $gone.Id }; locators = @('//Window') }
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
     }
 }

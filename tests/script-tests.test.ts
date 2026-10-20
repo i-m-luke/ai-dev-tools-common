@@ -35,13 +35,13 @@ describe("notify", () => {
 describe("win-app-spy", () => {
   suite.test("win-app-spy/act.Tests.ps1");
   suite.test("win-app-spy/attach.Tests.ps1");
+  suite.test("win-app-spy/check-prerequisites.Tests.ps1");
   suite.test("win-app-spy/dump-tree.Tests.ps1");
   suite.test("win-app-spy/flaui-basics.Tests.ps1");
   suite.test("win-app-spy/get-state.Tests.ps1");
-  suite.test("win-app-spy/preflight.Tests.ps1");
   suite.test("win-app-spy/screenshot.Tests.ps1");
+  suite.test("win-app-spy/spy.Tests.ps1");
   suite.test("win-app-spy/wait.Tests.ps1");
-  suite.test("win-app-spy/win-app-spy.Tests.ps1");
 });
 
 it("script test list matches the Pester files", suite.expectAllFilesDeclared);

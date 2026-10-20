@@ -1,36 +1,39 @@
-# Covers the sample ad hoc script in references/flaui-basics.md: run as the reference tells, beside a
-# copy of the scripts, it loads core.csx and prints the standard envelope. Its run against Notepad
-# is verified by hand, since parallel runs share one desktop.
+# Covers the sample ad hoc script in references/flaui-basics.md: saved in a working folder and run as
+# the reference tells, it loads the core from the skill's folder and answers like spy.csx. Its run
+# against Notepad is verified by hand, since parallel runs share one desktop.
 BeforeDiscovery {
     $script:noDotnetScript = -not (Get-Command dotnet-script -ErrorAction SilentlyContinue)
 }
 
 BeforeAll {
-    $skillFolder = Join-Path $PSScriptRoot '..' '..' '..' 'skills' 'win-app-spy'
-    $script:workingFolder = Join-Path $TestDrive 'working-folder'
-    New-Item -ItemType Directory -Path $script:workingFolder | Out-Null
-    Copy-Item -Path (Join-Path $skillFolder 'scripts' '*') -Destination $script:workingFolder -Recurse
+    . (Join-Path $PSScriptRoot 'spy-test-helpers.ps1')
+    Initialize-SpyWorkingFolder
+    $skillFolder = (Resolve-Path (Join-Path $PSScriptRoot '..' '..' '..' 'skills' 'win-app-spy')).Path
 
     $reference = Get-Content -LiteralPath (Join-Path $skillFolder 'references' 'flaui-basics.md') -Raw
     $match = [regex]::Match($reference, '(?s)## Sample script.*?```csharp\r?\n(.*?)```')
-    $script:sampleScript = Join-Path $script:workingFolder 'list-buttons.csx'
-    if ($match.Success) { Set-Content -LiteralPath $script:sampleScript -Value $match.Groups[1].Value -Encoding utf8 }
+    $script:sampleScript = Join-Path $script:spyWorkingFolder 'list-buttons.csx'
+    if ($match.Success) {
+        $source = $match.Groups[1].Value.Replace("<this skill's folder>", ($skillFolder -replace '\\', '/'))
+        Set-Content -LiteralPath $script:sampleScript -Value $source -Encoding utf8
+    }
 }
+
+AfterAll { Restore-SpyConsoleEncoding }
 
 Describe 'flaui-basics.md sample script' {
     It 'is a csharp block under "Sample script"' {
         $script:sampleScript | Should -Exist
     }
 
-    It 'loads the core and answers a missing active app with the standard error envelope' -Skip:$noDotnetScript {
-        Push-Location $script:workingFolder
-        try { $stdout = & dotnet script $script:sampleScript 2>$null | Out-String }
-        finally { Pop-Location }
+    It 'loads the core and answers a missing active app with APP_NOT_FOUND on stderr and exit 2' -Skip:$noDotnetScript {
+        $request = Join-Path $script:spyWorkingFolder 'req.json'
+        Set-Content -LiteralPath $request -Value '{}' -Encoding utf8
 
-        $LASTEXITCODE | Should -Be 1
-        $json = $stdout | ConvertFrom-Json -AsHashtable
-        $json.command | Should -Be 'list-buttons'
-        $json.error.code | Should -Be 'APP_NOT_FOUND'
-        $json.Keys | Should -Not -Contain 'data'
+        $result = Invoke-SpyScript -Script $script:sampleScript -Arguments '--request-path', $request
+
+        $result.ExitCode | Should -Be 2 -Because $result.Raw
+        $result.ResultLines | Should -Be 0
+        $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
     }
 }

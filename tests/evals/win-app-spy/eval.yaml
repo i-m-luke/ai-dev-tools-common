@@ -1,0 +1,24 @@
+name: win-app-spy
+description: Checks that the agent reaches for win-app-spy on its own whenever a task needs a Windows app's UI.
+skill: win-app-spy
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  executor: copilot-sdk
+  model: claude-sonnet-5.5
+  # Hide the skill body so the agent has to load the skill itself, as in real use.
+  inject_skill_body: false
+  skill_directories:
+    - ../../../skills
+# The prompts name an app that is not running, so a run that goes on never touches the desktop;
+# tasks that drive a real app would need a desktop and dotnet-script.
+metrics:
+  - name: task_completion
+    weight: 0.5
+    threshold: 1.0
+  - name: trigger_accuracy
+    weight: 0.5
+    threshold: 0.8
+tasks:
+  - "tasks/*.yaml"

@@ -1,34 +1,19 @@
-# Covers attach.csx and the `app` field every request may send, through the JSON contract of
-# win-app-spy.csx. GUI runs use a fixture app with a unique process name and window title, so they
+# Covers attach.csx and the `app` field every request may send, through the contract of
+# spy.csx. GUI runs use a fixture app with a unique process name and window title, so they
 # never touch the user's windows; they skip in CI, which has no desktop.
 BeforeDiscovery {
     $script:noDotnetScript = -not (Get-Command dotnet-script -ErrorAction SilentlyContinue)
 }
 
 BeforeAll {
-    # Scripts run from a copy, as in the skill's working folder; the copy also keeps session.json out of the repo.
-    $script:workingFolder = Join-Path $TestDrive 'working-folder'
-    New-Item -ItemType Directory -Path $script:workingFolder | Out-Null
-    Copy-Item -Path (Join-Path $PSScriptRoot '..' '..' '..' 'skills' 'win-app-spy' 'scripts' '*') -Destination $script:workingFolder -Recurse
-    $script:mainScript = Join-Path $script:workingFolder 'win-app-spy.csx'
-    $script:originalEncoding = [Console]::OutputEncoding
-    [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
-
-    # Writes the request to req.json, runs the main script on it and parses the JSON it prints.
-    function Invoke-Spy {
-        param([string] $Request)
-        Set-Content -LiteralPath (Join-Path $script:workingFolder 'req.json') -Value $Request -Encoding utf8
-        Push-Location $script:workingFolder
-        try { $stdout = & dotnet script $script:mainScript -- req.json 2>$null | Out-String }
-        finally { Pop-Location }
-        [pscustomobject] @{ ExitCode = $LASTEXITCODE; Raw = $stdout; Json = $stdout | ConvertFrom-Json -AsHashtable }
-    }
+    . (Join-Path $PSScriptRoot 'spy-test-helpers.ps1')
+    Initialize-SpyWorkingFolder
 }
 
-AfterAll { [Console]::OutputEncoding = $script:originalEncoding }
+AfterAll { Restore-SpyConsoleEncoding }
 
 Describe 'attach' -Skip:$noDotnetScript {
-    BeforeEach { Remove-Item -LiteralPath (Join-Path $script:workingFolder 'session.json') -ErrorAction SilentlyContinue }
+    BeforeEach { Remove-Item -LiteralPath (Join-Path $script:spyWorkingFolder 'session.json') -ErrorAction SilentlyContinue }
 
     It 'answers APP_NOT_FOUND when <case>' -ForEach @(
         @{ case = 'no process has the pid'; app = @{ pid = 2147483000 } }
@@ -37,7 +22,7 @@ Describe 'attach' -Skip:$noDotnetScript {
     ) {
         $result = Invoke-Spy (@{ command = 'attach'; app = $app } | ConvertTo-Json)
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
         $result.Json.error.message | Should -Not -BeNullOrEmpty
     }
@@ -50,7 +35,7 @@ Describe 'attach' -Skip:$noDotnetScript {
     ) {
         $result = Invoke-Spy $request
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 
@@ -116,7 +101,7 @@ class Fixture : Form
 
             $result = Invoke-Spy "{ `"command`": `"attach`", `"app`": { `"process`": `"$script:fixtureName`" } }"
 
-            $result.ExitCode | Should -Be 1
+            $result.ExitCode | Should -Be 2
             $result.Json.error.code | Should -Be 'APP_AMBIGUOUS'
             $result.Json.error.message | Should -Match "pid $($first.Id)\b"
             $result.Json.error.message | Should -Match "pid $($second.Id)\b"

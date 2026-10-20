@@ -1,4 +1,4 @@
-# Covers the act command of win-app-spy.csx (act.csx) through its JSON contract, against the Act window
+# Covers the act command of spy.csx (act.csx) through its JSON contract, against the Act window
 # of fixture-app.ps1. Actions move the real mouse and keyboard, so the tests hold the GUI lock; skipped
 # in CI, which has no desktop.
 BeforeDiscovery {
@@ -62,7 +62,7 @@ Describe 'act' -Skip:$skip {
 
         $result = Invoke-Act "//CheckBox[@Name='Flag']" toggle
 
-        $result.ExitCode | Should -Be 1
+        $result.ExitCode | Should -Be 2
         $result.Json.error.code | Should -Be 'AMBIGUOUS_MATCH'
         Get-StateOf "//CheckBox[@AutomationId='FlagB']" toggle | Should -Be $before
     }
