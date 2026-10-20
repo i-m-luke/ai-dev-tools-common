@@ -6,14 +6,13 @@ This document describes the contract every script of a skill follows, in any lan
 
 ## Language
 
-All scripts of a skill share one language, so the skill needs one runtime. Propose the language by the runtime the skill's users already have or the one its domain needs, PowerShell when nothing decides, and let the user confirm it before you write a script.
+All scripts of a skill share one language, so the skill needs one runtime, except as [Prerequisites](#prerequisites) allows. Propose the language by the runtime the skill's users already have or the one its domain needs, PowerShell when nothing decides, and let the user confirm it before you write a script.
 
 `references/powershell-scripts.md` works the contract out in PowerShell. For another language, derive the equivalent of each of its parts — invocation, help, emitting the result, tests — from the rules below.
 
 ## Name
 
-Name a script `<verb>-<noun>.<ext>`, kebab-case, starting with an imperative verb, e.g.
-`export-issues.ps1` or `check-prerequisites.py`.
+Start a script's name with an imperative verb and add a noun when the verb alone leaves its object unclear: `<verb>[-<noun>].<ext>`, kebab-case. Helper files the scripts load, never run by the agent, are named by their content.
 
 ## Input
 
@@ -66,7 +65,7 @@ Act on every script run by a playbook keyed by exit code: `0`, then a row for ea
 
 ## Prerequisites
 
-When the scripts need prerequisites beyond their runtime — modules, tools — the skill's first step runs `check-prerequisites.<ext>`, so the agent learns up front whether the skill can work. The script checks every such prerequisite and never the runtime itself: a missing runtime shows up as the script failing to start, which `*` covers.
+When the scripts need prerequisites beyond their runtime — modules, tools — the skill's first step runs `check-prerequisites.<ext>`, so the agent learns up front whether the skill can work. The script checks every such prerequisite and never its own runtime: a missing runtime shows up as the script failing to start, which `*` covers. When the runtime itself is a prerequisite — a tool such as dotnet-script — write `check-prerequisites` in a language the users already have, PowerShell by default, and let it check the runtime too; it is the only script of the skill that may differ in language.
 
 ```markdown
 ### 1. Check prerequisites
