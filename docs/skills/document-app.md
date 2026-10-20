@@ -21,6 +21,10 @@ document's Markdown shape — title, TOC markers, anchors, image tags — and
 states only the rules those files cannot show, so a shape change is an edit to the template,
 and a new term or language is an edit to the terms table, not to both.
 
+The scripts own what is mechanical: [`update-toc.ps1`](../../skills/document-app/scripts/update-toc.ps1)
+the anchor rule and the TOC, [`convert-icon.ps1`](../../skills/document-app/scripts/convert-icon.ps1)
+the icon format and size. Change such a rule in the script and its tests, not in `SKILL.md`.
+
 ### Keep the skill stack-agnostic
 
 Describe the process generically — layout definition -> wired code ->
