@@ -5,6 +5,8 @@
 - 'win-app-spy' skill
 - Migrace 'win-app-spy' skillu do MCP
 - Převést logiku pomocných testovacích skriptů do ts?
+- AGENTS-SHARED.md:
+  - Vyjmout kapitolu "Code changes" do vlastního reference dokumentu?
 
 ## LoPrio
 

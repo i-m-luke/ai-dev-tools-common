@@ -9,21 +9,15 @@ and list the doc in `docs/skills/index.md`.
 Before writing or editing a skill, run `/skill-authoring`, then read
 [`docs/guidelines/skills.md`](docs/guidelines/skills.md) for this repo's additions.
 
-## Changes
-
 ## Code changes
-
-### Build
-
-Build with `dotnet build`, except `Zat.SystemTest.Toolkit.Extension` — the VSIX needs `msbuild`.
 
 ### Commit subject
 
 Write the subject in format `< prefix > - < file-name >: < imperative-summary >`:
 
-- **< prefix >**: Is required. Supports one of these options: a. `Feat`: for a new capability; b. `Fix`: for a defect; c. `Change`: for reworked behaviour; d. `Dev`: for work that leaves behaviour intact (refactoring, docs, warnings, tooling)
+- **< prefix >**: Is required. Supports one of these options: a. `Feat`: for a new capability; b. `Fix`: for a defect; c. `Change`: for reworked behaviour; d. `Dev`: for work that leaves behaviour intact (refactoring, docs, warnings, tooling). If several apply, pick the first in the order `Feat` > `Fix` > `Change` > `Dev`.
 - **< file-name >**: Name the single edited production file; use it when the change touches that one
-  production file and the tests it drove, drop this part otherwise.
+  production file and the tests it drove. Otherwise drop this part, with its `-`, and write `< prefix >: < imperative-summary >`.
 
 ### Versioning
 
