@@ -48,7 +48,7 @@ export function pesterSuite(dir: string): PesterSuite {
   return {
     test(file) {
       declared.push(file);
-      it(file, async (context) => {
+      it(testName(file), async (context) => {
         if (failedPrerequisites.length) {
           context.skip(`prerequisites failed (${failedPrerequisites.join(', ')}); fix them first`);
         }
@@ -57,7 +57,7 @@ export function pesterSuite(dir: string): PesterSuite {
     },
     prerequisite(file) {
       declared.push(file);
-      it(file, async () => {
+      it(testName(file), async () => {
         try {
           await expectPesterPasses(join(root, file));
         } catch (error) {
@@ -74,6 +74,11 @@ export function pesterSuite(dir: string): PesterSuite {
       expect([...declared].sort(), `Test list does not match the Pester files in '${shown}'`).toEqual(found.sort());
     },
   };
+}
+
+// The enclosing describe() names the skill folder, so the test shows only the file name.
+function testName(file: string): string {
+  return file.slice(file.lastIndexOf('/') + 1);
 }
 
 async function expectPesterPasses(testFile: string) {
