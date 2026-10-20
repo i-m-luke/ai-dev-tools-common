@@ -1,0 +1,21 @@
+id: passes-request-on
+name: Passes the user's request on to document-app
+description: The target path named in the request reaches document-app, which writes the document there.
+tags:
+  - behavior
+inputs:
+  prompt: "/write-app-doc Write it in English into docs/user-guide.md."
+  context:
+    fixture: fixtures/notes-app
+graders:
+  - type: skill_invocation
+    name: runs-document-app
+    config:
+      mode: any_order
+      required_skills:
+        - document-app
+  - type: file
+    name: document-written-at-requested-path
+    config:
+      must_exist:
+        - docs/user-guide.md

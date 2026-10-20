@@ -4,7 +4,7 @@ description: The slash command hands the work to document-app, which writes the 
 tags:
   - behavior
 inputs:
-  prompt: "/write-app-doc Write it into docs/notes-app.md."
+  prompt: "/write-app-doc Write it in English into docs/notes-app.md."
   context:
     fixture: fixtures/notes-app
 graders:
