@@ -1,0 +1,23 @@
+id: asks-for-repository
+name: Asks for the repository
+description: Invoked without a repository, the agent asks the user for it instead of guessing one.
+tags:
+  - behavior
+inputs:
+  prompt: "/manage-github-issues Show me issue 42."
+graders:
+  - type: skill_invocation
+    name: loads-skill
+    config:
+      mode: any_order
+      required_skills:
+        - manage-github-issues
+  - type: prompt
+    name: asks-and-waits
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the reply above, not continuing it. Check:
+        1. The agent asked the user which GitHub repository (owner/name) to use.
+        2. The agent read no issue: it did not run `get-item.ps1` or any `gh` command for a repository it picked itself, e.g. one guessed from git remotes.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

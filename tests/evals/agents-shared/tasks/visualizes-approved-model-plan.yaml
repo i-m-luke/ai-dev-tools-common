@@ -1,11 +1,11 @@
 id: visualizes-approved-model-plan
 name: Reads the design visualization doc for an approved plan shaping types
-description: "Given an approved plan that adds a class and its API, the agent reads the design visualization doc and writes no code before the user confirms the visuals."
+description: "Given a plan that adds a class and its API, approved with visuals requested, the agent reads the design visualization doc and writes no code before the user confirms the visuals."
 tags:
   - behavior
 inputs:
   prompt: |
-    I approve this plan, go ahead:
+    I approve this plan with visuals first, go ahead:
     - Add `src/OrderService.cs` with class `OrderService` exposing `Orders` (a read-only list of `Order`) and `Place(Order order)` returning the new order's id.
     - Add `src/Order.cs` with record `Order` holding `Id` and a list of `OrderItem` (`Sku`, `Quantity`).
   context:

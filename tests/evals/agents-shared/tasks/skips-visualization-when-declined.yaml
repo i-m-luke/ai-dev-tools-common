@@ -1,0 +1,25 @@
+id: skips-visualization-when-declined
+name: Skips the design visualization doc for a plan shaping types approved without visuals
+description: "Given a plan that adds a class and its API, approved as is, the agent implements it without reading the design visualization doc."
+tags:
+  - behavior
+inputs:
+  prompt: |
+    I approve this plan as is, go ahead:
+    - Add `src/OrderService.cs` with class `OrderService` exposing `Orders` (a read-only list of `Order`) and `Place(Order order)` returning the new order's id.
+    - Add `src/Order.cs` with record `Order` holding `Id` and a list of `OrderItem` (`Sku`, `Quantity`).
+  context:
+    fixture: fixtures/workspace
+graders:
+  - type: tool_constraint
+    name: skips-design-visualization-doc
+    config:
+      reject_tools:
+        - tool: "view"
+          path_pattern: 'agents-shared[\\/]design-visualization\.md$'
+  - type: file
+    name: code-written
+    config:
+      must_exist:
+        - src/OrderService.cs
+        - src/Order.cs

@@ -1,11 +1,11 @@
 id: visualizes-approved-interaction-plan
 name: Reads the design visualization doc for an approved plan shaping an interaction
-description: "Given an approved plan in which services call each other in order, the agent reads the design visualization doc and writes no code before the user confirms the visuals."
+description: "Given a plan in which services call each other in order, approved with visuals requested, the agent reads the design visualization doc and writes no code before the user confirms the visuals."
 tags:
   - behavior
 inputs:
   prompt: |
-    I approve this plan, go ahead:
+    I approve this plan with visuals first, go ahead:
     - Add `src/checkout.ts` with `Checkout.submit(cart)`: it awaits `PaymentGateway.charge(cart.total)`; on success it calls `Inventory.reserve(cart.items)`, on failure `Notifier.alert(error)`.
     - Add `src/paymentGateway.ts`, `src/inventory.ts` and `src/notifier.ts` with these methods as stubs.
   context:

@@ -3,6 +3,20 @@ import { expectAllPesterFilesDeclared, pesterTest } from "./script-tests-executo
 
 // One pesterTest per file in tests/script-tests/. Names are listed by hand so the VS Code Test
 // Explorer shows them; the last test catches a file added or removed without updating this list.
+pesterTest("manage-github-issues/add-assignee.Tests.ps1");
+pesterTest("manage-github-issues/add-blocker.Tests.ps1");
+pesterTest("manage-github-issues/add-comment.Tests.ps1");
+pesterTest("manage-github-issues/add-sub-issue.Tests.ps1");
+pesterTest("manage-github-issues/check-prerequisites.Tests.ps1");
+pesterTest("manage-github-issues/close-item.Tests.ps1");
+pesterTest("manage-github-issues/get-external-prs.Tests.ps1");
+pesterTest("manage-github-issues/get-issues.Tests.ps1");
+pesterTest("manage-github-issues/get-item.Tests.ps1");
+pesterTest("manage-github-issues/get-ready-sub-issues.Tests.ps1");
+pesterTest("manage-github-issues/github-client.Tests.ps1");
+pesterTest("manage-github-issues/new-issue.Tests.ps1");
+pesterTest("manage-github-issues/set-labels.Tests.ps1");
+pesterTest("manage-github-issues/update-issue.Tests.ps1");
 pesterTest("notify/notify.Tests.ps1");
 pesterTest("win-app-spy/act.Tests.ps1");
 pesterTest("win-app-spy/attach.Tests.ps1");

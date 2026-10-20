@@ -9,6 +9,7 @@ const { evalTest, expectAllEvalsDeclared } = useEvals("shipped");
 evalTest("agents-shared");
 evalTest("document-app");
 evalTest("help-with-writing");
+evalTest("manage-github-issues");
 evalTest("notify");
 evalTest("roles");
 evalTest("shallow-grill");

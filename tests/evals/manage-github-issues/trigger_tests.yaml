@@ -1,0 +1,17 @@
+skill: manage-github-issues
+
+# Prompts only read, or name repositories that do not exist, so no run writes to GitHub.
+should_trigger_prompts:
+  - prompt: "/manage-github-issues repo cli/cli — read issue 1 and tell me its title."
+  - prompt: "Run /manage-github-issues with repo cli/cli to list the open issues labelled bug."
+  - prompt: "Before you start, run /manage-github-issues with repo example-owner/no-such-repo and read issue 42; it holds the spec."
+    confidence: medium
+
+should_not_trigger_prompts:
+  - prompt: "Write a short GitHub issue description for a bug where the save button does nothing; just show me the text."
+    confidence: medium
+  - prompt: "What does the gh CLI command `gh issue list` do? Answer in one sentence."
+    confidence: medium
+  - prompt: "Tell me a short joke about coffee."
+  - prompt: "In one sentence, what is the difference between a list and a tuple in Python?"
+  - prompt: "Write a commit message for the staged changes."

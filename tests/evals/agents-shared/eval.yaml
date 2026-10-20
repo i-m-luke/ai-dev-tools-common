@@ -1,5 +1,5 @@
 name: agents-shared
-description: Checks that the shared instructions make the agent read the roles doc when roles are assigned, the glossary when it meets an unfamiliar term (and that reading it shapes the result), and the design visualization doc only for an approved plan that shapes code.
+description: Checks that the shared instructions make the agent read the roles doc when roles are assigned, the glossary when it meets an unfamiliar term (and that reading it shapes the result), and the design visualization doc only for an approved plan that shapes code when the user asks for visuals.
 version: "1.0"
 config:
   trials_per_task: 1
