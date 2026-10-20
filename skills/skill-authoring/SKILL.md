@@ -95,7 +95,11 @@ A skill folder holds `SKILL.md` and, as needed:
 
 ## Scripts
 
-When designing a skill, go through its steps and ask of each one whether a script can do it. Aim for scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every step moved to a script is cheaper, faster and repeatable. A step whose outcome is fixed by its input — calling an API, parsing, transforming or validating files — runs as a script, so the agent spends no judgement or tokens on it and its result never drifts.
+Scripts are the skill's own tools — small programs the agent runs to do the mechanical work, while it keeps the judgement.
+
+When designing a skill, go through its steps and ask of each instruction whether a script can do it. Aim for scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every step moved to a script is cheaper, faster and repeatable. Every mechanical instruction or sequence of instructions — one whose outcome is fixed by its input, such as calling an API, parsing, transforming or validating files — runs as a script, so the agent spends no judgement or tokens on it and its result never drifts.
+
+Design cannot foresee every split. Once the skill's scripts work, review its steps again, together with its eval transcripts when there are any. Where the agent still does mechanical work, e.g. composes ad-hoc commands or reshapes a script's result, propose moving it into a script. Where a script fakes judgement through flags, propose handing it back to the agent. Agree each such deviation from the specification with the user before making it.
 
 Read `references/scripts.md` when a skill gets a script or you write, change or call one; it holds the contract every script follows, in any language. Read `references/powershell-scripts.md` when the skill's scripts are in PowerShell; it works the contract out in that language.
 
