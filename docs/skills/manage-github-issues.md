@@ -66,5 +66,5 @@ run the ones that write against a scratch repository you own, and delete what th
 
 Add a `<verb>-<noun>.ps1` script that imports `github-client.psm1`, with comment-based help in the
 outline of the [script contract](../../skills/skill-authoring/references/scripts.md), its Pester
-tests and their `pesterTest` line in `tests/script-tests.test.ts`, and a row in the operations table
+tests and their `suite.test` line in `tests/script-tests.test.ts`, and a row in the operations table
 of `SKILL.md`.

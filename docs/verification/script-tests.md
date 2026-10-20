@@ -10,10 +10,10 @@ ship (e.g. `skills/notify/scripts/notify.ps1`) and consume no tokens.
 
 Tests are grouped by the skill they cover: `tests/script-tests/<skill>/*.Tests.ps1`; the
 [repository checks](repository-checks.md) verify that every skill script has them. A new file needs
-its `pesterTest('<skill>/<file>')` line in `tests/script-tests.test.ts`, so the VS Code Test Explorer
+its `suite.test('<skill>/<file>')` line in `tests/script-tests.test.ts`, so the VS Code Test Explorer
 lists it before a run; a test there fails when the list and the files differ.
 
-Neither the pre-commit hook nor CI runs them, since they drive real apps and services; run them
+CI does not run them, since they drive real apps and services; run them
 yourself whenever you change a skill's script.
 
 Requirements:

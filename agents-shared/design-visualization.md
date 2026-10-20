@@ -1,6 +1,16 @@
 # Design visualization
 
-Show each part the plan shapes, new or existing; draw **Sequence** and **Flow** only when they answer a question the plan text leaves open:
+Show each part the plan shapes, new or existing; draw **Structure** first, and **Sequence** and **Flow** only when they answer a question the plan text leaves open:
+
+- **Structure** — use when the plan touches files or folders; draw the tree of the folders and files the plan touches, plus only the context needed to place them. Indent each child two spaces under its folder and end folder names with `/`. Give each entry a brief note in parentheses, aligned in one column, saying what it is and, when it helps, how the plan touches it:
+
+  ```text
+  src/                  (application code)
+    Orders/             (new feature slice for orders)
+      Order.cs          (new; order record)
+      OrderService.cs   (new; places orders)
+    Program.cs          (registers OrderService)
+  ```
 
 - **Model** — use when the plan shapes data; draw the shape of data alone. Put each property on its own line with its type. Draw a nested type inline when only one type uses it; otherwise draw it separately and reference it by name:
 

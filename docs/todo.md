@@ -4,6 +4,7 @@
 
 - 'win-app-spy' skill
 - Migrace 'win-app-spy' skillu do MCP
+- Převést logiku pomocných testovacích skriptů do ts?
 
 ## LoPrio
 

@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "repo-checks": "vitest run --project repo-checks",
     "script-tests": "vitest run --project script-tests",
     "evals": "vitest run --project evals",
     "evals:in-progress": "vitest run --project evals-in-progress",
