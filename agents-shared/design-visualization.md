@@ -2,11 +2,12 @@
 
 Show each part the plan shapes, new or existing; draw **Sequence** and **Flow** only when they answer a question the plan text leaves open:
 
-- **Model** — use when the plan shapes data; the shape of data alone, nested types drawn inline:
+- **Model** — use when the plan shapes data; draw the shape of data alone. Put each property on its own line with its type. Draw a nested type inline when only one type uses it; otherwise draw it separately and reference it by name:
 
   ```text
   Building {
-    color: string,
+    color: "red" | "green" | "blue",
+    adress: string,
     dimension: Dimension {
       height: int,
       width: int,

@@ -31,22 +31,17 @@ When asked for your opinion, give an honest, objective one: say what you actuall
 
 ### Planning
 
-Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary for approval, in a reply whose sole question is that approval.
+Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary for approval, in a reply whose sole question is that approval. When the plan shapes code — its types, APIs, relations or algorithms — end the summary with that question as a choice: approve as is, or approve with its design decisions sketched as visuals first.
 
-Once a plan that shapes code — its types, APIs, relations or algorithms — is approved, read [design-visualization.md](agents-shared/design-visualization.md) before anything else and sketch its design decisions as visuals by it, so you and the user confirm a shared understanding of the architecture.
-
-Start implementing only once the user confirms them; the approved plan and its visuals together form the final **specification**. Implement any other plan as soon as it is approved.
-
-## Writing docs
-
-Describe the **essence** — what the thing is for and the rule it upholds — in as few sentences as it needs, optimally one or two.
-Describe behaviour at a high level; add implementation details only when the user asks or when the behaviour cannot be understood without them.
-Applies to every human-facing doc in any repo: markdown docs, ADRs, and code doc comments alike.
-Docs with a dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead.
+When the user picks visuals, read [design-visualization.md](agents-shared/design-visualization.md) before anything else and sketch them by it, so you and the user confirm a shared understanding of the architecture.
 
 ## Code changes
 
 Write code, comments, docs and commit messages in the repo's existing language; English by default.
+
+### Implementation
+
+Start implementing once the user approves the plan, or confirms its design visuals when they asked for them. Implement by the **specification**; where it contradicts the code, ask before deviating.
 
 ### Quality assurance
 
@@ -69,6 +64,13 @@ When the workspace tracks architecture decisions (e.g. ADRs), record each signif
 - **Reason** — the motivation behind it; aim for two sentences at most.
 
 Exceed a row's aim only when the content cannot fit, and then by as little as it needs.
+
+## Writing docs
+
+Describe the **essence** — what the thing is for and the rule it upholds — in as few sentences as it needs, optimally one or two.
+Describe behaviour at a high level; add implementation details only when the user asks or when the behaviour cannot be understood without them.
+Applies to every human-facing doc in any repo: markdown docs, ADRs, and code doc comments alike.
+Docs with a dedicated skill (e.g. agent instructions, app UI docs) follow that skill instead.
 
 ## Working with subagents
 
