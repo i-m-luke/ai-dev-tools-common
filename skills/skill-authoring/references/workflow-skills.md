@@ -1,6 +1,6 @@
 # Workflow skills
 
-A workflow skill walks the agent through ordered steps towards a goal. A tool skill — one built around scripts — is a workflow skill too; its scripts follow `references/scripts.md`.
+A workflow skill walks the agent through ordered steps towards a goal.
 
 ## Shape
 

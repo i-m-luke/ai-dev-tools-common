@@ -17,9 +17,10 @@ Write skills in English, like any context an agent reads.
 
 ## Skill type
 
-Every skill is one of two types, each with its own template:
+Every skill is one of these types, each with its own guidelines:
 
-- **Workflow skill** — walks the agent through ordered steps towards a goal; usually categorizes as either _explicit_ or _hybrid_. A tool skill, one built around scripts, is a workflow skill too. Read `references/workflow-skills.md` when you create or change a workflow skill.
+- **Workflow skill** — walks the agent through ordered steps towards a goal; usually categorizes as either _explicit_ or _hybrid_. Read `references/workflow-skills.md` when you create or change a workflow skill.
+- **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Usually categorizes as _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/tool-skills.md` when you create or change a tool skill.
 - **Convention skill** — rules the agent returns to on demand while it works; usually categorizes as _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
 
 ## Skill categorization
@@ -37,7 +38,7 @@ What characteristics suit the requirements the most? Compare the three categorie
 ### Implicit
 
 - **Characteristics**: model invocation stays on — `disable-model-invocation` stays unset — so the agent loads the skill on its own for every task its description matches, and other skills can run it.
-- **When to choose**: the skill applies to every task it touches, e.g. the conventions of a language or an architecture. Its description stays loaded on every turn, so the reach must be worth it.
+- **When to choose**: the agent must decide on its own when to load the skill — a [convention skill](#skill-type), or a [tool skill](#skill-type) the agent reaches for whenever a task needs it. Its description stays loaded on every turn, so the reach must be worth it.
 - **Naming**: a noun phrase, e.g. `poem-writing`.
 - **Description**: starts with `Use when`, followed by every distinct situation the skill applies to, one trigger each, e.g. `Use when writing, reviewing or refactoring C# code — classes, constructors, method calls, file and namespace layout.` The agent reads it to decide whether to load the skill, and the uniform leading phrase makes it read as a trigger condition.
 - **How others call it**: as described in [Calling another skill](#calling-another-skill).
