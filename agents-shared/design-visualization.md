@@ -1,39 +1,63 @@
 # Design visualization
 
-Show each part the plan shapes, new or existing; draw **Structure** first, and **Sequence** and **Flow** only when they answer a question the plan text leaves open:
+Draw a view for each aspect the plan shapes, new or existing; the sections below pair each aspect with its view. Skip the preamble and keep prose brief. Pick the smallest view that makes the key point clear.
 
-- **Structure** — use when the plan touches files or folders; draw the tree of the folders and files the plan touches, plus only the context needed to place them. Indent each child two spaces under its folder and end folder names with `/`. Give each entry a brief note in parentheses, aligned in one column, saying what it is and, when it helps, how the plan touches it:
+## Structure
 
-  ```text
-  src/                  (application code)
-    Orders/             (new feature slice for orders)
-      Order.cs          (new; order record)
-      OrderService.cs   (new; places orders)
-    Program.cs          (registers OrderService)
-  ```
+For files or folders, show a diff tree of the touched ones, plus only the context needed to place them:
 
-- **Model** — use when the plan shapes data; draw the shape of data alone. Put each property on its own line with its type. Draw a nested type inline when only one type uses it; otherwise draw it separately and reference it by name:
+```diff
+ src/
+  Orders/
++   Order.cs          (new: order record)
++   OrderService.cs   (new: places orders)
+-   OrderRepository.cs   (delete: deprecated)
+~ Program.cs          (edit: registers OrderService)
+```
 
-  ```text
-  Building {
-    color: "red" | "green" | "blue",
-    adress: string,
-    dimension: Dimension {
-      height: int,
-      width: int,
-    },
-    walls: many of Wall { ... },
-  }
-  ```
+## Model
 
-- **API** — use when the plan shapes a public contract; each type's properties and method signatures as text, drawn as members in the Relations diagram only when the user asks for it.
+For data, show its shape alone. Put each property on its own line with its type. Draw a nested type inline when only one type uses it; otherwise draw it separately and reference it by name:
 
-  ```text
-  class OrderService
-    + Orders: IReadOnlyList<Order>
-    + Place(order: Order): Result<OrderId>
-  ```
+```pseudocode
+Building {
+  color: "red" | "green" | "blue",
+  address: string,
+  dimension: Dimension {
+    height: int,
+    width: int,
+  },
+  walls: many of Wall { ... },
+}
+```
 
-- **Relations** — use when the plan shapes how types relate; a Mermaid `classDiagram` of type names and their links, without members.
-- **Sequence** — use when several parts collaborate and the order of their calls or messages matters (e.g. async); a Mermaid `sequenceDiagram`.
-- **Flow** — use when logic branches or data passes through steps; a Mermaid `flowchart`.
+## API
+
+For a public contract, show each type's properties and method signatures as text.
+
+```pseudocode
+class OrderService
+  Orders: IReadOnlyList<Order>
+  Place(order: Order): Result<OrderId>
+```
+
+## Relations
+
+For how types relate, show a Mermaid `classDiagram` of type names and their links, without members unless the user asks for them.
+
+## Sequence
+
+When several parts collaborate and the order of their calls or messages matters (e.g. async), show a Mermaid `sequenceDiagram`.
+
+## Flow
+
+When logic branches or transforms data step by step, show it in one of two forms.
+
+Within one function, show pseudocode:
+
+```pseudocode
+on(save)
+  ...
+```
+
+Across functions, show a Mermaid `flowchart`.
