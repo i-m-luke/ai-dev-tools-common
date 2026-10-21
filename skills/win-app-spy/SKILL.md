@@ -3,8 +3,8 @@ name: win-app-spy
 description: Use when a task requires UI inspection of a Windows app, whether to explore its UI structure, check element state, capture a screenshot or interact with it.
 ---
 
-Inspect the UI of any Windows desktop app — its element tree, element states and screenshots — and
-interact with it, without needing the app's source code.
+Inspect the UI of any Windows desktop app — its element tree and element states — interact with it
+and capture screenshots of it.
 
 ## Initialization
 
