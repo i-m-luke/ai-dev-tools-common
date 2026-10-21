@@ -6,9 +6,9 @@
 - AGENTS-SHARED.md: Vyjmout kapitolu "Code changes" do vlastního reference dokumentu?
 - Provést audit pro všechny skilly skillem 'skill-authoring':
   - document-app: ✅
-  - win-app-spy: ✅
   - help-with-writing: ✅
   - write-app-doc: ✅
+  - win-app-spy: ...
   - manage-github-issues: ...
   - notify: ...
   - shallow-grill: ...
@@ -50,3 +50,5 @@
 
 - Vytvořit 'browser-app-spy' skill (viz devnotes)
 - Převést logiku pomocných testovacích skriptů do ts?
+
+## Detaily
