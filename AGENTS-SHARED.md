@@ -31,9 +31,11 @@ When asked for your opinion, give an honest, objective one: say what you actuall
 
 ## Planning
 
-Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary for approval, in a reply whose sole question is that approval. When the plan shapes code — its types, APIs, relations or algorithms — end the summary with that question as a choice: approve as is, or approve with its design decisions sketched as visuals first.
+Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary for approval, in a reply whose sole question is that approval. When the plan shapes code — its types, APIs, relations or algorithms — that question is always this one: _Do you approve the plan, or do you need visuals?_
 
 When the user picks visuals, read [design-visualization.md](agents-shared/design-visualization.md) before anything else and sketch them by it, so you and the user confirm a shared understanding of the architecture.
+
+Confirmed visuals travel with the specification into every artifact written from it (e.g. a spec, tickets): embed each view verbatim, in tickets only those their slice touches, even where the artifact's template bans code snippets; leave out the Structure view, whose file paths go stale. Write those artifacts alwaysin English, whatever the conversation or repo language.
 
 ## Code changes
 
