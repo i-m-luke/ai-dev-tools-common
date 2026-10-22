@@ -1,6 +1,6 @@
 # Tool skills
 
-A tool skill gives the agent a set of commands — helpers it runs whenever a task needs one, in any order. Each command holds its own steps; read `references/workflow-skills.md` too, as its rules for steps, completion conditions, playbooks, loops and reference hold here, with a command's chapter in place of `## Steps`.
+A tool skill gives the agent a set of commands — helpers it runs whenever a task needs one, in any order. Each command holds its own steps; the rules of `references/workflow-skills.md` for steps, completion conditions, playbooks, loops and reference hold here, with a command's chapter in place of `## Steps`.
 
 ## Shape
 

@@ -13,17 +13,21 @@ Conventions for authoring a skill, so that every skill follows one contract.
 
 Run `/writing-for-agents` skill (authored by Matt Pocock) — it covers writing any document an agent reads. When the `writing-for-agents` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
 
-Write skills in English, like any context an agent reads.
+Write every file of the skill:
+
+- **In English** — like any context an agent reads.
+- **One line per block** — each paragraph, list item and table row on one line, whatever its length; break lines only between them and between code lines.
+- **In positive instructions** — what the agent should do, not what it must avoid: "write one-line comments", not "don't write long comments". Naming the unwanted behaviour puts it into the agent's context and makes it more likely. Write a prohibition only where no positive phrasing exists, and pair it with what to do instead. Example: a hybrid skill's description ends with "— never otherwise, whatever the task"; without it, trigger evals showed the agent loading the skill for requests that merely resemble its task.
 
 ## Skill type
 
 Every skill is one of these types, each with its own guidelines:
 
 - **Workflow skill** — walks the agent through ordered steps towards a goal; defaults to _explicit_ or _hybrid_. Read `references/workflow-skills.md` when you create or change a workflow skill.
-- **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Defaults to _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/tool-skills.md` when you create or change a tool skill.
+- **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Defaults to _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/workflow-skills.md` and `references/tool-skills.md` when you create or change a tool skill.
 - **Convention skill** — rules the agent returns to on demand while it works; defaults to _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
 
-A type's default category is a starting point; [Skill categorization](#skill-categorization) decides.
+A type's default category is a starting point; [Skill categorization](#skill-categorization) decides. When a change shifts a skill's type or category, point out to the user that the skill may be worth reworking.
 
 When a skill fits more than one type, pick the type of its primary purpose — what the user invokes it for. When two purposes each carry substantial work, propose splitting the skill into one skill per type; when the primary purpose stays unclear, ask the user which type applies.
 
@@ -61,32 +65,6 @@ Start the `description` and `name` as its [category](#skill-categorization) pres
 
 Write frontmatter values without an unquoted `:` — it makes the YAML invalid and the skill fails to load. Use an em dash (—) instead.
 
-## Calling another skill
-
-Call another skill with three sentences, filled in. The middle one depends on whether the call is required or optional:
-
-- **Required** — the calling skill cannot deliver its result without the called one, so the agent stops:
-  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
-- **Optional** — the called skill only improves the result, so the agent goes on:
-  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
-
-Write no fallback copy of the called skill's instructions: a copy drifts from the original.
-
-## Standard phrases
-
-Point at a skill's files and decisions with these phrases, so the agent recognises each pointer:
-
-- reference — `Read references/<file> when <condition>.`
-- template — `Fill in assets/<file> …` when the agent completes it, or `Use assets/<file> as …` when it uses the file as it is.
-- script — `Run <exact command> …`.
-- playbook — `Act on the script's exit code by this playbook:`, followed by one `<outcome>` — `<action>` item per outcome.
-
-## Positive instructions
-
-Write each instruction as what the agent should do, not what it must avoid: "write one-line comments", not "don't write long comments". Naming the unwanted behaviour puts it into the agent's context and makes it more likely.
-
-Write a prohibition only where no positive phrasing exists, and pair it with what to do instead. Example: a hybrid skill's description ends with "— never otherwise, whatever the task"; without it, trigger evals showed the agent loading the skill for requests that merely resemble its task.
-
 ## Skill folder
 
 A skill folder holds `SKILL.md` and, as needed:
@@ -96,15 +74,22 @@ A skill folder holds `SKILL.md` and, as needed:
 - `assets/` — files the skill uses as they are or fills in, e.g. a document or HTML template.
 - `references/` — further instructions the agent reads when a step calls for them.
 
-`SKILL.md` mentions every file in `assets/` and `references/` by its path in the skill folder (e.g. `references/TERMS.md`), together with when to use it: the mention is the agent's only way to the file. Keep `SKILL.md` a short overview: move detail that only some tasks need into a reference.
+The agent reaches the skill's files only through these pointers:
+
+- `SKILL.md` points to every file in `references/` by its path in the skill folder (e.g. `references/TERMS.md`), together with when to read it.
+- The agent opens a reference only when a pointer in `SKILL.md` tells it to.
+- When one reference points to another reference, the agent reads only the part of it that pointer names, not the whole file.
+- Every file in `assets/` is mentioned by the instruction or script that uses it.
+
+Keep `SKILL.md` a short overview: move detail that only some tasks need into a reference.
 
 ## Scripts
 
 Scripts are the skill's own tools — small programs the agent runs to do the **mechanical** work, while it keeps the **judgement** (see [Glossary](#glossary)).
 
-When designing a skill, go through its steps and ask of each instruction whether a script can do it. Every mechanical instruction or sequence of instructions — such as calling an API, writing to a database, parsing, transforming or validating files — runs as a script: it is cheaper and faster, and it runs the same way every time. The agent keeps only the steps that need judgement — interpretation, design decisions, talking to the user.
+When designing a skill, go through its steps and ask of each instruction whether a script can do it. Every **mechanical** instruction or sequence of instructions — such as calling an API, writing to a database, parsing, transforming or validating files — runs as a script: it is cheaper and faster, and it runs the same way every time. The agent keeps only the steps that need judgement — interpretation, design decisions, talking to the user.
 
-Design cannot foresee every split. Once the skill's scripts work, review its steps again, together with its eval transcripts when there are any. Where the agent still does mechanical work, e.g. composes ad-hoc commands or reshapes a script's result, propose moving it into a script. Where a script fakes judgement through flags, propose handing it back to the agent. Agree each such deviation from the specification with the user before making it.
+Design cannot foresee every split. Once the skill's scripts work, review its steps again, together with its eval transcripts when there are any. Where the agent still does **mechanical** work, e.g. composes ad-hoc commands or reshapes a script's result, propose moving it into a script. Where a script fakes judgement through flags, propose handing it back to the agent. Agree each such change to the skill's existing instructions and scripts with the user before making it.
 
 Read `references/scripts.md` when a skill gets a script or you write, change or call one; it holds the contract every script follows, in any language. Read `references/powershell-scripts.md` when the skill's scripts are in PowerShell; it works the contract out in that language.
 
@@ -121,6 +106,26 @@ Rules that bind the agent running a skill live in instruction blocks in `assets/
 - A skill that writes files of its own, or whose scripts take a `<Noun>Path` parameter — fill in `assets/instruction-blocks/artifacts.md` as its `## Artifacts` chapter.
 
 When you change a skill, bring the blocks it carries in line with these files, and add the ones that now apply.
+
+## Standard phrases
+
+Point at a skill's files and decisions with these phrases, so the agent recognises each pointer:
+
+- reference — `Read references/<file> when <condition>.`
+- template — `Fill in assets/<file> …` when the agent completes it, or `Use assets/<file> as …` when it uses the file as it is.
+- script — `Run <exact command> …`.
+- playbook — `Act on the script's exit code by this playbook:`, followed by one `<outcome>` — `<action>` item per outcome.
+
+### Calling another skill
+
+Call another skill with three sentences, filled in. The middle one depends on whether the call is required or optional:
+
+- **Required** — the calling skill cannot deliver its result without the called one, so the agent stops:
+  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and stop. Where its instructions conflict with this skill's, this skill's win.
+- **Optional** — the called skill only improves the result, so the agent goes on:
+  > Run `/<skill>` skill …. When the `<skill>` skill is missing or cannot be invoked, tell the user and continue without it. Where its instructions conflict with this skill's, this skill's win.
+
+Write no fallback copy of the called skill's instructions: a copy drifts from the original.
 
 ## Glossary
 
