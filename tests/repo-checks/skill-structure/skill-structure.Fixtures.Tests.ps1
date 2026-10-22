@@ -33,10 +33,12 @@ BeforeAll {
     $scriptTestsRoot = Join-Path $TestDrive 'script-tests'
 
     New-Skill 'valid' "## Initialization`n`n### 1. Check`n`n## Steps`n`n### 1. Run`n`nSee ``references/guide.md`` and ``assets/page.html``.`n`n### 2. Close`n`n## Notes" @{
-        'agents/openai.yaml'  = 'interface: {}'
-        'scripts/run.ps1'     = 'exit 0'
-        'references/guide.md' = 'Guide.'
-        'assets/page.html'    = '<html></html>'
+        'agents/openai.yaml'        = 'interface: {}'
+        'scripts/run.ps1'           = 'exit 0'
+        'references/guide.md'       = 'Guide.'
+        'assets/page.html'          = '<html></html>'
+        # Left unmentioned on purpose: dotfiles configure tools, so the mention check skips them.
+        'assets/.markdownlint.json' = '{}'
     }
     New-Item -ItemType Directory -Force -Path (Join-Path $scriptTestsRoot 'valid') | Out-Null
     Set-Content -LiteralPath (Join-Path $scriptTestsRoot 'valid' 'run.Tests.ps1') -Value "# covers run.ps1" -Encoding utf8
@@ -48,6 +50,18 @@ BeforeAll {
     New-Skill 'prose-steps' "# Syntax`n`n## Steps`n`nOne step per line.`n`n``````text`n### not a step`n```````n`n## Loops`n`n### Loop syntax"
     New-Skill 'untested-script' 'Body.' @{ 'scripts/run.ps1' = 'exit 0' }
     New-Skill 'unmentioned-file' 'Uses a template.' @{ 'assets/page.html' = '<html></html>' }
+    New-Skill 'asset-in-reference' 'Read `references/guide.md` when writing.' @{
+        'references/guide.md' = 'Fill in `assets/page.html`.'
+        'assets/page.html'    = '<html></html>'
+    }
+    New-Skill 'asset-in-script' 'Run `scripts/run.ps1`.' @{
+        'scripts/run.ps1'  = "Get-Content (Join-Path `$PSScriptRoot '..' 'assets' 'page.html')"
+        'assets/page.html' = '<html></html>'
+    }
+    New-Skill 'nested-reference' 'Read `references/guide.md` when writing.' @{
+        'references/guide.md'  = 'Read `references/detail.md` for more.'
+        'references/detail.md' = 'Detail.'
+    }
 
     $script:results = Invoke-StructureTests $script:skillsRoot $scriptTestsRoot
 }
@@ -59,6 +73,8 @@ Describe 'skill-structure.Tests.ps1 on fixtures' {
         @{ test = 'Skill steps / prose-steps' }
         @{ test = 'Skill script tests / valid' }
         @{ test = 'Skill file mentions / valid' }
+        @{ test = 'Skill file mentions / asset-in-reference' }
+        @{ test = 'Skill file mentions / asset-in-script' }
     ) {
         ($script:results | Where-Object Test -EQ $test).Result | Should -Be 'Passed'
     }
@@ -70,6 +86,7 @@ Describe 'skill-structure.Tests.ps1 on fixtures' {
         @{ test = 'Skill steps / skipped-init-step'; expected = '## Initialization' }
         @{ test = 'Skill script tests / untested-script'; expected = 'add tests for: run.ps1' }
         @{ test = 'Skill file mentions / unmentioned-file'; expected = 'mention: assets/page.html' }
+        @{ test = 'Skill file mentions / nested-reference'; expected = 'mention: references/detail.md' }
     ) {
         $result = $script:results | Where-Object Test -EQ $test
 

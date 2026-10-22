@@ -30,6 +30,10 @@ BeforeAll {
             if (Test-Path -LiteralPath $path -PathType Container) { Get-ChildItem -LiteralPath $path -File -Recurse }
         }
     }
+
+    function Get-SkillPath([string] $Dir, [IO.FileInfo] $File) {
+        [IO.Path]::GetRelativePath($Dir, $File.FullName) -replace '\\', '/'
+    }
 }
 
 Describe 'Skill folder layout' {
@@ -83,12 +87,21 @@ Describe 'Skill script tests' {
 Describe 'Skill file mentions' {
     It '<name>' -ForEach $skills {
         $text = Get-Content -LiteralPath $path -Raw
-        $unmentioned = Get-SkillFiles $dir 'assets', 'references' |
-            ForEach-Object { [IO.Path]::GetRelativePath($dir, $_.FullName) -replace '\\', '/' } |
-            Where-Object { -not $text.Contains($_) }
+        $files = Get-ChildItem -LiteralPath $dir -File -Recurse
+        $unmentioned = @(
+            Get-SkillFiles $dir 'references' |
+                Where-Object { -not $text.Contains((Get-SkillPath $dir $_)) }
+            # Scripts build an asset's path from its parts, so the asset's name counts as its mention.
+            Get-SkillFiles $dir 'assets' |
+                Where-Object {
+                    $asset = $_
+                    -not ($files | Where-Object { $_.FullName -ne $asset.FullName -and "$(Get-Content -LiteralPath $_.FullName -Raw)".Contains($asset.Name) })
+                }
+        ) | Where-Object { -not $_.Name.StartsWith('.') } | ForEach-Object { Get-SkillPath $dir $_ }
 
         $unmentioned | Should -BeNullOrEmpty -Because (
-            'SKILL.md mentions every file in assets/ and references/ by its path in the skill folder, ' +
-            "e.g. references/TERMS.md (see docs/guidelines/skills.md#skill-folder); mention: $($unmentioned -join ', ')")
+            'SKILL.md mentions every file in references/ by its path in the skill folder, e.g. references/TERMS.md, ' +
+            'and the instruction or script that uses a file in assets/ mentions it ' +
+            "(see docs/guidelines/skills.md#skill-folder); mention: $($unmentioned -join ', ')")
     }
 }

@@ -17,8 +17,9 @@ The repo checks verify that every description starts with "Use when" or "Use ONL
 
 ## Skill folder
 
-The repo checks verify the folder layout and that `SKILL.md` mentions every file in `assets/` and
-`references/`.
+The repo checks verify the folder layout, that `SKILL.md` mentions every file in `references/` and that
+some file of the skill mentions every file in `assets/` by its name, except dotfiles that configure tools
+(e.g. `.markdownlint.json`).
 
 ## Scripts
 
