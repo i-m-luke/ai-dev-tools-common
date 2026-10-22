@@ -106,4 +106,14 @@ Read `references/scripts.md` when a skill gets a script or you write, change or 
 
 ## Artifacts
 
-Files a skill produces for its own work or for the user — reports, previews, state files — go to `.artifacts/<skill>/<yyyyMMdd-HHmmss>/` in the workspace root, one folder per run. The skill's script creates the folder and returns its path in its result; in a skill without scripts, the agent creates it. A script that writes there receives the path from its caller. Output that belongs in the user's repository, such as documentation, goes where the skill writes it.
+A skill's artifacts folder holds the files it produces for its own work or for the user, as `assets/instruction-blocks/artifacts.md` lays it out. A script that produces a run's output creates the run folder and returns its path in its result; a script that writes into an existing run folder receives the path from its caller.
+
+## Instruction blocks
+
+Rules that bind the agent running a skill live in instruction blocks in `assets/instruction-blocks/`: the running agent never loads this skill, so each skill carries the blocks it needs. Read each block that applies to the skill, keep the skill's own instructions consistent with its rules, and place it in the skill verbatim, with each `{{…}}` filled in — `{{skill}}` with the skill's name — and each `<…>` kept for the running agent to fill in:
+
+- A skill with scripts — fill in `assets/instruction-blocks/scripts.md` as its `## Scripts` chapter, beside `## Steps`.
+- A skill with PowerShell scripts — use `assets/instruction-blocks/scripts-powershell.md` as the first paragraph of that chapter.
+- A skill that writes files of its own, or whose scripts take a `<Noun>Path` parameter — fill in `assets/instruction-blocks/artifacts.md` as its `## Artifacts` chapter.
+
+When you change a skill, bring the blocks it carries in line with these files, and add the ones that now apply.

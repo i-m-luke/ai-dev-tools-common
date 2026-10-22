@@ -16,7 +16,7 @@ Start a script's name with an imperative verb and add a noun when the verb alone
 
 ## Input
 
-A script takes its input only as named parameters.
+A script takes its input only as named parameters. Structured or multi-line input — JSON, a list, free text — comes in a file: name its parameter `<Noun>Path`, e.g. `-IssuesPath`, and describe the file's content under the help's Input. The agent writes that file to the `.temp/` folder that `assets/instruction-blocks/artifacts.md` describes; the script only reads it, so it can run again on the same input.
 
 ## Output
 
@@ -48,18 +48,7 @@ The skill names the command that prints the help; the help is the only documenta
 
 ## Running scripts
 
-A skill with scripts gives the agent these rules in a chapter beside `## Steps`, filled in:
-
-```markdown
-## Scripts
-
-Print a script's help with `<help command>` and read it before you run the script for the first time. Read the script's source only when the help leaves out what you need, and then tell the user which part the help left out.
-
-The exit code alone decides whether a script succeeded:
-
-- On `0`, when the help says the script returns a result, take the compact JSON after `::result::` on the one stdout line that starts with it; every other stdout line is log. When that line is missing or appears more than once, tell the user the script broke its contract and stop.
-- On any other exit code, ignore stdout; the error is on stderr.
-```
+A skill with scripts gives the agent the rules for running them through the instruction blocks: `assets/instruction-blocks/scripts.md`, with `{{help-command}}` filled in by the command that prints a script's help, and `assets/instruction-blocks/artifacts.md` when a script takes a `<Noun>Path` parameter.
 
 Act on every script run by a playbook keyed by exit code: `0`, then a row for each documented code from `2` up, then `*` — show the user the script's stderr, or the error when it failed to start, and stop. `*` covers `1` and every undocumented code.
 

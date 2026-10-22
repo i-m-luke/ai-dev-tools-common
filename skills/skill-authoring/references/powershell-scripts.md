@@ -4,11 +4,11 @@ The contract of `references/scripts.md`, worked out in PowerShell.
 
 ## Invocation
 
-Run a script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`, with `powershell` in place of `pwsh` when pwsh is missing; write it so it runs on Windows PowerShell 5.1 and PowerShell 7+ alike, so the fallback works.
+The skill runs a script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script>.ps1 …`; `assets/instruction-blocks/scripts-powershell.md` tells the agent to fall back to `powershell` when pwsh is missing. Write each script so it runs on Windows PowerShell 5.1 and PowerShell 7+ alike, so the fallback works.
 
 ## Help
 
-Write the help as comment-based help at the top of the script; the skill prints it with
+Write the help as comment-based help at the top of the script, and fill in `{{help-command}}` of `assets/instruction-blocks/scripts.md` with
 `pwsh -NoProfile -Command "Get-Help '<this skill's folder>/scripts/<script>.ps1' -Full"`.
 
 | Outline part | Keyword                                          |

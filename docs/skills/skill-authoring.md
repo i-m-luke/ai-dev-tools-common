@@ -22,6 +22,15 @@ artifacts. Detail that only some tasks need sits in `references/`, behind a "Rea
 workflow skills, convention skills, the language-agnostic script contract and its PowerShell worked
 example.
 
+## Instruction blocks
+
+Rules that bind the agent running a skill — how it runs scripts, where it writes files — live in
+`assets/instruction-blocks/`. The running agent never loads `skill-authoring`, so each skill
+carries a verbatim copy of the blocks that apply to it. The blocks are the only source of those rules;
+`SKILL.md` and the references keep only what binds the author, and point to the blocks for the rest.
+`{{…}}` marks what the author fills in, `<…>` what the running agent fills in. No check verifies the
+copies; skill audits keep them in line.
+
 ## Verified facts behind the script contract
 
 - An unhandled `throw` makes both `pwsh -File` and `powershell -File` exit with 1, and Python and
