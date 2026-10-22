@@ -1,6 +1,6 @@
 # Design visualization
 
-Draw a view for each aspect the plan shapes, new or existing; the sections below pair each aspect with its view. Skip the preamble and keep prose brief. Pick the smallest view that makes the key point clear.
+Draw a view for each aspect the plan shapes, new or existing; the sections below pair each aspect with its view. Put each view under a heading named after its section below, keeping the sections' order; omit sections with no view. Pick the smallest view that makes the key point clear. Skip the preamble and keep prose brief.
 
 ## Structure
 
