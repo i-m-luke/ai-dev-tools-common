@@ -39,8 +39,8 @@ graders:
       prompt: |
         You are now grading the work above, not continuing it. Read every file in skills/resize-images in the workspace and check:
         1. Every script documents its purpose, input, result, exit codes and stderr in its comment-based help, and SKILL.md names the command that prints the help instead of describing the scripts' responses and errors itself.
-        2. A script that returns a result prints it as exactly one stdout line starting with `::result::` followed by compact JSON, and SKILL.md tells the agent to read it only on exit code 0 and to stop, reporting a broken contract, when the line is missing or appears more than once.
-        3. Expected failures use exit codes from 2 up, never 1, and every playbook in SKILL.md ends with a `*` row that shows the user the script's stderr and stops.
+        2. A script that returns a result prints it as exactly one stdout line starting with `::result::` followed by compact JSON, and SKILL.md tells the agent to read it only on exit code 0 or a code from 3 up and to stop, reporting a broken contract, when the line is missing or appears more than once.
+        3. Expected failures use exit code 2, never 1, and every playbook in SKILL.md ends with a `*` row that shows the user the script's stderr and stops.
         4. The `## Initialization` chapter, placed before `## Steps`, runs check-prerequisites.ps1, which checks ImageMagick but not PowerShell itself; on a missing prerequisite the agent offers to install it and runs the check again at most once, and no step under `## Steps` sends the agent back to initialization.
         5. Every step ends with a completion condition, and any instruction that sends the agent back to an earlier step states a maximum number of rounds.
         For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.

@@ -25,8 +25,8 @@ Write the help as comment-based help at the top of the script, and fill in `{{he
 - Set `[Console]::OutputEncoding` to UTF-8, so non-ASCII text survives stdout.
 - Write log lines with `Write-Host`.
 - Emit the result with `[Console]::Out.WriteLine('::result::' + (… | ConvertTo-Json -Compress -Depth 10))`.
-- End an expected failure with `[Console]::Error.WriteLine('<message>')` and `exit <code>`, the code
-  from 2 up.
+- End an expected failure with `[Console]::Error.WriteLine('<message>')` and `exit 2`.
+- End another expected outcome by emitting its result and `exit <code>`, the code from 3 up.
 
 ```powershell
 <#

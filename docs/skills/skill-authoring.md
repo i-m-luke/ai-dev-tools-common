@@ -35,7 +35,10 @@ copies; skill audits keep them in line.
 
 - An unhandled `throw` makes both `pwsh -File` and `powershell -File` exit with 1, and Python and
   Node.js do the same on an unhandled error — so exit code 1 cannot mean a deliberate failure, and
-  expected failures start at 2.
+  expected failures take 2. Other expected outcomes, such as a dialog with the agent, take 3 and
+  up, so the code's range alone tells where the outcome is — the result on stdout, or the error on
+  stderr. Success stays 0 even in a script with several outcomes: shells, CI and the agent's tools
+  read any other code as a failure, and adding an outcome never renumbers the success.
 - PSScriptAnalyzer's approved-verb rule checks function and cmdlet names only, never script file
   names, so kebab-case script names such as `check-prerequisites.ps1` raise no warning.
 - The PowerShell example in `references/powershell-scripts.md` avoids two Windows PowerShell 5.1

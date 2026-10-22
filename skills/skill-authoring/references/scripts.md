@@ -1,6 +1,6 @@
 # Scripts
 
-A script is a stateless function: its behaviour depends only on its input, and it keeps no state of its own between runs. It runs without interaction.
+A script is a stateless function: its behaviour depends only on its input, and it keeps no state of its own between runs. It runs without interaction: it reads no input while it runs, and asks the agent only through its result (see [Dialog with the agent](#dialog-with-the-agent)).
 
 This document describes the contract every script of a skill follows, in any language, so the agent runs a script from its help alone and acts on its outcome without guessing.
 
@@ -21,18 +21,27 @@ A script takes its input only as named parameters. Structured or multi-line inpu
 ## Output
 
 - **Result** — exactly one stdout line, `::result::` followed by compact JSON, e.g.
-  `::result::{"path":"out/issues.csv","count":12}`. A script that has nothing to return prints no `::result::` line.
+  `::result::{"path":"out/issues.csv","count":12}`, on exit code `0` or `3` and up. A script that has nothing to return prints no `::result::` line.
 - **Log** — every other stdout line, whoever writes it: the script, a library or a child process.
 - **Errors** — on stderr.
 
 ## Exit codes
 
-| Code         | Meaning                                                                                     |
-| ------------ | ------------------------------------------------------------------------------------------- |
-| `0`          | Success; the result, when the script returns one, is on stdout.                             |
-| `1`          | Unexpected failure: an unhandled error. Runtimes exit with 1 on one, so 1 never means more. |
-| `2` and up   | Expected failures, each documented in the help with its meaning.                            |
-| undocumented | Unexpected failure, like `1`.                                                               |
+The code's range alone tells the agent where the outcome is: the result on stdout, or the error on stderr.
+
+| Code         | Meaning                                                                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `0`          | Success: the script did what it is for; the result, when the script returns one, is on stdout.                                                                                 |
+| `1`          | Unexpected failure: an unhandled error. Runtimes exit with 1 on one, so 1 never means more.                                                                                    |
+| `2`          | Expected failure; stderr says which.                                                                                                                                           |
+| `3` and up   | Other expected outcomes, each documented in the help with its result on stdout — e.g. a [dialog with the agent](#dialog-with-the-agent), or an end short of the script's goal. |
+| undocumented | Unexpected failure, like `1`.                                                                                                                                                  |
+
+`0` is the outcome after which the skill goes on as usual; an outcome that changes the skill's course takes its own code from `3` up. An expected failure the agent must act on differently from the other failures is such an outcome too.
+
+## Dialog with the agent
+
+A script that needs a decision it cannot make itself — the user's answer, or the agent's judgement — stops with a code from `3` up and returns the question in its result, together with the exact command that continues the run for each answer. It keeps its progress in the run folder (see `assets/instruction-blocks/artifacts.md`) and takes that folder's path as a parameter, so the continuing command resumes where the run stopped. The skill bounds the dialog like any loop.
 
 ## Help
 
@@ -40,8 +49,8 @@ Document each script inside it, through the language's native help mechanism, in
 
 1. **Purpose** — what the script does.
 2. **Input** — each parameter, or that the script takes none.
-3. **Result** — the shape of the result JSON, or that the script returns none.
-4. **Exit codes** — `0` and each expected failure from `2` up.
+3. **Result** — the shape of the result JSON for each exit code that returns one, or that the script returns none.
+4. **Exit codes** — `0`, `2` when the script has expected failures, and each outcome from `3` up.
 5. **Stderr** — what the script writes there.
 
 The skill names the command that prints the help; the help is the only documentation of what the script returns and which errors it reports.
