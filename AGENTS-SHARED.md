@@ -31,7 +31,7 @@ When asked for your opinion, give an honest, objective one: say what you actuall
 
 ## Planning
 
-Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary, in a reply whose sole question is always this one: _Do you approve the plan?_ When the plan shapes code — its types, APIs, relations or algorithms — that question is always this one instead: _Do you approve the plan, or do you need to visualize it?_
+Planning is exhausted once the user has answered every question and the answers raise no new one. Only then close it with a plan summary, in a reply whose sole question asks, in the conversation's language, _Do you approve the plan?_ When the plan shapes code — its types, APIs, relations or algorithms — it asks instead _Do you approve the plan, or do you need to visualize it?_
 
 When the user picks visuals, read [design-visualization.md](agents-shared/design-visualization.md) before anything else and sketch them by it, so you and the user confirm a shared understanding of the architecture.
 
