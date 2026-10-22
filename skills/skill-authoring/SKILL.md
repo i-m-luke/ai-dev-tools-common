@@ -19,9 +19,13 @@ Write skills in English, like any context an agent reads.
 
 Every skill is one of these types, each with its own guidelines:
 
-- **Workflow skill** — walks the agent through ordered steps towards a goal; usually categorizes as either _explicit_ or _hybrid_. Read `references/workflow-skills.md` when you create or change a workflow skill.
-- **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Usually categorizes as _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/tool-skills.md` when you create or change a tool skill.
-- **Convention skill** — rules the agent returns to on demand while it works; usually categorizes as _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
+- **Workflow skill** — walks the agent through ordered steps towards a goal; defaults to _explicit_ or _hybrid_. Read `references/workflow-skills.md` when you create or change a workflow skill.
+- **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Defaults to _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/tool-skills.md` when you create or change a tool skill.
+- **Convention skill** — rules the agent returns to on demand while it works; defaults to _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
+
+A type's default category is a starting point; [Skill categorization](#skill-categorization) decides.
+
+When a skill fits more than one type, pick the type of its primary purpose — what the user invokes it for. When two purposes each carry substantial work, propose splitting the skill into one skill per type; when the primary purpose stays unclear, ask the user which type applies.
 
 ## Skill categorization
 
@@ -96,9 +100,9 @@ A skill folder holds `SKILL.md` and, as needed:
 
 ## Scripts
 
-Scripts are the skill's own tools — small programs the agent runs to do the mechanical work, while it keeps the judgement.
+Scripts are the skill's own tools — small programs the agent runs to do the **mechanical** work, while it keeps the **judgement** (see [Glossary](#glossary)).
 
-When designing a skill, go through its steps and ask of each instruction whether a script can do it. Aim for scripts to carry about 80 % of the work, leaving the agent the 20 % that needs judgement — every step moved to a script is cheaper, faster and repeatable. Every mechanical instruction or sequence of instructions — one whose outcome is fixed by its input, such as calling an API, parsing, transforming or validating files — runs as a script, so the agent spends no judgement or tokens on it and its result never drifts.
+When designing a skill, go through its steps and ask of each instruction whether a script can do it. Every mechanical instruction or sequence of instructions — such as calling an API, writing to a database, parsing, transforming or validating files — runs as a script: it is cheaper and faster, and it runs the same way every time. The agent keeps only the steps that need judgement — interpretation, design decisions, talking to the user.
 
 Design cannot foresee every split. Once the skill's scripts work, review its steps again, together with its eval transcripts when there are any. Where the agent still does mechanical work, e.g. composes ad-hoc commands or reshapes a script's result, propose moving it into a script. Where a script fakes judgement through flags, propose handing it back to the agent. Agree each such deviation from the specification with the user before making it.
 
@@ -117,3 +121,8 @@ Rules that bind the agent running a skill live in instruction blocks in `assets/
 - A skill that writes files of its own, or whose scripts take a `<Noun>Path` parameter — fill in `assets/instruction-blocks/artifacts.md` as its `## Artifacts` chapter.
 
 When you change a skill, bring the blocks it carries in line with these files, and add the ones that now apply.
+
+## Glossary
+
+- **Judgement** — weighing the situation at hand to make a decision no fixed procedure gives: interpreting a request, choosing a design, talking to the user.
+- **Mechanical** — work, a step or an instruction whose outcome follows from its input alone, so it needs no judgement.
