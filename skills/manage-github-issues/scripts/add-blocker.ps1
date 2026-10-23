@@ -20,8 +20,8 @@ None.
 .NOTES
 Exit codes:
 - 0: the issue is blocked by the blocker.
-- 2: GitHub rejected the request, e.g. an issue does not exist or the dependency already exists.
-- 3: issue dependencies are not available in the repository.
+- 20: GitHub rejected the request, e.g. an issue does not exist or the dependency already exists.
+- 21: issue dependencies are not available in the repository.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>
@@ -42,6 +42,6 @@ $blockerId = (Invoke-GhApi -Path "repos/$Repository/issues/$BlockedBy" -Action "
 
 Invoke-GhApi -Path "repos/$Repository/issues/$Issue/dependencies/blocked_by" -Method POST -Body @{ issue_id = $blockerId } `
     -Action "mark #$Issue as blocked by #$BlockedBy" `
-    -NotFoundCode 3 -NotFoundMessage "Issue dependencies are not available in $Repository." | Out-Null
+    -NotFoundCode 21 -NotFoundMessage "Issue dependencies are not available in $Repository." | Out-Null
 
 Write-Host "#$Issue is blocked by #$BlockedBy."

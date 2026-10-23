@@ -39,7 +39,7 @@ Describe 'check-prerequisites.ps1' {
         $result.Output | Should -BeLike '*dotnet-script: 2.0.1*'
     }
 
-    It 'exits 2 and prints how to install <missing> when <case>' -ForEach @(
+    It 'exits 20 and prints how to install <missing> when <case>' -ForEach @(
         @{ case = 'dotnet is not on the PATH'; missing = 'the .NET SDK and dotnet-script'; fake = $null; sdk = $true; tool = $true }
         @{ case = 'only the .NET runtime is installed'; missing = 'the .NET SDK'; fake = @{ Sdks = @(); ScriptVersion = '2.0.1' }; sdk = $true; tool = $false }
         @{ case = 'dotnet-script is not installed'; missing = 'dotnet-script'; fake = @{ Sdks = @('10.0.303') }; sdk = $false; tool = $true }
@@ -48,7 +48,7 @@ Describe 'check-prerequisites.ps1' {
 
         $result = Invoke-CheckPrerequisites
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         ($result.Output -like '*https://dotnet.microsoft.com/download*') | Should -Be $sdk
         ($result.Output -like '*dotnet tool install -g dotnet-script*') | Should -Be $tool
     }

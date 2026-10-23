@@ -66,7 +66,7 @@ Keep the images few: each one goes stale as the UI moves.
 - **Screenshots** — give each screen one overview screenshot, annotated with the part labels `A`, `B`, `C`…, as a placeholder image tag for the user to capture into `img/`. Parts, panels and single elements are shown by that overview and by their icons.
 - **Icons** — illustrate an element, an icon-coded state, or a result with the app's own icon, placed inline with the text. For each icon file in the application's resources, run `pwsh -NoProfile -File <this skill's folder>/scripts/convert-icon.ps1 -SourcePath "<icon file>" -DestinationPath "<document folder>/img/<name>.png"`. Act on the script's exit code by this playbook:
   - `0` — place the PNG inline.
-  - `2` or `3` — leave a placeholder image tag and note the icon for the report.
+  - `20` or `21` — leave a placeholder image tag and note the icon for the report.
   - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
 
   An icon with no file of its own — a font glyph or a vector drawn in code — gets a placeholder image tag, noted for the report.
@@ -88,7 +88,7 @@ Link a heading by the anchor step 5 gives it — its text in ASCII, lowercase an
 Run `pwsh -NoProfile -File <this skill's folder>/scripts/update-toc.ps1 -Path "<the document>"`. Act on the script's exit code by this playbook:
 
 - `0` — repoint each link in `brokenLinks` at the anchor of the heading it means. Go back to step 5 while `brokenLinks` is not empty — at most 3 times, or until a round leaves the result unchanged; then note the remaining broken links for the report.
-- `3` — add the `<!--TOC-->` and `<!--/TOC-->` markers under the contents heading as `assets/TEMPLATE.md` shows them. Go back to step 5 while the script exits `3` — at most once; then show the user the script's stderr and stop.
+- `21` — add the `<!--TOC-->` and `<!--/TOC-->` markers under the contents heading as `assets/TEMPLATE.md` shows them. Go back to step 5 while the script exits `21` — at most once; then show the user the script's stderr and stop.
 - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
 
 Done when the script exits `0` with no broken links, or the remaining ones are noted for the report.

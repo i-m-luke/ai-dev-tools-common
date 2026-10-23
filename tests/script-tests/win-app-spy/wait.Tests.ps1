@@ -40,7 +40,7 @@ Describe 'wait' {
         ) {
             $result = Invoke-Spy $request
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.ResultLines | Should -Be 0
             $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         }
@@ -48,7 +48,7 @@ Describe 'wait' {
         It 'answers launch with a poll of 0 with INVALID_REQUEST, as it polls the same way' {
             $result = Invoke-Spy '{ "command": "launch", "exe": "notepad.exe", "poll": 0 }'
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         }
     }
@@ -88,7 +88,7 @@ Describe 'wait' {
         ) {
             $result = Wait-Element $xpath @{ condition = $condition; timeout = 1000 }
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'TIMEOUT'
             $result.Json.error.message | Should -Match '1000 ms'
         }
@@ -115,7 +115,7 @@ Describe 'wait' {
         It 'answers a locator that matches several elements with AMBIGUOUS_MATCH at once' {
             $result = Wait-Element "//Button[@Name='OK']" @{ timeout = 60000 }
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'AMBIGUOUS_MATCH'
             $result.Json.error.count | Should -Be 3
         }

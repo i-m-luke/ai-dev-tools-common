@@ -18,8 +18,8 @@ The number of the parent issue.
 .NOTES
 Exit codes:
 - 0: the ready sub-issues are listed; the list may be empty.
-- 2: GitHub rejected the request, e.g. the parent issue does not exist.
-- 3: sub-issues are not available in the repository.
+- 20: GitHub rejected the request, e.g. the parent issue does not exist.
+- 21: sub-issues are not available in the repository.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>
@@ -35,7 +35,7 @@ Import-Module (Join-Path $PSScriptRoot 'github-client.psm1')
 # Reading the parent first leaves an HTTP 404 of the sub-issues endpoint meaning the feature is missing.
 Invoke-GhApi -Path "repos/$Repository/issues/$Parent" -Action "read the parent issue #$Parent" | Out-Null
 $children = @(Get-GhApiPages -Path "repos/$Repository/issues/$Parent/sub_issues" -Action "list the sub-issues of #$Parent" `
-        -NotFoundCode 3 -NotFoundMessage "Sub-issues are not available in $Repository.")
+        -NotFoundCode 21 -NotFoundMessage "Sub-issues are not available in $Repository.")
 
 $ready = @(foreach ($child in $children) {
         if ($child.state -ne 'open' -or @(Get-Names $child.assignees 'login').Count) { continue }

@@ -17,7 +17,7 @@ A UTF-8 file holding the comment in Markdown.
 .NOTES
 Exit codes:
 - 0: the comment is posted.
-- 2: GitHub rejected the request, e.g. no issue or pull request has the number.
+- 20: GitHub rejected the request, e.g. no issue or pull request has the number.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

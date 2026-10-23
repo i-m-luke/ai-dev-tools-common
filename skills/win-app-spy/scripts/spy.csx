@@ -44,7 +44,7 @@ const string Help = """
 
     Exit codes
       0  Success; the result is on stdout.
-      2  The command failed with an error from the list below; the error is on stderr.
+      20 The command failed with an error from the list below; the error is on stderr.
 
     Stderr
       The error as one line of JSON, { "code": "…", "message": "…" }: the message says what failed

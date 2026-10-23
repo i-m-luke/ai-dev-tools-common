@@ -69,15 +69,15 @@ Describe 'update-toc.ps1' {
     }
 
     Context 'Failures' {
-        It 'exits 2 when the document does not exist' {
-            (Invoke-UpdateToc (Join-Path $TestDrive 'missing.md')).ExitCode | Should -Be 2
+        It 'exits 20 when the document does not exist' {
+            (Invoke-UpdateToc (Join-Path $TestDrive 'missing.md')).ExitCode | Should -Be 20
         }
 
-        It 'exits 3 when <case>' -ForEach @(
+        It 'exits 21 when <case>' -ForEach @(
             @{ case = 'the markers are missing'; content = "## Main`n" }
             @{ case = 'the markers are swapped'; content = "<!--/TOC-->`n<!--TOC-->`n## Main`n" }
         ) {
-            (Invoke-UpdateToc (New-Document $content)).ExitCode | Should -Be 3
+            (Invoke-UpdateToc (New-Document $content)).ExitCode | Should -Be 21
         }
     }
 }

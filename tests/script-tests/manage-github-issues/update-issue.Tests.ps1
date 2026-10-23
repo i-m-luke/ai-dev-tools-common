@@ -36,11 +36,11 @@ Describe 'update-issue.ps1' {
         Get-GhCalls | Should -BeNullOrEmpty
     }
 
-    It 'exits 2 when no item has the number' {
+    It 'exits 20 when no item has the number' {
         Set-GhStub @($script:notFound + @{ match = $script:patch })
 
         $run = Invoke-SkillScript 'update-issue' @{ Repository = $script:repo; Number = 7; Title = 'x' }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
     }
 }

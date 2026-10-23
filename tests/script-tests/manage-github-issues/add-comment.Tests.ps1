@@ -14,12 +14,12 @@ Describe 'add-comment.ps1' {
         (Get-GhBody $script:post).body | Should -Be "Řešení:`n- hotovo"
     }
 
-    It 'exits 2 when no item has the number' {
+    It 'exits 20 when no item has the number' {
         Set-GhStub @($script:notFound + @{ match = $script:post })
 
         $run = Invoke-SkillScript 'add-comment' @{ Repository = $script:repo; Number = 7; BodyPath = (New-TextFile 'x') }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         $run.Stderr | Should -BeLike '*HTTP 404*'
     }
 }

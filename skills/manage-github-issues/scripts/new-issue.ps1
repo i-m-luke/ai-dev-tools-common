@@ -24,7 +24,7 @@ Optional comma-separated labels to apply, e.g. `bug,needs-triage`.
 .NOTES
 Exit codes:
 - 0: the issue is created.
-- 2: GitHub rejected the request.
+- 20: GitHub rejected the request.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

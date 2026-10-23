@@ -24,7 +24,7 @@ Why an issue closes: `completed` (default) or `not_planned`.
 .NOTES
 Exit codes:
 - 0: the item is closed.
-- 2: GitHub rejected the request, e.g. no issue or pull request has the number.
+- 20: GitHub rejected the request, e.g. no issue or pull request has the number.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

@@ -46,12 +46,12 @@ Describe 'get-item.ps1' {
         $run.Result.comments.Count | Should -Be 0
     }
 
-    It 'exits 2 when no item has the number' {
+    It 'exits 20 when no item has the number' {
         Set-GhStub @($script:notFound + @{ match = (Get-ApiMatch GET 'repos/owner/name/issues/9') })
 
         $run = Invoke-SkillScript 'get-item' @{ Repository = $script:repo; Number = 9 }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         $run.Stderr | Should -BeLike '*#9*HTTP 404*'
     }
 }

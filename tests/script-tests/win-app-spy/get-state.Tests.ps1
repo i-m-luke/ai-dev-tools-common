@@ -197,7 +197,7 @@ Describe 'get-state' -Skip:$skip {
 
         $result = Invoke-Spy $request
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.ResultLines | Should -Be 0
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
@@ -210,7 +210,7 @@ Describe 'get-state without an app' -Skip:(-not (Get-Command dotnet-script -Erro
 
         $result = Invoke-Spy @{ command = 'get-state'; app = @{ pid = $gone.Id }; locators = @('//Window') }
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
     }
 }

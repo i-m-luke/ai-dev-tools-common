@@ -21,7 +21,7 @@ The issue or pull request number.
 .NOTES
 Exit codes:
 - 0: the item is read.
-- 2: GitHub rejected the request, e.g. no issue or pull request has the number.
+- 20: GitHub rejected the request, e.g. no issue or pull request has the number.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

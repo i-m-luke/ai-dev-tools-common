@@ -12,9 +12,9 @@ None.
 .NOTES
 Exit codes:
 - 0: both prerequisites are installed.
-- 2: a prerequisite is missing.
+- 20: a prerequisite is missing.
 
-Stderr: on exit 2, how to install each missing prerequisite.
+Stderr: on exit 20, how to install each missing prerequisite.
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -51,7 +51,7 @@ Then make sure the .NET tools folder (%USERPROFILE%\.dotnet\tools) is on the PAT
 }
 if ($instructions) {
     [Console]::Error.WriteLine(($instructions -join "`n`n"))
-    exit 2
+    exit 20
 }
 
 Write-Host ".NET SDK: $sdkVersion"

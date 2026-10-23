@@ -153,12 +153,12 @@ public static class Envelope
 
     /// <summary>
     /// Runs <paramref name="handler"/> and prints its outcome; returns the exit code: 0 with the result,
-    /// 2 with a <see cref="SpyError"/>'s error object, 1 with the error object of any other exception.
+    /// 20 with a <see cref="SpyError"/>'s error object, 1 with the error object of any other exception.
     /// </summary>
     public static int Run(string? command, Func<JsonNode?> handler)
     {
         try { return Result(new JsonObject { ["command"] = command, ["data"] = handler() }); }
-        catch (SpyError e) { return Fail(e.ToJson(), 2); }
+        catch (SpyError e) { return Fail(e.ToJson(), 20); }
         catch (Exception e) { return Fail(Error(e), 1); }
     }
 
@@ -496,7 +496,7 @@ public static class Spy
             request = Request.Load(path);
             WorkingFolder = Path.GetDirectoryName(path)!;
         }
-        catch (SpyError e) { return Envelope.Fail(e.ToJson(), 2); }
+        catch (SpyError e) { return Envelope.Fail(e.ToJson(), 20); }
 
         return Envelope.Run(command ?? SafeCommand(request), () => handler(request));
     }
@@ -535,6 +535,6 @@ public static class Spy
 
         return Envelope.Fail(
             Envelope.Error(ErrorCodes.UnknownCommand, $"Pass --help or --help <command>; known commands: {string.Join(", ", commands.Keys.Order())}."),
-            2);
+                        20);
     }
 }

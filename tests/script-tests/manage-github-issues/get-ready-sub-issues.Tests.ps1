@@ -44,20 +44,20 @@ Describe 'get-ready-sub-issues.ps1' {
         $run.Result.Count | Should -Be 0
     }
 
-    It 'exits 3 when sub-issues are not available' {
+    It 'exits 21 when sub-issues are not available' {
         Set-GhStub @($script:parent; $script:notFound + @{ match = $script:subIssues })
 
         $run = Invoke-SkillScript 'get-ready-sub-issues' @{ Repository = $script:repo; Parent = 1 }
 
-        $run.ExitCode | Should -Be 3
+        $run.ExitCode | Should -Be 21
         $run.Stderr | Should -BeLike '*Sub-issues are not available*'
     }
 
-    It 'exits 2 when the parent does not exist' {
+    It 'exits 20 when the parent does not exist' {
         Set-GhStub @($script:notFound + @{ match = Get-ApiMatch GET 'repos/owner/name/issues/1' })
 
         $run = Invoke-SkillScript 'get-ready-sub-issues' @{ Repository = $script:repo; Parent = 1 }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
     }
 }

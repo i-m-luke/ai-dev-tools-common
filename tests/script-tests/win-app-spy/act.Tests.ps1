@@ -62,7 +62,7 @@ Describe 'act' -Skip:$skip {
 
         $result = Invoke-Act "//CheckBox[@Name='Flag']" toggle
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'AMBIGUOUS_MATCH'
         Get-StateOf "//CheckBox[@AutomationId='FlagB']" toggle | Should -Be $before
     }

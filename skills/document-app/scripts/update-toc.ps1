@@ -20,8 +20,8 @@ The Markdown document to update.
 .NOTES
 Exit codes:
 - 0: the document is updated.
-- 2: the document does not exist.
-- 3: the document lacks the `<!--TOC-->` or `<!--/TOC-->` marker, or holds them in the wrong order.
+- 20: the document does not exist.
+- 21: the document lacks the `<!--TOC-->` or `<!--/TOC-->` marker, or holds them in the wrong order.
 
 Stderr: the reason of the failure.
 #>
@@ -48,7 +48,7 @@ function Test-Fence([string] $Line) { $Line -match '^\s*(```|~~~)' }
 $fullPath = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($Path)
 if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
     [Console]::Error.WriteLine("The document $fullPath does not exist.")
-    exit 2
+    exit 20
 }
 
 $text = [IO.File]::ReadAllText($fullPath, [Text.Encoding]::UTF8)
@@ -61,7 +61,7 @@ $tocStart = $lines.IndexOf('<!--TOC-->')
 $tocEnd = $lines.IndexOf('<!--/TOC-->')
 if ($tocStart -lt 0 -or $tocEnd -lt $tocStart) {
     [Console]::Error.WriteLine("The document $fullPath needs a <!--TOC--> line followed by a <!--/TOC--> line.")
-    exit 3
+    exit 21
 }
 
 $headingPattern = '^(#{2,6})\s+(.*?)\s*(?:\{#([^}\s]+)\})?\s*$'

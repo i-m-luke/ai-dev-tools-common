@@ -16,7 +16,7 @@ The GitHub repository as `<owner>/<name>`.
 .NOTES
 Exit codes:
 - 0: the pull requests are listed; the list may be empty.
-- 2: GitHub rejected the request.
+- 20: GitHub rejected the request.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

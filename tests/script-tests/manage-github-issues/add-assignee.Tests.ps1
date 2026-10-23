@@ -27,20 +27,20 @@ Describe 'add-assignee.ps1' {
         (Get-GhBody $script:assign).assignees | Should -Be 'dave'
     }
 
-    It 'exits 3 when GitHub skips the user' {
+    It 'exits 21 when GitHub skips the user' {
         Set-GhStub @(@{ match = $script:assign; stdout = New-RestIssue -Number 7 })
 
         $run = Invoke-SkillScript 'add-assignee' @{ Repository = $script:repo; Number = 7; Assignee = 'stranger' }
 
-        $run.ExitCode | Should -Be 3
+        $run.ExitCode | Should -Be 21
         $run.Stderr | Should -BeLike '*stranger*'
     }
 
-    It 'exits 2 when no item has the number' {
+    It 'exits 20 when no item has the number' {
         Set-GhStub @($script:notFound + @{ match = $script:assign })
 
         $run = Invoke-SkillScript 'add-assignee' @{ Repository = $script:repo; Number = 7; Assignee = 'dave' }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
     }
 }

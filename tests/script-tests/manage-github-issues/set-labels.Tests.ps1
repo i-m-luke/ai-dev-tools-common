@@ -34,12 +34,12 @@ Describe 'set-labels.ps1' {
         @(Get-GhCalls | Where-Object { $_.args -contains 'POST' }).Count | Should -Be 0
     }
 
-    It 'exits 2 when GitHub rejects the labels' {
+    It 'exits 20 when GitHub rejects the labels' {
         Set-GhStub @(@{ match = Get-ApiMatch POST $script:labels; stderr = 'gh: Forbidden (HTTP 403)'; exit = 1 })
 
         $run = Invoke-SkillScript 'set-labels' @{ Repository = $script:repo; Number = 7; Add = 'bug' }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         $run.Stderr | Should -BeLike '*HTTP 403*'
     }
 }

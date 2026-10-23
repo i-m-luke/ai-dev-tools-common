@@ -22,8 +22,8 @@ The height of the PNG in pixels, 16 to 24; 20 when omitted.
 .NOTES
 Exit codes:
 - 0: the PNG file is written.
-- 2: the source file does not exist.
-- 3: the source file is not an image this script can read, e.g. a vector image.
+- 20: the source file does not exist.
+- 21: the source file is not an image this script can read, e.g. a vector image.
 
 Stderr: the reason of the failure.
 #>
@@ -42,7 +42,7 @@ $source = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($SourcePath)
 $destination = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($DestinationPath)
 if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
     [Console]::Error.WriteLine("The source image $source does not exist.")
-    exit 2
+    exit 20
 }
 
 try {
@@ -53,7 +53,7 @@ try {
     }
 } catch {
     [Console]::Error.WriteLine("The source $source is not a readable raster image: $($_.Exception.Message)")
-    exit 3
+    exit 21
 }
 
 try {

@@ -25,7 +25,7 @@ The most issues to list; 100 by default.
 .NOTES
 Exit codes:
 - 0: the issues are listed; the list may be empty.
-- 2: GitHub rejected the request.
+- 20: GitHub rejected the request.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>

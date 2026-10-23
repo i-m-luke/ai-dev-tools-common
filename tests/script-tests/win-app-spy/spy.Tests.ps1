@@ -42,10 +42,10 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
         ($result.Stdout -join "`n") | Should -BeLike '*condition*'
     }
 
-    It 'answers the help of an unknown command with UNKNOWN_COMMAND and exit 2' {
+    It 'answers the help of an unknown command with UNKNOWN_COMMAND and exit 20' {
         $result = Invoke-SpyScript -Arguments '--help', 'fly'
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'UNKNOWN_COMMAND'
     }
 
@@ -67,23 +67,23 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
         }
     }
 
-    It 'answers an unknown command with an error on stderr, no result and exit 2' {
+    It 'answers an unknown command with an error on stderr, no result and exit 20' {
         $result = Invoke-Spy '{ "command": "fly" }'
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.ResultLines | Should -Be 0
         $result.Json.error.code | Should -Be 'UNKNOWN_COMMAND'
         $result.Json.error.message | Should -Not -BeNullOrEmpty
     }
 
-    It 'answers arguments other than its own with INVALID_REQUEST and exit 2' {
+    It 'answers arguments other than its own with INVALID_REQUEST and exit 20' {
         $result = Invoke-SpyScript -Arguments 'req.json'
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 
-    It 'answers <case> with INVALID_REQUEST and exit 2' -ForEach @(
+    It 'answers <case> with INVALID_REQUEST and exit 20' -ForEach @(
         @{ case = 'a request that is not JSON'; request = '{ "command": ' }
         @{ case = 'a request that is not an object'; request = '[ "launch" ]' }
         @{ case = 'a request without a command'; request = '{ "exe": "notepad.exe" }' }
@@ -91,15 +91,15 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
     ) {
         $result = Invoke-Spy $request
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         $result.Json.error.message | Should -Not -BeNullOrEmpty
     }
 
-    It 'answers a missing request file with INVALID_REQUEST and exit 2' {
+    It 'answers a missing request file with INVALID_REQUEST and exit 20' {
         $result = Invoke-SpyScript -Arguments '--request-path', (Join-Path $script:spyWorkingFolder 'missing.json')
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 
@@ -107,14 +107,14 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
         It 'answers an exe that does not exist with APP_NOT_FOUND' {
             $result = Invoke-Spy '{ "command": "launch", "exe": "win-app-spy-no-such-app.exe" }'
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
         }
 
         It 'answers an unknown UIA mode with INVALID_REQUEST' {
             $result = Invoke-Spy '{ "command": "launch", "exe": "notepad.exe", "uia": "UIA4" }'
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'INVALID_REQUEST'
         }
 
@@ -129,7 +129,7 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
 
             $result = Invoke-Spy $request
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'TIMEOUT'
             Get-CimInstance Win32_Process -Filter "Name = 'pwsh.exe'" |
                 Where-Object CommandLine -Like "*$marker*" | Should -BeNullOrEmpty
@@ -142,7 +142,7 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
         It 'answers APP_NOT_FOUND when neither app nor an active app is given' {
             $result = Invoke-Spy '{ "command": "close" }'
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
         }
 
@@ -151,7 +151,7 @@ Describe 'spy.csx' -Skip:$noDotnetScript {
             try {
                 $result = Invoke-Spy "{ `"command`": `"close`", `"app`": { `"pid`": $($other.Id) }, `"force`": true }"
 
-                $result.ExitCode | Should -Be 2
+                $result.ExitCode | Should -Be 20
                 $result.Json.error.code | Should -Be 'NOT_LAUNCHED'
                 $other.HasExited | Should -BeFalse
             }

@@ -40,15 +40,15 @@ function Invoke-Gh {
 }
 
 function Assert-GhSuccess {
-    <# Ends the script with exit code 2 when the gh call failed. #>
+    <# Ends the script with exit code 20 when the gh call failed. #>
     param([Parameter(Mandatory)] [object] $Call, [Parameter(Mandatory)] [string] $Action)
-    if ($Call.ExitCode -ne 0) { Stop-WithError 2 "Cannot $Action; gh failed with exit code $($Call.ExitCode):`n$($Call.Stderr)" }
+    if ($Call.ExitCode -ne 0) { Stop-WithError 20 "Cannot $Action; gh failed with exit code $($Call.ExitCode):`n$($Call.Stderr)" }
 }
 
 function Invoke-GhApi {
     <#
     Calls the GitHub REST API through `gh api` and returns the parsed JSON response.
-    A failed call ends the script with exit code 2; with -NotFoundCode, an HTTP 404 ends it with that
+    A failed call ends the script with exit code 20; with -NotFoundCode, an HTTP 404 ends it with that
     code and -NotFoundMessage instead; with -IgnoreNotFound, an HTTP 404 returns nothing.
     #>
     param(

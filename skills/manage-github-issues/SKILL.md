@@ -13,9 +13,9 @@ The repository, as `<owner>/<name>`, comes with the invocation, e.g. `Run /manag
 Run `pwsh -NoProfile -File <this skill's folder>/scripts/check-prerequisites.ps1 -Repository <owner/name>` once per repository in the conversation; use `powershell` in place of `pwsh` when pwsh is missing. Act on the script's exit code by this playbook:
 
 - `0` — continue.
-- `2` — GitHub CLI is missing; offer the user to install it from <https://cli.github.com>. Once installed, run this step again — at most once; when it still exits non-zero, show the user the script's stderr and stop.
-- `3` — GitHub CLI is not logged in; ask the user to run `gh auth login`, which is interactive. Once they confirm, run this step again — at most once; when it still exits non-zero, show the user the script's stderr and stop.
-- `4` — tell the user the repository is not accessible or has issues disabled, quoting stderr, and stop.
+- `20` — GitHub CLI is missing; offer the user to install it from <https://cli.github.com>. Once installed, run this step again — at most once; when it still exits non-zero, show the user the script's stderr and stop.
+- `21` — GitHub CLI is not logged in; ask the user to run `gh auth login`, which is interactive. Once they confirm, run this step again — at most once; when it still exits non-zero, show the user the script's stderr and stop.
+- `22` — tell the user the repository is not accessible or has issues disabled, quoting stderr, and stop.
 - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
 
 Done when the script exited 0 for the repository.
@@ -52,7 +52,7 @@ Write every Markdown text a script takes as a file — an issue body, a comment 
 Run each script as `pwsh -NoProfile -File <this skill's folder>/scripts/<script> -Repository <owner/name> …`, with `powershell` in place of `pwsh` when pwsh is missing, one at a time in the order the operations depend on each other — e.g. create the issues before linking them. Act on each script's exit code by this playbook:
 
 - `0` — take the result and run the next script.
-- `3` — tell the user what GitHub could not do, quoting stderr, e.g. sub-issues not available, and stop.
+- `21` — tell the user what GitHub could not do, quoting stderr, e.g. sub-issues not available, and stop.
 - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
 
 Done when every script exited 0.

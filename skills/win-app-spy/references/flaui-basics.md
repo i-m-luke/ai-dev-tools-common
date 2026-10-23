@@ -35,7 +35,7 @@ is set with `!`.
 - `Poll.Until(probe, timeoutMs)` — repeats the probe every 250 ms until it returns non-null or the
   timeout passes; use it to wait for UI to appear. `Poll.Until(probe, Poll.Options.Read(request))`
   takes the request's `timeout` and `poll` the way the `wait` command does.
-- `throw new SpyError(ErrorCodes.X, message)` fails the whole run with exit 2; `Envelope.Error(code, message)`
+- `throw new SpyError(ErrorCodes.X, message)` fails the whole run with exit 20; `Envelope.Error(code, message)`
   is the `error` to put on a single item inside `data`, `Envelope.Error(exception)` the one for a
   caught exception.
 - `Locator.Root(automation, pid)` — the root xpaths start from, over all the app's top-level

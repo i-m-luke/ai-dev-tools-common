@@ -4,5 +4,5 @@ Print a script's help with `{{help-command}}` and read it before you run the scr
 
 The exit code alone decides how a script ended:
 
-- On `0` or a code from `3` up, when the help says the script returns a result for that code, take the compact JSON after `::result::` on the one stdout line that starts with it; every other stdout line is log. When that line is missing or appears more than once, tell the user the script broke its contract and stop.
-- On any other exit code, ignore stdout; the error is on stderr.
+- On `0` or a code from `21` to `63`, when the help says the script returns a result for that code, take the compact JSON after `::result::` on the one stdout line that starts with it; every other stdout line is log. When that line is missing or appears more than once, tell the user the script broke its contract and stop.
+- On `20`, the expected failure, or any other exit code, ignore stdout; the error is on stderr.

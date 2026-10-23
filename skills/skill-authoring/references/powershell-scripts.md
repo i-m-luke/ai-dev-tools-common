@@ -25,8 +25,8 @@ Write the help as comment-based help at the top of the script, and fill in `{{he
 - Set `[Console]::OutputEncoding` to UTF-8, so non-ASCII text survives stdout.
 - Write log lines with `Write-Host`.
 - Emit the result with `[Console]::Out.WriteLine('::result::' + (… | ConvertTo-Json -Compress -Depth 10))`.
-- End an expected failure with `[Console]::Error.WriteLine('<message>')` and `exit 2`.
-- End another expected outcome by emitting its result and `exit <code>`, the code from 3 up.
+- End an expected failure with `[Console]::Error.WriteLine('<message>')` and `exit 20`.
+- End another expected outcome by emitting its result and `exit <code>`, the code from 21 to 63.
 
 ```powershell
 <#
@@ -48,7 +48,7 @@ The CSV file to write.
 .NOTES
 Exit codes:
 - 0: the CSV file is written.
-- 2: the repository does not exist or is not accessible.
+- 20: the repository does not exist or is not accessible.
 
 Stderr: the reason of the failure, after the output of GitHub CLI.
 #>
@@ -64,7 +64,7 @@ Write-Host "Listing open issues of $Repository"
 $json = gh issue list --repo $Repository --state open --json number,title,labels
 if ($LASTEXITCODE -ne 0) {
     [Console]::Error.WriteLine("Cannot list the issues of $Repository; gh failed with exit code $LASTEXITCODE.")
-    exit 2
+        exit 20
 }
 
 $issues = ($json -join "`n") | ConvertFrom-Json

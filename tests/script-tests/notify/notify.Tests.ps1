@@ -125,7 +125,7 @@ Describe 'notify.ps1' {
     }
 
     Context 'Invalid config file' {
-        It 'exits 2 when <case>' -ForEach @(
+        It 'exits 20 when <case>' -ForEach @(
             @{ case = 'the notify section is missing'; content = "other:`n  token: x`n  chatId: 1" }
             @{ case = 'the token is empty'; content = "notify:`n  token: `"`"`n  chatId: 1" }
             @{ case = 'the chatId is missing'; content = "notify:`n  token: x" }
@@ -133,7 +133,7 @@ Describe 'notify.ps1' {
         ) {
             $path = New-SecretsFile $script:workDir $content
 
-            Invoke-Notify -SecretsPath $path | Should -Be 2
+            Invoke-Notify -SecretsPath $path | Should -Be 20
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
@@ -147,18 +147,18 @@ Describe 'notify.ps1' {
     }
 
     Context 'Telegram errors' {
-        It 'exits 3 when the request fails' {
+        It 'exits 21 when the request fails' {
             Mock Invoke-RestMethod { throw 'network down' }
             $path = New-SecretsFile $script:workDir $script:validSecrets
 
-            Invoke-Notify -SecretsPath $path | Should -Be 3
+            Invoke-Notify -SecretsPath $path | Should -Be 21
         }
 
-        It 'exits 3 when Telegram rejects the message' {
+        It 'exits 21 when Telegram rejects the message' {
             Mock Invoke-RestMethod { [pscustomobject] @{ ok = $false; description = 'Bad Request' } }
             $path = New-SecretsFile $script:workDir $script:validSecrets
 
-            Invoke-Notify -SecretsPath $path | Should -Be 3
+            Invoke-Notify -SecretsPath $path | Should -Be 21
         }
     }
 }

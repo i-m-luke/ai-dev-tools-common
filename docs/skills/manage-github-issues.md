@@ -44,7 +44,7 @@ repository has issues enabled, and tells the user what to fix.
   JSON in PowerShell, never in jq expressions.
 - **Feature detection.** `add-sub-issue.ps1`, `add-blocker.ps1` and `get-ready-sub-issues.ps1` read
   the issues they name first; an HTTP 404 from the sub-issues or dependencies endpoint after that
-  means the feature is missing (exit code 3), not the issue.
+  means the feature is missing (exit code 21), not the issue.
 - **Shared module.** `scripts/github-client.psm1` holds what every script needs — calling `gh`
   without stopping on its stderr, paging REST lists, emitting the result, ending with an expected
   failure. It is not a script to run, and `SKILL.md` does not list it.

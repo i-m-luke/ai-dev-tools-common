@@ -53,12 +53,12 @@ Describe 'close-item.ps1' {
         (Get-GhBody $closePull).state | Should -Be 'closed'
     }
 
-    It 'exits 2 when no item has the number' {
+    It 'exits 20 when no item has the number' {
         Set-GhStub @($script:notFound + @{ match = Get-ApiMatch GET 'repos/owner/name/issues/7' })
 
         $run = Invoke-SkillScript 'close-item' @{ Repository = $script:repo; Number = 7; CommentPath = (New-TextFile 'Done.') }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         @(Get-GhCalls | Where-Object { $_.args -contains 'POST' }).Count | Should -Be 0
     }
 }

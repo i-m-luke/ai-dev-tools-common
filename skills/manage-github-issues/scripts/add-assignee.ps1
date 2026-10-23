@@ -17,8 +17,8 @@ The login to assign; `@me` (default) for the account GitHub CLI is logged in as.
 .NOTES
 Exit codes:
 - 0: the user is assigned.
-- 2: GitHub rejected the request, e.g. no issue or pull request has the number.
-- 3: the user cannot be assigned, e.g. lacks access to the repository; GitHub skips such a user
+- 20: GitHub rejected the request, e.g. no issue or pull request has the number.
+- 21: the user cannot be assigned, e.g. lacks access to the repository; GitHub skips such a user
   without an error.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
@@ -44,7 +44,7 @@ $item = Invoke-GhApi -Path "repos/$Repository/issues/$Number/assignees" -Method 
 $assignees = @(Get-Names $item.assignees 'login')
 
 if ($assignees -notcontains $login) {
-    Stop-WithError 3 "GitHub did not assign $login to #$Number of $Repository; the user may lack access to the repository."
+    Stop-WithError 21 "GitHub did not assign $login to #$Number of $Repository; the user may lack access to the repository."
 }
 
 Write-Result ([ordered] @{ assignees = $assignees })

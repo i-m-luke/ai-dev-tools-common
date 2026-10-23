@@ -10,8 +10,8 @@ Reads the bot token and chat ID from the `notify` section of `agents.secrets.yam
 Exit codes:
 - 0: message sent.
 - 1: config file 'agents.secrets.yaml' not found.
-- 2: config file invalid (unreadable, no `notify` section, or empty `token`/`chatId`).
-- 3: Telegram API or network error.
+- 20: config file invalid (unreadable, no `notify` section, or empty `token`/`chatId`).
+- 21: Telegram API or network error.
 
 .PARAMETER Message
 What to report; sent as `<WorkingFolderName>: <Message>`, truncated to Telegram's 4096-character limit.
@@ -93,10 +93,10 @@ if (-not $secretsFile) {
 }
 
 try { $notify = Read-NotifySection $secretsFile }
-catch { Fail 2 "Config file '$secretsFile' cannot be read: $($_.Exception.Message)" }
-if ($null -eq $notify) { Fail 2 "Config file '$secretsFile' has no 'notify' section.`n$expectedStructure" }
+catch { Fail 20 "Config file '$secretsFile' cannot be read: $($_.Exception.Message)" }
+if ($null -eq $notify) { Fail 20 "Config file '$secretsFile' has no 'notify' section.`n$expectedStructure" }
 $missing = @('token', 'chatId' | Where-Object { -not $notify[$_] })
-if ($missing) { Fail 2 "Config file '$secretsFile' has an empty or missing 'notify.$($missing -join "', 'notify.")'.`n$expectedStructure" }
+if ($missing) { Fail 20 "Config file '$secretsFile' has an empty or missing 'notify.$($missing -join "', 'notify.")'.`n$expectedStructure" }
 
 $text = "${WorkingFolderName}: $Message"
 if ($text.Length -gt $maxMessageLength) { $text = $text.Substring(0, $maxMessageLength - 1) + [char] 0x2026 }
@@ -110,9 +110,9 @@ try {
 }
 catch {
     $detail = if ($_.ErrorDetails -and $_.ErrorDetails.Message) { $_.ErrorDetails.Message } else { $_.Exception.Message }
-    Fail 3 "Telegram API or network error: $detail"
+    Fail 21 "Telegram API or network error: $detail"
 }
-if (-not $response.ok) { Fail 3 "Telegram API error: $($response.description)" }
+if (-not $response.ok) { Fail 21 "Telegram API error: $($response.description)" }
 
 Write-Output 'Message sent.'
 exit 0

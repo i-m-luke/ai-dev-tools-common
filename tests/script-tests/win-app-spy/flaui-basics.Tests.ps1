@@ -26,13 +26,13 @@ Describe 'flaui-basics.md sample script' {
         $script:sampleScript | Should -Exist
     }
 
-    It 'loads the core and answers a missing active app with APP_NOT_FOUND on stderr and exit 2' -Skip:$noDotnetScript {
+    It 'loads the core and answers a missing active app with APP_NOT_FOUND on stderr and exit 20' -Skip:$noDotnetScript {
         $request = Join-Path $script:spyWorkingFolder 'req.json'
         Set-Content -LiteralPath $request -Value '{}' -Encoding utf8
 
         $result = Invoke-SpyScript -Script $script:sampleScript -Arguments '--request-path', $request
 
-        $result.ExitCode | Should -Be 2 -Because $result.Raw
+        $result.ExitCode | Should -Be 20 -Because $result.Raw
         $result.ResultLines | Should -Be 0
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
     }

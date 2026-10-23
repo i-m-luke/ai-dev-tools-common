@@ -22,7 +22,7 @@ Describe 'attach' -Skip:$noDotnetScript {
     ) {
         $result = Invoke-Spy (@{ command = 'attach'; app = $app } | ConvertTo-Json)
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
         $result.Json.error.message | Should -Not -BeNullOrEmpty
     }
@@ -35,7 +35,7 @@ Describe 'attach' -Skip:$noDotnetScript {
     ) {
         $result = Invoke-Spy $request
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 
@@ -101,7 +101,7 @@ class Fixture : Form
 
             $result = Invoke-Spy "{ `"command`": `"attach`", `"app`": { `"process`": `"$script:fixtureName`" } }"
 
-            $result.ExitCode | Should -Be 2
+            $result.ExitCode | Should -Be 20
             $result.Json.error.code | Should -Be 'APP_AMBIGUOUS'
             $result.Json.error.message | Should -Match "pid $($first.Id)\b"
             $result.Json.error.message | Should -Match "pid $($second.Id)\b"

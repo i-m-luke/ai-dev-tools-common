@@ -38,12 +38,12 @@ Describe 'get-issues.ps1' {
         ((Get-GhCalls).args -join ' ') | Should -Match '--state all --limit 5 .* --label bug --label ready-for-agent$'
     }
 
-    It 'exits 2 when gh fails' {
+    It 'exits 20 when gh fails' {
         Set-GhStub @(@{ match = '^issue list '; stderr = 'GraphQL: Could not resolve to a Repository'; exit = 1 })
 
         $run = Invoke-SkillScript 'get-issues' @{ Repository = $script:repo }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         $run.Stderr | Should -BeLike '*Could not resolve*'
     }
 }

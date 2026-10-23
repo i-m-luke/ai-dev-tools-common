@@ -55,14 +55,14 @@ Describe 'convert-icon.ps1' {
         Get-Size $destination | Should -Be '16x16'
     }
 
-    It 'exits 2 when the source does not exist' {
-        (Invoke-ConvertIcon (Join-Path $TestDrive 'missing.png') (Join-Path $TestDrive 'out.png')).ExitCode | Should -Be 2
+    It 'exits 20 when the source does not exist' {
+        (Invoke-ConvertIcon (Join-Path $TestDrive 'missing.png') (Join-Path $TestDrive 'out.png')).ExitCode | Should -Be 20
     }
 
-    It 'exits 3 when the source is not a raster image' {
+    It 'exits 21 when the source is not a raster image' {
         $svg = Join-Path $TestDrive 'icon.svg'
         Set-Content -LiteralPath $svg -Value '<svg xmlns="http://www.w3.org/2000/svg"/>'
 
-        (Invoke-ConvertIcon $svg (Join-Path $TestDrive 'out.png')).ExitCode | Should -Be 3
+        (Invoke-ConvertIcon $svg (Join-Path $TestDrive 'out.png')).ExitCode | Should -Be 21
     }
 }

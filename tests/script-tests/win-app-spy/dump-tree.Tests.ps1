@@ -99,7 +99,7 @@ Describe 'dump-tree' -Skip:$skip {
     ) {
         $result = Get-Dump @{ root = $root }
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be $code
         $result.ResultLines | Should -Be 0
     }
@@ -165,7 +165,7 @@ Describe 'dump-tree' -Skip:$skip {
     ) {
         $result = Get-Dump $fields
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 }

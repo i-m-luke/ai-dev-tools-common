@@ -28,12 +28,12 @@ Describe 'new-issue.ps1' {
         (Get-GhBody $script:create).PSObject.Properties.Name | Should -Not -Contain 'labels'
     }
 
-    It 'exits 2 when GitHub rejects the issue' {
+    It 'exits 20 when GitHub rejects the issue' {
         Set-GhStub @(@{ match = $script:create; stderr = 'gh: Validation Failed (HTTP 422)'; exit = 1 })
 
         $run = Invoke-SkillScript 'new-issue' @{ Repository = $script:repo; Title = 'A title'; BodyPath = (New-TextFile 'body') }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
         $run.Stderr | Should -BeLike '*HTTP 422*'
     }
 

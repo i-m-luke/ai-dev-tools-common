@@ -21,8 +21,8 @@ None.
 .NOTES
 Exit codes:
 - 0: the child is a sub-issue of the parent.
-- 2: GitHub rejected the request, e.g. an issue does not exist or the child already has a parent.
-- 3: sub-issues are not available in the repository.
+- 20: GitHub rejected the request, e.g. an issue does not exist or the child already has a parent.
+- 21: sub-issues are not available in the repository.
 
 Stderr: the reason of the failure, followed by the output of GitHub CLI.
 #>
@@ -42,6 +42,6 @@ $childId = (Invoke-GhApi -Path "repos/$Repository/issues/$Child" -Action "read t
 
 Invoke-GhApi -Path "repos/$Repository/issues/$Parent/sub_issues" -Method POST -Body @{ sub_issue_id = $childId } `
     -Action "add #$Child as a sub-issue of #$Parent" `
-    -NotFoundCode 3 -NotFoundMessage "Sub-issues are not available in $Repository." | Out-Null
+    -NotFoundCode 21 -NotFoundMessage "Sub-issues are not available in $Repository." | Out-Null
 
 Write-Host "#$Child is a sub-issue of #$Parent."

@@ -14,7 +14,7 @@ Run the initialization once per conversation.
 Run `pwsh -NoProfile -File <this skill's folder>/scripts/check-prerequisites.ps1`; use `powershell` in place of `pwsh` when pwsh is missing. Act on the script's exit code by this playbook:
 
 - `0` — continue.
-- `2` — a prerequisite is missing; offer the user to install what stderr names. Once installed, run
+- `20` — a prerequisite is missing; offer the user to install what stderr names. Once installed, run
   this step again — at most once; when it still exits non-zero, show the user the script's stderr
   and stop.
 - `*` — show the user the script's stderr, or the error when it failed to start, and stop.
@@ -38,8 +38,8 @@ Send each request by writing it as a JSON object into `req.json` in the working 
 `dotnet script <this skill's folder>/scripts/spy.csx -- --request-path <working folder>/req.json`.
 Act on the script's exit code by this playbook:
 
-- `0` — use the result's `data`; act on an item inside it that carries an `error` as on exit `2`.
-- `2` — act on the error's `code`:
+- `0` — use the result's `data`; act on an item inside it that carries an `error` as on exit `20`.
+- `20` — act on the error's `code`:
   - `APP_AMBIGUOUS` — resend with the `pid` of the app you mean; ask the user when the titles in the message don't tell.
   - `AMBIGUOUS_MATCH` — resend with the xpath of the candidate you mean, or narrow the xpath.
   - `APP_ALREADY_RUNNING` — ask the user to close that app, then `launch` again.
@@ -62,7 +62,7 @@ Done when every question the task asks about the UI is answered and every intera
 Send `close` for every app you launched — without `app` it closes the active app, with `app` another one. Act on the script's exit code by this playbook:
 
 - `0` — continue with the next app.
-- `2` with `TIMEOUT` — the app may be asking to save changes; send `close` again with `"force": true`.
+- `20` with `TIMEOUT` — the app may be asking to save changes; send `close` again with `"force": true`.
 - `*` — act as the playbook of step 1 does.
 
 Apps you did not launch stay open; `close` refuses them with `NOT_LAUNCHED`. Done when every app you launched is closed.

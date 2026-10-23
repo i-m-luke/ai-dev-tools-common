@@ -103,7 +103,7 @@ Describe 'screenshot' -Skip:$skip {
 
         $result = Get-Screenshot $xpath
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.ResultLines | Should -Be 0
         $result.Json.error.code | Should -Be $code
         @(Get-ChildItem -LiteralPath $script:spyWorkingFolder -Filter *.png).Count | Should -Be $before
@@ -119,7 +119,7 @@ Describe 'screenshot' -Skip:$skip {
     It 'answers INVALID_REQUEST when xpath is not a string' {
         $result = Invoke-Spy @{ command = 'screenshot'; app = @{ pid = $script:fixture.Id }; xpath = 42 }
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'INVALID_REQUEST'
     }
 
@@ -131,7 +131,7 @@ Describe 'screenshot' -Skip:$skip {
 
         $result = Get-Screenshot "/Window[@AutomationId='DialogForm']"
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.message | Should -Match 'minimized'
     }
 }
@@ -140,7 +140,7 @@ Describe 'screenshot without an app' -Skip:(-not (Get-Command dotnet-script -Err
     It 'answers APP_NOT_FOUND when no app is active' {
         $result = Invoke-Spy @{ command = 'screenshot' }
 
-        $result.ExitCode | Should -Be 2
+        $result.ExitCode | Should -Be 20
         $result.Json.error.code | Should -Be 'APP_NOT_FOUND'
     }
 }

@@ -46,11 +46,11 @@ Describe 'get-external-prs.ps1' {
         $run.Result.Count | Should -Be 0
     }
 
-    It 'exits 2 when GitHub rejects the request' {
+    It 'exits 20 when GitHub rejects the request' {
         Set-GhStub @($script:notFound + @{ match = Get-ApiMatch GET 'repos/owner/name/pulls' })
 
         $run = Invoke-SkillScript 'get-external-prs' @{ Repository = $script:repo }
 
-        $run.ExitCode | Should -Be 2
+        $run.ExitCode | Should -Be 20
     }
 }

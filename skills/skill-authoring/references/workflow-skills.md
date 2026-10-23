@@ -53,7 +53,7 @@ Run `<exact command>`. Act on the script's exit code by this playbook:
 Run `<exact command>`. Act on the script's exit code by this playbook:
 
 - `0` — <action>.
-- `2` — <action>.
+- `20` — <action>.
 - `*` — show the user the script's stderr and stop.
 
 ### 3. Report
