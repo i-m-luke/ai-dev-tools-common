@@ -3,10 +3,14 @@ name: skill-authoring
 description: Use when creating a skill or changing what one does — its instructions, description, scripts or other files. Load it before loading the skill you create or edit.
 metadata:
   credits:
-    skill: writing-for-agents
-    author: Matt Pocock
-    organisation: mattpocock
-    url: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
+    - skill: writing-for-agents
+      author: Matt Pocock
+      organisation: mattpocock
+      url: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
+    - skill: grilling
+      author: Matt Pocock
+      organisation: mattpocock
+      url: https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling
 ---
 
 Conventions for authoring a skill, so that every skill follows one contract.
@@ -19,17 +23,21 @@ Write every file of the skill:
 - **One line per block** — each paragraph, list item and table row on one line, whatever its length; break lines only between them and between code lines.
 - **In positive instructions** — what the agent should do, not what it must avoid: "write one-line comments", not "don't write long comments". Naming the unwanted behaviour puts it into the agent's context and makes it more likely. Write a prohibition only where no positive phrasing exists, and pair it with what to do instead. Example: a hybrid skill's description ends with "— never otherwise, whatever the task"; without it, trigger evals showed the agent loading the skill for requests that merely resemble its task.
 
+## Interview
+
+Read `references/interview.md` when you create a new skill, before writing any of its files; it settles the skill's specification with the user.
+
 ## Skill type
 
 Every skill is one of these types, each with its own guidelines:
 
+- **Convention skill** — rules the agent returns to on demand while it works; defaults to _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
 - **Workflow skill** — walks the agent through ordered steps towards a goal; defaults to _explicit_ or _hybrid_. Read `references/workflow-skills.md` when you create or change a workflow skill.
 - **Tool skill** — gives the agent a set of helpers, each run as a command; like a workflow skill it holds steps, but each command has its own. Defaults to _implicit_; such a skill is a candidate for an MCP server, so point that out to the user. Read `references/workflow-skills.md` and `references/tool-skills.md` when you create or change a tool skill.
-- **Convention skill** — rules the agent returns to on demand while it works; defaults to _implicit_. Read `references/convention-skills.md` when you create or change a convention skill.
-
-A type's default category is a starting point; [Skill categorization](#skill-categorization) decides. When a change shifts a skill's type or category, point out to the user that the skill may be worth reworking.
 
 When a skill fits more than one type, pick the type of its primary purpose — what the user invokes it for. When two purposes each carry substantial work, propose splitting the skill into one skill per type; when the primary purpose stays unclear, ask the user which type applies.
+
+A type's default category is a starting point; [Skill categorization](#skill-categorization) decides. When a change shifts a skill's type or category, point out to the user that the skill may be worth reworking.
 
 ## Skill categorization
 
@@ -93,19 +101,19 @@ Design cannot foresee every split. Once the skill's scripts work, review its ste
 
 Read `references/scripts.md` when a skill gets a script or you write, change or call one; it holds the contract every script follows, in any language. Read `references/powershell-scripts.md` when the skill's scripts are in PowerShell; it works the contract out in that language.
 
-## Artifacts
-
-A skill's artifacts folder holds the files it produces for its own work or for the user, as `assets/instruction-blocks/artifacts.md` lays it out. A script that produces a run's output creates the run folder and returns its path in its result; a script that writes into an existing run folder receives the path from its caller.
-
 ## Instruction blocks
 
-Rules that bind the agent running a skill live in instruction blocks in `assets/instruction-blocks/`: the running agent never loads this skill, so each skill carries the blocks it needs. Read each block that applies to the skill, keep the skill's own instructions consistent with its rules, and place it in the skill verbatim, with each `{{…}}` filled in — `{{skill}}` with the skill's name — and each `<…>` kept for the running agent to fill in:
+Rules that bind the agent running a skill live in instruction blocks — files in `assets/instruction-blocks`: the running agent never loads this skill, so each skill carries the blocks it needs. Read each block that applies to the skill, keep the skill's own instructions consistent with its rules, and place it in the skill verbatim, with each `{{…}}` filled in — `{{skill}}` with the skill's name — and each `<…>` kept for the running agent to fill in:
 
-- A skill with scripts — fill in `assets/instruction-blocks/scripts.md` as its `## Scripts` chapter, beside `## Steps`.
+- A skill with scripts — fill in `assets/instruction-blocks/scripts.md` as its `## Scripts` chapter, beside `## Steps`, with `{{help-command}}` the command that prints a script's help.
 - A skill with PowerShell scripts — use `assets/instruction-blocks/scripts-powershell.md` as the first paragraph of that chapter.
 - A skill that writes files of its own, or whose scripts take a `<Noun>Path` parameter — fill in `assets/instruction-blocks/artifacts.md` as its `## Artifacts` chapter.
 
 When you change a skill, bring the blocks it carries in line with these files, and add the ones that now apply.
+
+## Artifacts
+
+Design the skill's steps and scripts so that every file the skill writes — by the agent or a script, input, output or state — lands in its artifacts folder, as `assets/instruction-blocks/artifacts.md` lays it out.
 
 ## Standard phrases
 

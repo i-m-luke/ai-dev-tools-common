@@ -10,7 +10,7 @@ metadata:
     url: https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling
 ---
 
-Run `/grilling` as **shallow planning**.
+Run `/grilling` skill (authored by Matt Pocock) as **shallow planning**.
 When the `grilling` skill is missing or cannot be invoked, tell the user and stop.
 When the `grilling` skill's instructions conflict with the Shallow planning definition, the definition wins.
 

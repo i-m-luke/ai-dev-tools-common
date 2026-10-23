@@ -22,7 +22,7 @@ export default defineConfig({
       },
       {
         test: {
-          name: "[WARNING: Cost tokens] evals",
+          name: "evals",
           include: ["tests/evals.test.ts"],
           testTimeout: 180 * minute,
           hookTimeout: minute,
@@ -30,7 +30,7 @@ export default defineConfig({
       },
       {
         test: {
-          name: "[WARNING: Cost tokens] evals-in-progress",
+          name: "evals-in-progress",
           include: ["tests/evals-in-progress.test.ts"],
           testTimeout: 180 * minute,
           hookTimeout: minute,

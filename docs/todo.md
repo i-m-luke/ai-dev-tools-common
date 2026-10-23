@@ -3,11 +3,12 @@
 ## HiPrio
 
 - Migrace 'win-app-spy' skillu do MCP (viz devnotes): MCP bude součástí repa 'agentic-toolkit-mcps'?
+- Skill 'skill-authoring' - vylepšit instrukce kapitoly 'Instruction blocks': Je třeba zjednodušit, formulace jsou někdy složité a souvětí dlouhá
 - AGENTS-SHARED.md: Vyjmout kapitolu "Code changes" do vlastního reference dokumentu?
 - Provést audit pro všechny skilly skillem 'skill-authoring':
-  - document-app: ✅
-  - help-with-writing: ✅
-  - write-app-doc: ✅
+  - document-app: ...
+  - help-with-writing: ...
+  - write-app-doc: ...
   - win-app-spy: ...
   - manage-github-issues: ...
   - notify: ...
@@ -37,14 +38,13 @@
   - sync-app-doc: ...
   - vertical-slice-architecture: ...
   - skill-authoring: ...
+- AGENTS-SHARED.md: Vytvořit instrukci pro uchovávání stavu sessionu?
 
 ## MidPrio
 
-- Sloučit ai-tools-common a ai-tools-custom:
-  - Název repa: agentic-toolkit
-  - Budou sdílet docs a CI
-  - Root repa bude mít adresáře: 1. specific (současné cuatom); 2. general (současné common)
-  - poté Summarní commit a verze package 1.0.0
+- Sloučit ai-tools-common a ai-tools-custom (viz detaily)
+- Vytvořt skill 'planning'? (viz detaily)
+- Vytvořt skill 'create-replicator'? (viz detaily)
 
 ## LoPrio
 
@@ -52,3 +52,33 @@
 - Převést logiku pomocných testovacích skriptů do ts?
 
 ## Detaily
+
+### AGENTS-SHARED.md: Vytvořit instrukci pro uchovávání stavu sessionu
+
+- Bylo by fajn mít instrukce pro vytvoření např. složky (v artifacts) s prostorem, ve kterém by se mohlo navázat code-review (nebo další změny) po implementaci agentem (implementace by byla řešena v jiném session než code-review)
+- Byl by tu yaml s metadaty o původním session: Např odkaz na spec, git metadata (větev, commit) - prostě vše co by umožnili agentovi říct "Provedl jsem code-review implementace x,y,z a v tomto souboru jsou moje připomínky"
+- Dále by tu agent vedl zaznam o vývoji: Stručně co se provedlo, atd.
+
+### Sloučit ai-tools-common a ai-tools-custom
+
+- Název repa: agentic-toolkit
+- Budou sdílet docs a CI
+- Root repa bude mít adresáře: 1. specific (současné cuatom); 2. general (současné common)
+- poté Summarní commit a verze package 1.0.0
+
+### Vytvořt skill 'planning'
+
+- Type: Implicit
+- Category: Convention
+- Přesunuli by se sem části z agents -Shared.md a na skill by tu byl trigger
+- Trigne grilling skill
+
+### Vytvořt skill 'create-replicator'
+
+- Skill vytvoří skill pro všechno: Např ukážeš na MCP server a řekneš "Vytvoř mi skill na MCP server"
+- Name: create-replicator
+- Type: Exlicit
+- Category: Workflow?
+- Skill by s lehkou navigací vývojáře dokázal pochopit podstatu
+- Skill by měl jako první větu "Extract/Describe the essence of everything you were pointed to (focused/aimed) that helps create replikas of it. When you grasp the essence fully run /skill-authoring skill and create the skill based on the description"
+- Skill trigne skill-authoring

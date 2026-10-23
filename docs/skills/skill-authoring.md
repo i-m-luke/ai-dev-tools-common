@@ -19,8 +19,16 @@ skill and runs it when available.
 `SKILL.md` is a short overview every authoring task needs: the skill categories, frontmatter, skill
 types, calling other skills, standard phrases, wording, the skill folder, the aim of scripts and
 artifacts. Detail that only some tasks need sits in `references/`, behind a "Read … when …" pointer:
-workflow skills, convention skills, the language-agnostic script contract and its PowerShell worked
-example.
+the interview for a new skill, workflow skills, convention skills, the language-agnostic script
+contract and its PowerShell worked example.
+
+## Interview
+
+A new skill starts with an interview that settles its specification before any file is written: the
+first round fixes the base — purpose, type, category — and the second, run by the external
+[`grilling`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling) skill,
+its details. A consistency check after each round catches answers that contradict each other or
+the skill's rules.
 
 ## Instruction blocks
 
@@ -35,7 +43,7 @@ copies; skill audits keep them in line.
 
 - An unhandled `throw` makes both `pwsh -File` and `powershell -File` exit with 1, and Python and
   Node.js do the same on an unhandled error — so exit code 1 cannot mean a deliberate failure, and
-  expected failures take 2. Other expected outcomes, such as a dialog with the agent, take 3 and
+  expected failures take 2. Other expected outcomes take 3 and
   up, so the code's range alone tells where the outcome is — the result on stdout, or the error on
   stderr. Success stays 0 even in a script with several outcomes: shells, CI and the agent's tools
   read any other code as a failure, and adding an outcome never renumbers the success.

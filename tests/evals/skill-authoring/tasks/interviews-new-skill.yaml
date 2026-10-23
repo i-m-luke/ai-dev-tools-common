@@ -1,0 +1,29 @@
+id: interviews-new-skill
+name: Interviews the user before creating a skill
+description: Asked for a new skill without a full specification, the agent proposes the base specification in one message, flags the conflict between the category and the name, and writes no file before the user confirms.
+tags:
+  - behavior
+inputs:
+  prompt: "Create a skill named release-notes-writing in skills/release-notes-writing that I run as /release-notes-writing to draft release notes from the pull requests merged since the last tag."
+graders:
+  - type: skill_invocation
+    name: loads-skill-authoring
+    config:
+      mode: any_order
+      required_skills:
+        - skill-authoring
+  - type: file
+    name: nothing-written
+    config:
+      must_not_exist:
+        - skills/release-notes-writing/SKILL.md
+  - type: prompt
+    name: proposes-base-specification
+    config:
+      continue_session: true
+      prompt: |
+        You are now grading the reply above, not continuing it. Check:
+        1. In a single message, the agent presented the skill's purpose, type and category, in this order, each with a proposed answer and a reason, followed by a proposed name and description.
+        2. The agent pointed out that the noun-phrase name "release-notes-writing" clashes with a skill the user runs by hand, and proposed resolving it, e.g. with a verb-phrase name.
+        3. The agent asked the user to confirm or correct the proposals and did not present the skill's files as already written.
+        For each criterion call set_waza_grade_pass if it is met or set_waza_grade_fail if it is not, naming the criterion number in the description.
