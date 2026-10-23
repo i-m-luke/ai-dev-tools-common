@@ -32,17 +32,15 @@ The code's range alone tells the agent where the outcome is: the result on stdou
 
 Exit codes meaning:
 
-- `0`- Success: the script did what it is for; the result, when the script returns one, is on stdout.
+- `0`- Success: the script did what it is for; the result, when the script returns one, is on stdout. It's the outcome after which the skill goes on as usual
 
 - `1` - Unexpected failure: an unhandled error. Runtimes exit with 1 on one, so 1 never means more.
 
-- `2` - Expected failure; stderr says which.
+- `2` - Expected failure; stderr says which. The agent must act on differently from the enexpected failures.
 
-- `3 and up` - Other expected outcomes, each documented in the help with its result on stdout.
+- `3 and up` - Other expected outcomes, each documented in the help with its result on stdout. It's the outcome that changes the skill's course.
 
 - `undocumented` - Unexpected failure, like `1`.
-
-`0` is the outcome after which the skill goes on as usual; an outcome that changes the skill's course takes its own code from `3` up. An expected failure the agent must act on differently from the other failures is such an outcome too.
 
 ## Help
 
@@ -51,14 +49,14 @@ Document each script inside it, through the language's native help mechanism, in
 1. **Purpose** — what the script does.
 2. **Input** — each parameter, or that the script takes none.
 3. **Result** — the shape of the result JSON for each exit code that returns one, or that the script returns none.
-4. **Exit codes** — `0`, `2` when the script has expected failures, and each outcome from `3` up.
-5. **Stderr** — what the script writes there.
+4. **Stderr** — what the script writes there.
+5. **Exit codes** — see [Exit codes](#exit-codes) section
 
 The skill names the command that prints the help; the help is the only documentation of what the script returns and which errors it reports.
 
 ## Running scripts
 
-Act on every script run by a playbook keyed by exit code: `0`, then a row for each documented code from `2` up, then `*` — show the user the script's stderr, or the error when it failed to start, and stop. `*` covers `1` and every undocumented code.
+Act on every script run by a playbook keyed by exit code: Starting by `0`, then a row for each documented code from `2` up, then `*` — show the user the script's stderr, or the error when it failed to start, and stop. `*` covers `1` and every undocumented code.
 
 ## Prerequisites
 

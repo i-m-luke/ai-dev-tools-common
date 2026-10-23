@@ -4,6 +4,7 @@
 
 - Migrace 'win-app-spy' skillu do MCP (viz devnotes): MCP bude součástí repa 'agentic-toolkit-mcps'?
 - Skill 'skill-authoring' - vylepšit instrukce kapitoly 'Instruction blocks': Je třeba zjednodušit, formulace jsou někdy složité a souvětí dlouhá
+- Skill 'skill-authoring' - vylepšit intrukce script.md
 - AGENTS-SHARED.md: Vyjmout kapitolu "Code changes" do vlastního reference dokumentu?
 - Provést audit pro všechny skilly skillem 'skill-authoring':
   - document-app: ...
